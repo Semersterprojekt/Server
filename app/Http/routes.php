@@ -26,6 +26,12 @@ Route::get('/', function () {
 |
 */
 
+// We will probably use this later.
 Route::group(['middleware' => ['web']], function () {
     //
+});
+
+
+Route::group(['prefix' => 'api/v1'], function(){
+    Route::resource('cars', 'CarsController');
 });
