@@ -34,4 +34,5 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['prefix' => 'api/v1'], function(){
     Route::resource('cars', 'CarsController');
+    Route::resource('tests', 'TestsController');
 });
