@@ -16,6 +16,7 @@ class CreateTestsTable extends Migration
             $table->increments('id');
             $table->text('data');
             $table->text('comment');
+            $table->timestamps();
         });
     }
 
