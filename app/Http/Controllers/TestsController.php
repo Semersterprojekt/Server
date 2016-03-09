@@ -42,10 +42,12 @@ class TestsController extends Controller
      */
     public function store(Request $request)
     {
-        $test = Test::create($request->all());
+//        $test = Test::create($request->all());
 
         return response()->json([
-            'message' => 'Joke Created Successfully'
+                'message' => $request->all(),
+                'data' => $request->data,
+                'comment' => $request->comment
         ]);
     }
 
