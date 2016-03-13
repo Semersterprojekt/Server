@@ -11,10 +11,10 @@
 
 namespace Monolog\Handler;
 
-use Monolog\TestCase;
 use Monolog\Logger;
-use PhpAmqpLib\Message\AMQPMessage;
+use Monolog\TestCase;
 use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * @covers Monolog\Handler\RotatingFileHandler
@@ -65,7 +65,7 @@ class AmqpHandlerTest extends TestCase
             0,
             array(
                 'delivery_mode' => 2,
-                'Content-type' => 'application/json',
+                'content_type' => 'application/json',
             ),
         );
 

@@ -11,8 +11,8 @@
 
 namespace Monolog\Handler;
 
-use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
+use Monolog\Logger;
 
 /**
  * Sends notifications through Slack API
@@ -241,6 +241,10 @@ class SlackHandler extends SocketHandler
     protected function write(array $record)
     {
         parent::write($record);
+        $res = $this->getResource();
+        if (is_resource($res)) {
+            @fread($res, 2048);
+        }
         $this->closeSocket();
     }
 
