@@ -8,7 +8,7 @@ class Test extends Model
 {
         protected $table = 'tests';
 
-        protected $fillable = ['data', 'comment'];
+        protected $fillable = ['img_path', 'data', 'comment'];
 
 
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Test;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+use Intervention\Image\Facades\Image;
 
 class TestsController extends Controller
 {
@@ -42,11 +42,22 @@ class TestsController extends Controller
      */
     public function store(Request $request)
     {
-        $test = Test::create($request->all());
+        $image = Image::make($request->base64);
+
+        //$request->img_path = 'img/test/foo.jpg';
+
+
+        $test = Test::create($request->except('base64'));
+
+        $image->resize(300, 200)->save('img/test/' . $test->id . '.jpg');
+
+
+        $test->img_path = 'img/test/' . $test->id . '.jpg';
+        $test->save();
 
         return response()->json([
-                'message' => $request->all(),
-                'status' => 'Saved successfully!'
+            'message' => $request->all(),
+            'status' => 'Saved successfully!'
         ]);
     }
 
