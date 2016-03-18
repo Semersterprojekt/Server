@@ -49,7 +49,7 @@ class TestsController extends Controller
 
         $test = Test::create($request->except('base64'));
 
-        $image->resize(300, 200)->save('img/test/' . $test->id . '.jpg');
+        $image->resize(500, 500)->save('img/test/' . $test->id . '.jpg');
 
 
         $test->img_path = 'img/test/' . $test->id . '.jpg';
