@@ -3,9 +3,9 @@
 namespace Illuminate\Queue;
 
 use Closure;
-use InvalidArgumentException;
 use Illuminate\Contracts\Queue\Factory as FactoryContract;
 use Illuminate\Contracts\Queue\Monitor as MonitorContract;
+use InvalidArgumentException;
 
 class QueueManager implements FactoryContract, MonitorContract
 {
@@ -61,6 +61,17 @@ class QueueManager implements FactoryContract, MonitorContract
     public function after($callback)
     {
         $this->app['events']->listen(Events\JobProcessed::class, $callback);
+    }
+
+    /**
+     * Register an event listener for the exception occurred job event.
+     *
+     * @param  mixed $callback
+     * @return void
+     */
+    public function exceptionOccurred($callback)
+    {
+        $this->app['events']->listen(Events\JobExceptionOccurred::class, $callback);
     }
 
     /**

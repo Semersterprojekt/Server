@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Test;
+use App\User;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
 class TestsController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('jwt.auth');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -43,14 +51,10 @@ class TestsController extends Controller
     public function store(Request $request)
     {
         $image = Image::make($request->base64);
-
-        //$request->img_path = 'img/test/foo.jpg';
-
-
         $test = Test::create($request->except('base64'));
 
-        $image->resize(500, 500)->save('img/test/' . $test->id . '.jpg');
-
+        $image->resize(1200, 800)->save('img/test/' . $test->id . '.jpg');
+        $image->resize(300, 300)->save('img/test_tmbn/' . $test->id . '.jpg');
 
         $test->img_path = 'img/test/' . $test->id . '.jpg';
         $test->save();
@@ -58,7 +62,7 @@ class TestsController extends Controller
         return response()->json([
             'message' => $request->all(),
             'status' => 'Saved successfully!'
-        ]);
+        ], 200);
     }
 
     /**
@@ -103,6 +107,6 @@ class TestsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Test::destroy($id);
     }
 }

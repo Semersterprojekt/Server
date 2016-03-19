@@ -3,20 +3,20 @@
 namespace Illuminate\Foundation;
 
 use Closure;
-use RuntimeException;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Container\Container;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Events\EventServiceProvider;
-use Illuminate\Routing\RoutingServiceProvider;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Events\EventServiceProvider;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
+use Illuminate\Routing\RoutingServiceProvider;
+use Illuminate\Support\Arr;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Application extends Container implements ApplicationContract, HttpKernelInterface
 {
@@ -25,7 +25,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      *
      * @var string
      */
-    const VERSION = '5.2.22';
+    const VERSION = '5.2.23';
 
     /**
      * The base path for the Laravel installation.
@@ -276,10 +276,13 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     protected function bindPathsInContainer()
     {
         $this->instance('path', $this->path());
-
-        foreach (['base', 'config', 'database', 'lang', 'public', 'storage'] as $path) {
-            $this->instance('path.'.$path, $this->{$path.'Path'}());
-        }
+        $this->instance('path.base', $this->basePath());
+        $this->instance('path.lang', $this->langPath());
+        $this->instance('path.config', $this->configPath());
+        $this->instance('path.public', $this->publicPath());
+        $this->instance('path.storage', $this->storagePath());
+        $this->instance('path.database', $this->databasePath());
+        $this->instance('path.bootstrap', $this->bootstrapPath());
     }
 
     /**
@@ -300,6 +303,16 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
     public function basePath()
     {
         return $this->basePath;
+    }
+
+    /**
+     * Get the path to the bootstrap directory.
+     *
+     * @return string
+     */
+    public function bootstrapPath()
+    {
+        return $this->basePath . DIRECTORY_SEPARATOR . 'bootstrap';
     }
 
     /**
@@ -432,7 +445,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      * Get or check the current application environment.
      *
      * @param  mixed
-     * @return string
+     * @return string|bool
      */
     public function environment()
     {
@@ -810,7 +823,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function getCachedConfigPath()
     {
-        return $this->basePath().'/bootstrap/cache/config.php';
+        return $this->bootstrapPath() . '/cache/config.php';
     }
 
     /**
@@ -830,7 +843,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function getCachedRoutesPath()
     {
-        return $this->basePath().'/bootstrap/cache/routes.php';
+        return $this->bootstrapPath() . '/cache/routes.php';
     }
 
     /**
@@ -840,7 +853,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function getCachedCompilePath()
     {
-        return $this->basePath().'/bootstrap/cache/compiled.php';
+        return $this->bootstrapPath() . '/cache/compiled.php';
     }
 
     /**
@@ -850,7 +863,7 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
      */
     public function getCachedServicesPath()
     {
-        return $this->basePath().'/bootstrap/cache/services.php';
+        return $this->bootstrapPath() . '/cache/services.php';
     }
 
     /**
@@ -1016,6 +1029,17 @@ class Application extends Container implements ApplicationContract, HttpKernelIn
         $this['translator']->setLocale($locale);
 
         $this['events']->fire('locale.changed', [$locale]);
+    }
+
+    /**
+     * Determine if application locale is the given locale.
+     *
+     * @param  string $locale
+     * @return bool
+     */
+    public function isLocale($locale)
+    {
+        return $this->getLocale() == $locale;
     }
 
     /**

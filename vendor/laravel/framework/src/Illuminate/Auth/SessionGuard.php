@@ -2,17 +2,17 @@
 
 namespace Illuminate\Auth;
 
-use RuntimeException;
-use Illuminate\Support\Str;
-use Illuminate\Http\Response;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Auth\StatefulGuard;
-use Symfony\Component\HttpFoundation\Request;
-use Illuminate\Contracts\Auth\SupportsBasicAuth;
-use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\Auth\SupportsBasicAuth;
+use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Cookie\QueueingFactory as CookieJar;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Http\Response;
+use Illuminate\Support\Str;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class SessionGuard implements StatefulGuard, SupportsBasicAuth
 {
@@ -734,7 +734,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     public function getName()
     {
-        return 'login_'.$this->name.'_'.sha1(get_class($this));
+        return 'login_' . $this->name . '_' . sha1(static::class);
     }
 
     /**
@@ -744,7 +744,7 @@ class SessionGuard implements StatefulGuard, SupportsBasicAuth
      */
     public function getRecallerName()
     {
-        return 'remember_'.$this->name.'_'.sha1(get_class($this));
+        return 'remember_' . $this->name . '_' . sha1(static::class);
     }
 
     /**

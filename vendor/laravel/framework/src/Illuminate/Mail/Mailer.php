@@ -3,18 +3,18 @@
 namespace Illuminate\Mail;
 
 use Closure;
-use Swift_Mailer;
-use Swift_Message;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use SuperClosure\Serializer;
-use InvalidArgumentException;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Queue\Queue as QueueContract;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Mail\Mailer as MailerContract;
 use Illuminate\Contracts\Mail\MailQueue as MailQueueContract;
+use Illuminate\Contracts\Queue\Queue as QueueContract;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
+use SuperClosure\Serializer;
+use Swift_Mailer;
+use Swift_Message;
 
 class Mailer implements MailerContract, MailQueueContract
 {
@@ -254,8 +254,8 @@ class Mailer implements MailerContract, MailQueueContract
     /**
      * Build the callable for a queued e-mail job.
      *
-     * @param  mixed  $callback
-     * @return mixed
+     * @param  \Closure|string $callback
+     * @return string
      */
     protected function buildQueueCallable($callback)
     {
@@ -284,12 +284,12 @@ class Mailer implements MailerContract, MailQueueContract
      * Get the true callable for a queued e-mail message.
      *
      * @param  array  $data
-     * @return mixed
+     * @return \Closure|string
      */
     protected function getQueuedCallable(array $data)
     {
         if (Str::contains($data['callback'], 'SerializableClosure')) {
-            return unserialize($data['callback'])->getClosure();
+            return (new Serializer)->unserialize($data['callback']);
         }
 
         return $data['callback'];

@@ -3,10 +3,10 @@
 namespace Illuminate\Foundation\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Composer;
-use Symfony\Component\Finder\Finder;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Composer;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Finder\Finder;
 
 class AppNameCommand extends Command
 {
@@ -247,7 +247,7 @@ class AppNameCommand extends Command
      */
     protected function getBootstrapPath()
     {
-        return $this->laravel->basePath().'/bootstrap/app.php';
+        return $this->laravel->bootstrapPath() . '/app.php';
     }
 
     /**

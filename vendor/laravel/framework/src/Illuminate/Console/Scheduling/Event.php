@@ -2,15 +2,15 @@
 
 namespace Illuminate\Console\Scheduling;
 
-use Closure;
 use Carbon\Carbon;
-use LogicException;
+use Closure;
 use Cron\CronExpression;
 use GuzzleHttp\Client as HttpClient;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Mail\Mailer;
+use LogicException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
-use Illuminate\Contracts\Container\Container;
 
 class Event
 {
@@ -483,6 +483,20 @@ class Event
     public function monthly()
     {
         return $this->cron('0 0 1 * * *');
+    }
+
+    /**
+     * Schedule the event to run monthly on a given day and time.
+     *
+     * @param int $day
+     * @param string $time
+     * @return $this
+     */
+    public function monthlyOn($day = 1, $time = '0:0')
+    {
+        $this->dailyAt($time);
+
+        return $this->spliceIntoPosition(3, $day);
     }
 
     /**

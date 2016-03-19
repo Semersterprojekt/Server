@@ -3,9 +3,9 @@
 namespace Illuminate\Database\Schema;
 
 use Closure;
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Grammars\Grammar;
+use Illuminate\Support\Fluent;
 
 class Blueprint
 {
@@ -775,15 +775,17 @@ class Blueprint
     /**
      * Add nullable creation and update timestamps to the table.
      *
+     * Alias for self::timestamps().
+     *
      * @return void
      */
     public function nullableTimestamps()
     {
-        return $this->timestamps();
+        $this->timestamps();
     }
 
     /**
-     * Add creation and update timestamps to the table.
+     * Add nullable creation and update timestamps to the table.
      *
      * @return void
      */

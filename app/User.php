@@ -25,9 +25,20 @@ class User extends Authenticatable
     ];
 
 
+    public static $rules = [
+        'username' => 'required|unique:users',
+        'email' => 'required|unique:users|email',
+        'password' => 'required|min:5',
+    ];
+
     public function cars()
     {
         return $this->hasMany('App\Car');
+    }
+
+    public function tests()
+    {
+        return $this->hasMany('App\Test');
     }
 
 }

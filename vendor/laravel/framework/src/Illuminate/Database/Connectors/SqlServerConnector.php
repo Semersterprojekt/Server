@@ -2,8 +2,8 @@
 
 namespace Illuminate\Database\Connectors;
 
-use PDO;
 use Illuminate\Support\Arr;
+use PDO;
 
 class SqlServerConnector extends Connector implements ConnectorInterface
 {
@@ -92,6 +92,10 @@ class SqlServerConnector extends Connector implements ConnectorInterface
 
         if (isset($config['readonly'])) {
             $arguments['ApplicationIntent'] = 'ReadOnly';
+        }
+
+        if (isset($config['pooling']) && $config['pooling'] === false) {
+            $arguments['ConnectionPooling'] = '0';
         }
 
         return $this->buildConnectString('sqlsrv', $arguments);

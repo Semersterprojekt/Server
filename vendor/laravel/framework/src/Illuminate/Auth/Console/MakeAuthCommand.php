@@ -2,8 +2,8 @@
 
 namespace Illuminate\Auth\Console;
 
-use Illuminate\Console\Command;
 use Illuminate\Console\AppNamespaceDetectorTrait;
+use Illuminate\Console\Command;
 
 class MakeAuthCommand extends Command
 {
@@ -56,6 +56,15 @@ class MakeAuthCommand extends Command
             file_put_contents(
                 app_path('Http/Controllers/HomeController.php'),
                 $this->compileControllerStub()
+            );
+
+            file_put_contents(
+                app_path('Http/Controllers/HomeController.php'),
+                str_replace(
+                    'App\\',
+                    $this->laravel->getNamespace(),
+                    file_get_contents(app_path('Http/Controllers/HomeController.php'))
+                )
             );
 
             $this->info('Updated Routes File.');

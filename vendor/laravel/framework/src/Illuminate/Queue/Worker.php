@@ -3,13 +3,13 @@
 namespace Illuminate\Queue;
 
 use Exception;
-use Throwable;
-use Illuminate\Contracts\Queue\Job;
-use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Cache\Repository as CacheContract;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Queue\Job;
 use Illuminate\Queue\Failed\FailedJobProviderInterface;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use Illuminate\Contracts\Cache\Repository as CacheContract;
+use Throwable;
 
 class Worker
 {
@@ -220,11 +220,15 @@ class Worker
                 $job->release($delay);
             }
 
+            $this->raiseExceptionOccurredJobEvent($connection, $job, $e);
+
             throw $e;
         } catch (Throwable $e) {
             if (! $job->isDeleted()) {
                 $job->release($delay);
             }
+
+            $this->raiseExceptionOccurredJobEvent($connection, $job, $e);
 
             throw $e;
         }
@@ -259,6 +263,23 @@ class Worker
             $data = json_decode($job->getRawBody(), true);
 
             $this->events->fire(new Events\JobProcessed($connection, $job, $data));
+        }
+    }
+
+    /**
+     * Raise the exception occurred queue job event.
+     *
+     * @param  string $connection
+     * @param  \Illuminate\Contracts\Queue\Job $job
+     * @param  \Throwable $exception
+     * @return void
+     */
+    protected function raiseExceptionOccurredJobEvent($connection, Job $job, $exception)
+    {
+        if ($this->events) {
+            $data = json_decode($job->getRawBody(), true);
+
+            $this->events->fire(new Events\JobExceptionOccurred($connection, $job, $data, $exception));
         }
     }
 

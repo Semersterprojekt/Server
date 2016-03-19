@@ -33,6 +33,17 @@ Route::group(['middleware' => ['web']], function () {
 
 
 Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
+    Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
+    Route::post('authenticate', 'AuthenticateController@authenticate');
+    Route::post('authenticate/register', 'AuthenticateController@register');
+    Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
+
     Route::resource('cars', 'CarsController');
     Route::resource('tests', 'TestsController');
+});
+
+Route::group(['middleware' => ['cors', 'jwt.auth']], function () {
+    /*Route::get('img/test/{id}', function() {
+
+    });*/
 });

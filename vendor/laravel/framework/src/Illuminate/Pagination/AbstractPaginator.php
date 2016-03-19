@@ -2,10 +2,10 @@
 
 namespace Illuminate\Pagination;
 
-use Closure;
 use ArrayIterator;
-use Illuminate\Support\Collection;
+use Closure;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Collection;
 
 abstract class AbstractPaginator implements Htmlable
 {
@@ -129,7 +129,8 @@ abstract class AbstractPaginator implements Htmlable
             $parameters = array_merge($this->query, $parameters);
         }
 
-        return $this->path.'?'
+        return $this->path
+        . (str_contains($this->path, '?') ? '&' : '?')
                         .http_build_query($parameters, null, '&')
                         .$this->buildFragment();
     }

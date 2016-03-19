@@ -2,19 +2,19 @@
 
 namespace Illuminate\Database\Query;
 
-use Closure;
-use RuntimeException;
 use BadMethodCallException;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use InvalidArgumentException;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Traits\Macroable;
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Processors\Processor;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Support\Traits\Macroable;
+use InvalidArgumentException;
+use RuntimeException;
 
 class Builder
 {
@@ -213,12 +213,12 @@ class Builder
      * @return void
      */
     public function __construct(ConnectionInterface $connection,
-                                Grammar $grammar,
-                                Processor $processor)
+                                Grammar $grammar = null,
+                                Processor $processor = null)
     {
-        $this->grammar = $grammar;
-        $this->processor = $processor;
         $this->connection = $connection;
+        $this->grammar = $grammar ?: $connection->getQueryGrammar();
+        $this->processor = $processor ?: $connection->getPostProcessor();
     }
 
     /**
@@ -2156,7 +2156,7 @@ class Builder
             return $this->dynamicWhere($method, $parameters);
         }
 
-        $className = get_class($this);
+        $className = static::class;
 
         throw new BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
