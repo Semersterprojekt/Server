@@ -56,7 +56,7 @@ class TestsController extends Controller
         $image->resize(1200, 800)->save('img/test/' . $test->id . '.jpg');
         $image->resize(300, 300)->save('img/test_tmbn/' . $test->id . '.jpg');
 
-        $test->img_path = 'img/test/' . $test->id . '.jpg';
+        $test->img_path = $test->id . '.jpg';
         $test->save();
 
         return response()->json([
