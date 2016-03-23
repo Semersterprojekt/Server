@@ -15,7 +15,7 @@ elixir.config.jsOutput = 'public/js';
 elixir.config.cssOutput = 'public/css';
 
 elixir(function (mix) {
-    mix.sass('app.scss');
+//    mix.sass('app.scss');
     mix.scripts([
         './resources/scripts/bower_components/angular/angular.js',
         './resources/scripts/bower_components/angular-animate/angular-animate.js',
@@ -31,6 +31,7 @@ elixir(function (mix) {
     mix.styles([
         './resources/scripts/bower_components/angular-material/angular-material.min.css',
         './resources/scripts/bower_components/angular-material/angular-material.layouts.min.css',
+        './resources/assets/sass/style.css',
     ]);
 
 

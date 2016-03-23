@@ -7,6 +7,6 @@ angular.module('app', ['app.controllers', 'ngMaterial', 'ngRoute', 'ui.router'])
                     controller: 'LoginCtrl'
                 })
                 .otherwise({
-                    redirectTo: '/'
+                        redirectTo: '/login'
                 });
         }]);
