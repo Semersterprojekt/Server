@@ -21,7 +21,7 @@ elixir(function (mix) {
         './resources/scripts/bower_components/angular-animate/angular-animate.js',
         './resources/scripts/bower_components/angular-aria/angular-aria.js',
         './resources/scripts/bower_components/angular-material/angular-material.js',
-        './resources/scripts/bower_components/angular-route/angular-route.js',
+        //'./resources/scripts/bower_components/angular-route/angular-route.js',
         './resources/scripts/bower_components/angular-ui-router/release/angular-ui-router.js',
         './resources/scripts/bower_components/angular-ui/build/angular-ui.js',
         './resources/scripts/app.js',
