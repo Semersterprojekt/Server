@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Test;
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -25,7 +25,12 @@ class TestsController extends Controller
      */
     public function index()
     {
-        $tests = Test::all();
+        //$tests = Test::all();
+
+        $id = Auth::user()->id;
+        $user = User::find($id);
+
+        $tests = $user->tests()->get();
 
         return response()->json([
             'data' => $tests
