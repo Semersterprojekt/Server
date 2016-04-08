@@ -40,10 +40,19 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
 
     Route::resource('cars', 'CarsController');
     Route::resource('tests', 'TestsController');
+
+
+    Route::post('authenticate/admin', 'AuthenticateController@authenticateAdmin');
+
+    Route::group(['middleware' => ['jwt.auth', 'admin', 'cors']], function () {
+        Route::get('admin/posts', 'TestsController@adminPosts');
+        Route::get('admin/users', 'TestsController@adminUsers');
+    });
 });
 
-Route::group(['middleware' => ['cors', 'jwt.auth']], function () {
+
+/*Route::group(['middleware' => ['cors', 'jwt.auth']], function () {
     /*Route::get('img/test/{id}', function() {
 
-    });*/
-});
+    });
+});*/

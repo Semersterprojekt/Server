@@ -17,7 +17,6 @@ class TestsController extends Controller
         $this->middleware('jwt.auth');
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -27,14 +26,16 @@ class TestsController extends Controller
     {
         //$tests = Test::all();
 
-        $id = Auth::user()->id;
-        $user = User::find($id);
+        if (Auth::check()) {
+            $id = Auth::user()->id;
+            $user = User::find($id);
 
-        $tests = $user->tests()->get();
+            $tests = $user->tests()->get();
 
-        return response()->json([
-            'data' => $tests
-        ], 200);
+            return response()->json([
+                'data' => $tests
+            ], 200);
+        }
     }
 
     /**
@@ -103,6 +104,16 @@ class TestsController extends Controller
     {
         //
     }
+
+
+    //Für Semesterprojekt nur
+    public function adminPosts()
+    {
+        if (Auth::check()) {
+            return Test::all();
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.
