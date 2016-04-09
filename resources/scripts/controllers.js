@@ -3,37 +3,52 @@
  */
 var app = angular.module('app.controllers', ['ngMaterial', 'ui.router']);
 
-app.controller('LoginCtrl', function ($rootScope, $scope, $http) {
-    var token;
-    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
+app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth) {
+//    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
     $scope.pictureUrl = "img/icon_without_radius.jpg";
-    console.log("bin im login Controller");
 
     $scope.logIn = function () {
-        var username = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        var headers = {headers: {'Content-Type': 'application/json'}};
-        var data = {
-            username: username,
-            email: username,
+        var email = $scope.email;
+        var password = $scope.password;
+        //var headers = {headers: {'Content-Type': 'application/json'}};
+        var credentials = {
+            email: email,
             password: password
         };
 
-        $http.post(loginUrl, data, headers).then(function (resp) {
-            console.log(resp);
-            //    console.log(resp.statusText + "status");
-            //    console.log("Sry bro. falsche anmeldedaten");
-            $rootScope.token = resp.data.token;
-            console.log("das ist der Token  " + $rootScope.token);
-            if (resp.status == 200) {
-                //$state.go("tab.upload");
-            }
-
-        }, function (fail) {
-            console.log(fail);
+        $auth.login(credentials).then(function () {
+            $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
+                    var user = JSON.stringify(response.user);
+                    localStorage.setItem('user', user);
+                    $rootScope.currentUser = response.user;
+                    $state.go('home');
+                })
+                .error(function () {
+                    $scope.loginError = true;
+                    $scope.loginErrorText = error.data.error;
+                    console.log($scope.loginErrorText);
+                })
         });
-
+        /*$http.post(loginUrl, credentials, headers).then(function (resp) {
+         $rootScope.token = resp.data.token;
+         console.log("das ist der Token  " + $rootScope.token);
+         if (resp.status == 200) {
+         $state.go("home");
+         }
+         }, function (fail) {
+         console.log(fail);
+         });*/
     }
+});
 
+app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav) {
+    $scope.$on('$viewContentLoaded', function () {
+        $mdSidenav('left').toggle();
+    });
 
+    $scope.close = function () {
+        $mdSidenav('left').toggle();
+    };
+
+    $scope.radius = Math.floor(Math.random() * 100);
 });

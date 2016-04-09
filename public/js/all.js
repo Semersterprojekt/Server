@@ -38653,10 +38653,11 @@ function InterimElementProvider() {
           dimBackground: true
         }
       }
-    }
+    };
   }
 
     MdButtonInkRipple.$inject = ["$mdInkRipple"];
+    ;
 })();
 
 })();
@@ -38693,10 +38694,11 @@ function InterimElementProvider() {
         dimBackground: false,
         fitRipple: true
       }, options));
-    }
+    };
   }
 
     MdCheckboxInkRipple.$inject = ["$mdInkRipple"];
+    ;
 })();
 
 })();
@@ -38734,10 +38736,11 @@ function InterimElementProvider() {
         outline: false,
         rippleSize: 'full'
       }, options));
-    }
+    };
   }
 
     MdListInkRipple.$inject = ["$mdInkRipple"];
+    ;
 })();
 
 })();
@@ -39246,10 +39249,11 @@ function attrNoDirective () {
         outline: false,
         rippleSize: 'full'
       }, options));
-    }
+    };
   }
 
     MdTabInkRipple.$inject = ["$mdInkRipple"];
+    ;
 })();
 
 })();
@@ -40529,7 +40533,9 @@ function AnimateDomUtils($mdUtil, $q, $timeout, $mdConstant, $animateCss) {
     }
 
   };
-}
+};
+
+
 })();
 (function(){
 "use strict";
@@ -40824,7 +40830,7 @@ if (angular.version.minor >= 4) {
 
       function computeTimings(element) {
         var node = getDomNode(element);
-          var cs = $window.getComputedStyle(node);
+          var cs = $window.getComputedStyle(node)
         var tdr = parseMaxTime(cs[prop('transitionDuration')]);
         var adr = parseMaxTime(cs[prop('animationDuration')]);
         var tdy = parseMaxTime(cs[prop('transitionDelay')]);
@@ -42546,7 +42552,7 @@ function iosScrollFix(node) {
           this.calendarCtrl.minDate, this.calendarCtrl.maxDate) && 
           (!angular.isFunction(this.calendarCtrl.dateFilter)
            || this.calendarCtrl.dateFilter(opt_date));
-  };
+  }
   
   /**
    * Builds a `tr` element for the calendar grid.
@@ -49714,7 +49720,7 @@ function SelectProvider($$interimElementProvider) {
             }
             newOption = optionsArray[index];
             if (newOption.hasAttribute('disabled')) newOption = undefined;
-          } while (!newOption && index < optionsArray.length - 1 && index > 0);
+          } while (!newOption && index < optionsArray.length - 1 && index > 0)
           newOption && newOption.focus();
           opts.focusedNode = newOption;
         }
@@ -57395,7 +57401,7 @@ function MenuProvider($$interimElementProvider) {
               }
               break;
             }
-          } while (target = target.parentNode);
+          } while (target = target.parentNode)
 
           function close() {
             scope.$apply(function() {
@@ -59413,7 +59419,7 @@ angular.module("material.core").constant("$MD_THEME_CSS", "md-autocomplete.md-TH
 
 
 })(window, window.angular);
-window.ngMaterial = {version: {full: "1.0.5"}};
+;window.ngMaterial = {version: {full: "1.0.5"}};
 /**
  * State-based routing for AngularJS
  * @version v0.2.18
@@ -65563,68 +65569,2543 @@ angular.module('ui.filters').filter('unique', function () {
   };
 });
 
-var app = angular.module('app', ['app.controllers', 'ngMaterial', 'ui.router']);
+/**
+ * Satellizer 0.14.0
+ * (c) 2016 Sahat Yalkabov
+ * License: MIT
+ */
 
-app.config(['$stateProvider', '$urlRouterProvider',
-    function ($stateProvider, $urlRouterProvider) {
+// CommonJS package manager support.
+if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.exports === exports) {
+    module.exports = 'satellizer';
+}
+
+(function (window, angular, undefined) {
+    'use strict';
+
+    if (!window.location.origin) {
+        window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : '');
+    }
+
+    angular.module('satellizer', [])
+        .constant('SatellizerConfig', {
+            httpInterceptor: function () {
+                return true;
+            },
+            withCredentials: false,
+            tokenRoot: null,
+            baseUrl: '/',
+            loginUrl: '/auth/login',
+            signupUrl: '/auth/signup',
+            unlinkUrl: '/auth/unlink/',
+            tokenName: 'token',
+            tokenPrefix: 'satellizer',
+            authHeader: 'Authorization',
+            authToken: 'Bearer',
+            storageType: 'localStorage',
+            providers: {
+                facebook: {
+                    name: 'facebook',
+                    url: '/auth/facebook',
+                    authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',
+                    redirectUri: window.location.origin + '/',
+                    requiredUrlParams: ['display', 'scope'],
+                    scope: ['email'],
+                    scopeDelimiter: ',',
+                    display: 'popup',
+                    oauthType: '2.0',
+                    popupOptions: {width: 580, height: 400}
+                },
+                google: {
+                    name: 'google',
+                    url: '/auth/google',
+                    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
+                    redirectUri: window.location.origin,
+                    requiredUrlParams: ['scope'],
+                    optionalUrlParams: ['display'],
+                    scope: ['profile', 'email'],
+                    scopePrefix: 'openid',
+                    scopeDelimiter: ' ',
+                    display: 'popup',
+                    oauthType: '2.0',
+                    popupOptions: {width: 452, height: 633}
+                },
+                github: {
+                    name: 'github',
+                    url: '/auth/github',
+                    authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+                    redirectUri: window.location.origin,
+                    optionalUrlParams: ['scope'],
+                    scope: ['user:email'],
+                    scopeDelimiter: ' ',
+                    oauthType: '2.0',
+                    popupOptions: {width: 1020, height: 618}
+                },
+                instagram: {
+                    name: 'instagram',
+                    url: '/auth/instagram',
+                    authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+                    redirectUri: window.location.origin,
+                    requiredUrlParams: ['scope'],
+                    scope: ['basic'],
+                    scopeDelimiter: '+',
+                    oauthType: '2.0'
+                },
+                linkedin: {
+                    name: 'linkedin',
+                    url: '/auth/linkedin',
+                    authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization',
+                    redirectUri: window.location.origin,
+                    requiredUrlParams: ['state'],
+                    scope: ['r_emailaddress'],
+                    scopeDelimiter: ' ',
+                    state: 'STATE',
+                    oauthType: '2.0',
+                    popupOptions: {width: 527, height: 582}
+                },
+                twitter: {
+                    name: 'twitter',
+                    url: '/auth/twitter',
+                    authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+                    redirectUri: window.location.origin,
+                    oauthType: '1.0',
+                    popupOptions: {width: 495, height: 645}
+                },
+                twitch: {
+                    name: 'twitch',
+                    url: '/auth/twitch',
+                    authorizationEndpoint: 'https://api.twitch.tv/kraken/oauth2/authorize',
+                    redirectUri: window.location.origin,
+                    requiredUrlParams: ['scope'],
+                    scope: ['user_read'],
+                    scopeDelimiter: ' ',
+                    display: 'popup',
+                    oauthType: '2.0',
+                    popupOptions: {width: 500, height: 560}
+                },
+                live: {
+                    name: 'live',
+                    url: '/auth/live',
+                    authorizationEndpoint: 'https://login.live.com/oauth20_authorize.srf',
+                    redirectUri: window.location.origin,
+                    requiredUrlParams: ['display', 'scope'],
+                    scope: ['wl.emails'],
+                    scopeDelimiter: ' ',
+                    display: 'popup',
+                    oauthType: '2.0',
+                    popupOptions: {width: 500, height: 560}
+                },
+                yahoo: {
+                    name: 'yahoo',
+                    url: '/auth/yahoo',
+                    authorizationEndpoint: 'https://api.login.yahoo.com/oauth2/request_auth',
+                    redirectUri: window.location.origin,
+                    scope: [],
+                    scopeDelimiter: ',',
+                    oauthType: '2.0',
+                    popupOptions: {width: 559, height: 519}
+                },
+                bitbucket: {
+                    name: 'bitbucket',
+                    url: '/auth/bitbucket',
+                    authorizationEndpoint: 'https://bitbucket.org/site/oauth2/authorize',
+                    redirectUri: window.location.origin + '/',
+                    requiredUrlParams: ['scope'],
+                    scope: ['email'],
+                    scopeDelimiter: ' ',
+                    oauthType: '2.0',
+                    popupOptions: {width: 1028, height: 529}
+                }
+            }
+        })
+        .provider('$auth', ['SatellizerConfig', function (config) {
+            Object.defineProperties(this, {
+                httpInterceptor: {
+                    get: function () {
+                        return config.httpInterceptor;
+                    },
+                    set: function (value) {
+                        if (typeof value === 'function') {
+                            config.httpInterceptor = value;
+                        } else {
+                            config.httpInterceptor = function () {
+                                return value;
+                            };
+                        }
+                    }
+                },
+                baseUrl: {
+                    get: function () {
+                        return config.baseUrl;
+                    },
+                    set: function (value) {
+                        config.baseUrl = value;
+                    }
+                },
+                loginUrl: {
+                    get: function () {
+                        return config.loginUrl;
+                    },
+                    set: function (value) {
+                        config.loginUrl = value;
+                    }
+                },
+                signupUrl: {
+                    get: function () {
+                        return config.signupUrl;
+                    },
+                    set: function (value) {
+                        config.signupUrl = value;
+                    }
+                },
+                tokenRoot: {
+                    get: function () {
+                        return config.tokenRoot;
+                    },
+                    set: function (value) {
+                        config.tokenRoot = value;
+                    }
+                },
+                tokenName: {
+                    get: function () {
+                        return config.tokenName;
+                    },
+                    set: function (value) {
+                        config.tokenName = value;
+                    }
+                },
+                tokenPrefix: {
+                    get: function () {
+                        return config.tokenPrefix;
+                    },
+                    set: function (value) {
+                        config.tokenPrefix = value;
+                    }
+                },
+                unlinkUrl: {
+                    get: function () {
+                        return config.unlinkUrl;
+                    },
+                    set: function (value) {
+                        config.unlinkUrl = value;
+                    }
+                },
+                authHeader: {
+                    get: function () {
+                        return config.authHeader;
+                    },
+                    set: function (value) {
+                        config.authHeader = value;
+                    }
+                },
+                authToken: {
+                    get: function () {
+                        return config.authToken;
+                    },
+                    set: function (value) {
+                        config.authToken = value;
+                    }
+                },
+                withCredentials: {
+                    get: function () {
+                        return config.withCredentials;
+                    },
+                    set: function (value) {
+                        config.withCredentials = value;
+                    }
+                },
+                storageType: {
+                    get: function () {
+                        return config.storageType;
+                    },
+                    set: function (value) {
+                        config.storageType = value;
+                    }
+                }
+            });
+
+            angular.forEach(Object.keys(config.providers), function (provider) {
+                this[provider] = function (params) {
+                    return angular.extend(config.providers[provider], params);
+                };
+            }, this);
+
+            var oauth = function (params) {
+                config.providers[params.name] = config.providers[params.name] || {};
+                angular.extend(config.providers[params.name], params);
+            };
+
+            this.oauth1 = function (params) {
+                oauth(params);
+                config.providers[params.name].oauthType = '1.0';
+            };
+
+            this.oauth2 = function (params) {
+                oauth(params);
+                config.providers[params.name].oauthType = '2.0';
+            };
+
+            this.$get = [
+                '$q',
+                'SatellizerShared',
+                'SatellizerLocal',
+                'SatellizerOauth',
+                function ($q, shared, local, oauth) {
+                    var $auth = {};
+
+                    $auth.login = function (user, opts) {
+                        return local.login(user, opts);
+                    };
+
+                    $auth.signup = function (user, options) {
+                        return local.signup(user, options);
+                    };
+
+                    $auth.logout = function () {
+                        return shared.logout();
+                    };
+
+                    $auth.authenticate = function (name, userData) {
+                        return oauth.authenticate(name, userData);
+                    };
+
+                    $auth.link = function (name, userData) {
+                        return oauth.authenticate(name, userData);
+                    };
+
+                    $auth.unlink = function (provider, opts) {
+                        return oauth.unlink(provider, opts);
+                    };
+
+                    $auth.isAuthenticated = function () {
+                        return shared.isAuthenticated();
+                    };
+
+                    $auth.getToken = function () {
+                        return shared.getToken();
+                    };
+
+                    $auth.setToken = function (token) {
+                        shared.setToken({access_token: token});
+                    };
+
+                    $auth.removeToken = function () {
+                        return shared.removeToken();
+                    };
+
+                    $auth.getPayload = function () {
+                        return shared.getPayload();
+                    };
+
+                    $auth.setStorageType = function (type) {
+                        return shared.setStorageType(type);
+                    };
+
+                    return $auth;
+                }];
+        }])
+        .factory('SatellizerShared', [
+            '$q',
+            '$window',
+            '$log',
+            'SatellizerConfig',
+            'SatellizerStorage',
+            function ($q, $window, $log, config, storage) {
+                var Shared = {};
+
+                var tokenName = config.tokenPrefix ? [config.tokenPrefix, config.tokenName].join('_') : config.tokenName;
+
+                Shared.getToken = function () {
+                    return storage.get(tokenName);
+                };
+
+                Shared.getPayload = function () {
+                    var token = storage.get(tokenName);
+
+                    if (token && token.split('.').length === 3) {
+                        try {
+                            var base64Url = token.split('.')[1];
+                            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                            return JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+                        } catch (e) {
+                            return undefined;
+                        }
+                    }
+                };
+
+                Shared.setToken = function (response) {
+                    if (!response) {
+                        return $log.warn('Can\'t set token without passing a value');
+                    }
+
+                    var accessToken = response && response.access_token;
+                    var token;
+
+                    if (accessToken) {
+                        if (angular.isObject(accessToken) && angular.isObject(accessToken.data)) {
+                            response = accessToken;
+                        } else if (angular.isString(accessToken)) {
+                            token = accessToken;
+                        }
+                    }
+
+                    if (!token && response) {
+                        var tokenRootData = config.tokenRoot && config.tokenRoot.split('.').reduce(function (o, x) {
+                                return o[x];
+                            }, response.data);
+                        token = tokenRootData ? tokenRootData[config.tokenName] : response.data && response.data[config.tokenName];
+                    }
+
+                    if (!token) {
+                        var tokenPath = config.tokenRoot ? config.tokenRoot + '.' + config.tokenName : config.tokenName;
+                        return $log.warn('Expecting a token named "' + tokenPath);
+                    }
+
+                    storage.set(tokenName, token);
+                };
+
+                Shared.removeToken = function () {
+                    storage.remove(tokenName);
+                };
+
+                /**
+                 * @returns {boolean}
+                 */
+                Shared.isAuthenticated = function () {
+                    var token = storage.get(tokenName);
+                    // A token is present
+                    if (token) {
+                        // Token with a valid JWT format XXX.YYY.ZZZ
+                        if (token.split('.').length === 3) {
+                            // Could be a valid JWT or an access token with the same format
+                            try {
+                                var base64Url = token.split('.')[1];
+                                var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                                var exp = JSON.parse($window.atob(base64)).exp;
+                                // JWT with an optonal expiration claims
+                                if (exp) {
+                                    var isExpired = Math.round(new Date().getTime() / 1000) >= exp;
+                                    if (isExpired) {
+                                        // FAIL: Expired token
+                                        return false;
+                                    } else {
+                                        // PASS: Non-expired token
+                                        return true;
+                                    }
+                                }
+                            } catch (e) {
+                                // PASS: Non-JWT token that looks like JWT
+                                return true;
+                            }
+                        }
+                        // PASS: All other tokens
+                        return true;
+                    }
+                    // FAIL: No token at all
+                    return false;
+                };
+
+                Shared.logout = function () {
+                    storage.remove(tokenName);
+                    return $q.when();
+                };
+
+                Shared.setStorageType = function (type) {
+                    config.storageType = type;
+                };
+
+                return Shared;
+            }])
+        .factory('SatellizerOauth', [
+            '$q',
+            '$http',
+            'SatellizerConfig',
+            'SatellizerUtils',
+            'SatellizerShared',
+            'SatellizerOauth1',
+            'SatellizerOauth2',
+            function ($q, $http, config, utils, shared, Oauth1, Oauth2) {
+                var Oauth = {};
+
+                Oauth.authenticate = function (name, userData) {
+                    var provider = config.providers[name].oauthType === '1.0' ? new Oauth1() : new Oauth2();
+                    var deferred = $q.defer();
+
+                    provider.open(config.providers[name], userData || {})
+                        .then(function (response) {
+                            // This is for a scenario when someone wishes to opt out from
+                            // Satellizer's magic by doing authorization code exchange and
+                            // saving a token manually.
+                            if (config.providers[name].url) {
+                                shared.setToken(response, false);
+                            }
+                            deferred.resolve(response);
+                        })
+                        .catch(function (error) {
+                            deferred.reject(error);
+                        });
+
+                    return deferred.promise;
+                };
+
+                Oauth.unlink = function (provider, opts) {
+                    opts = opts || {};
+                    opts.url = opts.url ? opts.url : utils.joinUrl(config.baseUrl, config.unlinkUrl);
+                    opts.data = {provider: provider} || opts.data;
+                    opts.method = opts.method || 'POST';
+                    opts.withCredentials = opts.withCredentials || config.withCredentials;
+
+                    return $http(opts);
+                };
+
+                return Oauth;
+            }])
+        .factory('SatellizerLocal', [
+            '$http',
+            'SatellizerUtils',
+            'SatellizerShared',
+            'SatellizerConfig',
+            function ($http, utils, shared, config) {
+                var Local = {};
+
+                Local.login = function (user, opts) {
+                    opts = opts || {};
+                    opts.url = opts.url ? opts.url : utils.joinUrl(config.baseUrl, config.loginUrl);
+                    opts.data = user || opts.data;
+                    opts.method = opts.method || 'POST';
+                    opts.withCredentials = opts.withCredentials || config.withCredentials;
+
+                    return $http(opts).then(function (response) {
+                        shared.setToken(response);
+                        return response;
+                    });
+                };
+
+                Local.signup = function (user, opts) {
+                    opts = opts || {};
+                    opts.url = opts.url ? opts.url : utils.joinUrl(config.baseUrl, config.signupUrl);
+                    opts.data = user || opts.data;
+                    opts.method = opts.method || 'POST';
+                    opts.withCredentials = opts.withCredentials || config.withCredentials;
+
+                    return $http(opts);
+                };
+
+                return Local;
+            }])
+        .factory('SatellizerOauth2', [
+            '$q',
+            '$http',
+            '$window',
+            '$timeout',
+            'SatellizerPopup',
+            'SatellizerUtils',
+            'SatellizerConfig',
+            'SatellizerStorage',
+            function ($q, $http, $window, $timeout, popup, utils, config, storage) {
+                return function () {
+                    var Oauth2 = {};
+
+                    var defaults = {
+                        defaultUrlParams: ['response_type', 'client_id', 'redirect_uri'],
+                        responseType: 'code',
+                        responseParams: {
+                            code: 'code',
+                            clientId: 'clientId',
+                            redirectUri: 'redirectUri'
+                        }
+                    };
+
+                    Oauth2.open = function (options, userData) {
+                        defaults = utils.merge(options, defaults);
+                        var defer = $q.defer();
+
+                        $timeout(function () {
+                            var url;
+                            var openPopup;
+                            var stateName = defaults.name + '_state';
+
+                            if (angular.isFunction(defaults.state)) {
+                                storage.set(stateName, defaults.state());
+                            } else if (angular.isString(defaults.state)) {
+                                storage.set(stateName, defaults.state);
+                            }
+
+                            url = [defaults.authorizationEndpoint, Oauth2.buildQueryString()].join('?');
+
+                            if (window.cordova) {
+                                openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri).eventListener(defaults.redirectUri);
+                            } else {
+                                openPopup = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri).pollPopup(defaults.redirectUri);
+                            }
+
+                            return openPopup
+                                .then(function (oauthData) {
+                                    // When no server URL provided, return popup params as-is.
+                                    // This is for a scenario when someone wishes to opt out from
+                                    // Satellizer's magic by doing authorization code exchange and
+                                    // saving a token manually.
+                                    if (defaults.responseType === 'token' || !defaults.url) {
+                                        defer.resolve(oauthData);
+                                    }
+
+                                    if (oauthData.state && oauthData.state !== storage.get(stateName)) {
+                                        return defer.reject(
+                                            'The value returned in the state parameter does not match the state value from your original ' +
+                                            'authorization code request.'
+                                        );
+                                    }
+
+                                    defer.resolve(Oauth2.exchangeForToken(oauthData, userData));
+                                });
+                        });
+
+                        return defer.promise;
+                    };
+
+                    Oauth2.exchangeForToken = function (oauthData, userData) {
+                        var data = angular.extend({}, userData);
+
+                        angular.forEach(defaults.responseParams, function (value, key) {
+                            switch (key) {
+                                case 'code':
+                                    data[value] = oauthData.code;
+                                    break;
+                                case 'clientId':
+                                    data[value] = defaults.clientId;
+                                    break;
+                                case 'redirectUri':
+                                    data[value] = defaults.redirectUri;
+                                    break;
+                                default:
+                                    data[value] = oauthData[key];
+                            }
+                        });
+
+                        if (oauthData.state) {
+                            data.state = oauthData.state;
+                        }
+
+                        var exchangeForTokenUrl = config.baseUrl ? utils.joinUrl(config.baseUrl, defaults.url) : defaults.url;
+
+                        return $http.post(exchangeForTokenUrl, data, {withCredentials: config.withCredentials});
+                    };
+
+                    Oauth2.buildQueryString = function () {
+                        var keyValuePairs = [];
+                        var urlParamsCategories = ['defaultUrlParams', 'requiredUrlParams', 'optionalUrlParams'];
+
+                        angular.forEach(urlParamsCategories, function (paramsCategory) {
+                            angular.forEach(defaults[paramsCategory], function (paramName) {
+                                var camelizedName = utils.camelCase(paramName);
+                                var paramValue = angular.isFunction(defaults[paramName]) ? defaults[paramName]() : defaults[camelizedName];
+
+                                if (paramName === 'redirect_uri' && !paramValue) {
+                                    return;
+                                }
+
+                                if (paramName === 'state') {
+                                    var stateName = defaults.name + '_state';
+                                    paramValue = encodeURIComponent(storage.get(stateName));
+                                }
+
+                                if (paramName === 'scope' && Array.isArray(paramValue)) {
+                                    paramValue = paramValue.join(defaults.scopeDelimiter);
+
+                                    if (defaults.scopePrefix) {
+                                        paramValue = [defaults.scopePrefix, paramValue].join(defaults.scopeDelimiter);
+                                    }
+                                }
+
+                                keyValuePairs.push([paramName, paramValue]);
+                            });
+                        });
+
+                        return keyValuePairs.map(function (pair) {
+                            return pair.join('=');
+                        }).join('&');
+                    };
+
+                    return Oauth2;
+                };
+            }])
+        .factory('SatellizerOauth1', [
+            '$q',
+            '$http',
+            'SatellizerPopup',
+            'SatellizerConfig',
+            'SatellizerUtils',
+            function ($q, $http, popup, config, utils) {
+                return function () {
+                    var Oauth1 = {};
+
+                    var defaults = {
+                        url: null,
+                        name: null,
+                        popupOptions: null,
+                        redirectUri: null,
+                        authorizationEndpoint: null
+                    };
+
+                    Oauth1.open = function (options, userData) {
+                        angular.extend(defaults, options);
+                        var popupWindow;
+                        var serverUrl = config.baseUrl ? utils.joinUrl(config.baseUrl, defaults.url) : defaults.url;
+
+                        if (!window.cordova) {
+                            popupWindow = popup.open('', defaults.name, defaults.popupOptions, defaults.redirectUri);
+                        }
+
+                        return $http.post(serverUrl, defaults)
+                            .then(function (response) {
+                                var url = [defaults.authorizationEndpoint, Oauth1.buildQueryString(response.data)].join('?');
+
+                                if (window.cordova) {
+                                    popupWindow = popup.open(url, defaults.name, defaults.popupOptions, defaults.redirectUri);
+                                } else {
+                                    popupWindow.popupWindow.location = url;
+                                }
+
+                                var popupListener;
+
+                                if (window.cordova) {
+                                    popupListener = popupWindow.eventListener(defaults.redirectUri);
+                                } else {
+                                    popupListener = popupWindow.pollPopup(defaults.redirectUri);
+                                }
+
+                                return popupListener
+                                    .then(function (response) {
+                                        return Oauth1.exchangeForToken(response, userData);
+                                    });
+                            });
+
+                    };
+
+                    Oauth1.exchangeForToken = function (oauthData, userData) {
+                        var data = angular.extend({}, userData, oauthData);
+                        var exchangeForTokenUrl = config.baseUrl ? utils.joinUrl(config.baseUrl, defaults.url) : defaults.url;
+                        return $http.post(exchangeForTokenUrl, data, {withCredentials: config.withCredentials});
+                    };
+
+                    Oauth1.buildQueryString = function (obj) {
+                        var str = [];
+
+                        angular.forEach(obj, function (value, key) {
+                            str.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+                        });
+
+                        return str.join('&');
+                    };
+
+                    return Oauth1;
+                };
+            }])
+        .factory('SatellizerPopup', [
+            '$q',
+            '$interval',
+            '$window',
+            'SatellizerConfig',
+            'SatellizerUtils',
+            function ($q, $interval, $window, config, utils) {
+                var Popup = {};
+
+                Popup.url = '';
+                Popup.popupWindow = null;
+
+                Popup.open = function (url, name, options) {
+                    Popup.url = url;
+
+                    var stringifiedOptions = Popup.stringifyOptions(Popup.prepareOptions(options));
+                    var UA = $window.navigator.userAgent;
+                    var windowName = (window.cordova || UA.indexOf('CriOS') > -1) ? '_blank' : name;
+
+                    Popup.popupWindow = $window.open(url, windowName, stringifiedOptions);
+
+                    $window.popup = Popup.popupWindow;
+
+                    if (Popup.popupWindow && Popup.popupWindow.focus) {
+                        Popup.popupWindow.focus();
+                    }
+
+                    return Popup;
+                };
+
+                Popup.eventListener = function (redirectUri) {
+                    var deferred = $q.defer();
+
+                    Popup.popupWindow.addEventListener('loadstart', function (event) {
+                        if (event.url.indexOf(redirectUri) !== 0) {
+                            return;
+                        }
+
+                        var parser = document.createElement('a');
+                        parser.href = event.url;
+
+                        if (parser.search || parser.hash) {
+                            var queryParams = parser.search.substring(1).replace(/\/$/, '');
+                            var hashParams = parser.hash.substring(1).replace(/\/$/, '');
+                            var hash = utils.parseQueryString(hashParams);
+                            var qs = utils.parseQueryString(queryParams);
+
+                            angular.extend(qs, hash);
+
+                            if (!qs.error) {
+                                deferred.resolve(qs);
+                            }
+
+                            Popup.popupWindow.close();
+                        }
+                    });
+
+                    Popup.popupWindow.addEventListener('loaderror', function () {
+                        deferred.reject('Authorization Failed');
+                    });
+
+                    return deferred.promise;
+                };
+
+                Popup.pollPopup = function (redirectUri) {
+                    var deferred = $q.defer();
+
+                    var redirectUriParser = document.createElement('a');
+                    redirectUriParser.href = redirectUri;
+
+                    var redirectUriPath = utils.getFullUrlPath(redirectUriParser);
+
+                    var polling = $interval(function () {
+                        if (!Popup.popupWindow || Popup.popupWindow.closed || Popup.popupWindow.closed === undefined) {
+                            deferred.reject('The popup window was closed.');
+                            $interval.cancel(polling);
+                        }
+
+                        try {
+                            var popupWindowPath = utils.getFullUrlPath(Popup.popupWindow.location);
+
+                            // Redirect has occurred.
+                            if (popupWindowPath === redirectUriPath) {
+                                // Contains query/hash parameters as expected.
+                                if (Popup.popupWindow.location.search || Popup.popupWindow.location.hash) {
+                                    var queryParams = Popup.popupWindow.location.search.substring(1).replace(/\/$/, '');
+                                    var hashParams = Popup.popupWindow.location.hash.substring(1).replace(/[\/$]/, '');
+                                    var hash = utils.parseQueryString(hashParams);
+                                    var qs = utils.parseQueryString(queryParams);
+
+                                    angular.extend(qs, hash);
+
+                                    if (qs.error) {
+                                        deferred.reject(qs);
+                                    } else {
+                                        deferred.resolve(qs);
+                                    }
+                                } else {
+                                    // Does not contain query/hash parameters, can't do anything at this point.
+                                    deferred.reject(
+                                        'Redirect has occurred but no query or hash parameters were found. ' +
+                                        'They were either not set during the redirect, or were removed before Satellizer ' +
+                                        'could read them, e.g. AngularJS routing mechanism.'
+                                    );
+                                }
+
+                                $interval.cancel(polling);
+                                Popup.popupWindow.close();
+                            }
+                        } catch (error) {
+                            // Ignore DOMException: Blocked a frame with origin from accessing a cross-origin frame.
+                            // A hack to get around same-origin security policy errors in IE.
+                        }
+                    }, 20);
+
+                    return deferred.promise;
+                };
+
+                Popup.prepareOptions = function (options) {
+                    options = options || {};
+                    var width = options.width || 500;
+                    var height = options.height || 500;
+
+                    return angular.extend({
+                        width: width,
+                        height: height,
+                        left: $window.screenX + (($window.outerWidth - width) / 2),
+                        top: $window.screenY + (($window.outerHeight - height) / 2.5)
+                    }, options);
+                };
+
+                Popup.stringifyOptions = function (options) {
+                    var parts = [];
+                    angular.forEach(options, function (value, key) {
+                        parts.push(key + '=' + value);
+                    });
+                    return parts.join(',');
+                };
+
+                return Popup;
+            }])
+        .service('SatellizerUtils', function () {
+            this.getFullUrlPath = function (location) {
+                return location.protocol + '//' + location.hostname +
+                    (location.port ? ':' + location.port : '') + location.pathname;
+            };
+
+            this.camelCase = function (name) {
+                return name.replace(/([\:\-\_]+(.))/g, function (_, separator, letter, offset) {
+                    return offset ? letter.toUpperCase() : letter;
+                });
+            };
+
+            this.parseQueryString = function (keyValue) {
+                var obj = {}, key, value;
+                angular.forEach((keyValue || '').split('&'), function (keyValue) {
+                    if (keyValue) {
+                        value = keyValue.split('=');
+                        key = decodeURIComponent(value[0]);
+                        obj[key] = angular.isDefined(value[1]) ? decodeURIComponent(value[1]) : true;
+                    }
+                });
+                return obj;
+            };
+
+            this.joinUrl = function (baseUrl, url) {
+                if (/^(?:[a-z]+:)?\/\//i.test(url)) {
+                    return url;
+                }
+
+                var joined = [baseUrl, url].join('/');
+
+                var normalize = function (str) {
+                    return str
+                        .replace(/[\/]+/g, '/')
+                        .replace(/\/\?/g, '?')
+                        .replace(/\/\#/g, '#')
+                        .replace(/\:\//g, '://');
+                };
+
+                return normalize(joined);
+            };
+
+            this.merge = function (obj1, obj2) {
+                var result = {};
+                for (var i in obj1) {
+                    if (obj1.hasOwnProperty(i)) {
+                        if ((i in obj2) && (typeof obj1[i] === 'object') && (i !== null)) {
+                            result[i] = this.merge(obj1[i], obj2[i]);
+                        } else {
+                            result[i] = obj1[i];
+                        }
+                    }
+                }
+                for (i in obj2) {
+                    if (obj2.hasOwnProperty(i)) {
+                        if (i in result) {
+                            continue;
+                        }
+                        result[i] = obj2[i];
+                    }
+
+                }
+                return result;
+            };
+        })
+        .factory('SatellizerStorage', ['$window', '$log', 'SatellizerConfig', function ($window, $log, config) {
+
+            var store = {};
+
+            // Check if localStorage or sessionStorage is available or enabled
+            var isStorageAvailable = (function () {
+                try {
+                    var supported = config.storageType in $window && $window[config.storageType] !== null;
+
+                    if (supported) {
+                        var key = Math.random().toString(36).substring(7);
+                        $window[config.storageType].setItem(key, '');
+                        $window[config.storageType].removeItem(key);
+                    }
+
+                    return supported;
+                } catch (e) {
+                    return false;
+                }
+            })();
+
+            if (!isStorageAvailable) {
+                $log.warn(config.storageType + ' is not available.');
+            }
+
+            return {
+                get: function (key) {
+                    return isStorageAvailable ? $window[config.storageType].getItem(key) : store[key];
+                },
+                set: function (key, value) {
+                    return isStorageAvailable ? $window[config.storageType].setItem(key, value) : store[key] = value;
+                },
+                remove: function (key) {
+                    return isStorageAvailable ? $window[config.storageType].removeItem(key) : delete store[key];
+                }
+            };
+
+        }])
+        .factory('SatellizerInterceptor', [
+            '$q',
+            'SatellizerConfig',
+            'SatellizerStorage',
+            'SatellizerShared',
+            function ($q, config, storage, shared) {
+                return {
+                    request: function (request) {
+                        if (request.skipAuthorization) {
+                            return request;
+                        }
+
+                        if (shared.isAuthenticated() && config.httpInterceptor(request)) {
+                            var tokenName = config.tokenPrefix ? config.tokenPrefix + '_' + config.tokenName : config.tokenName;
+                            var token = storage.get(tokenName);
+
+                            if (config.authHeader && config.authToken) {
+                                token = config.authToken + ' ' + token;
+                            }
+
+                            request.headers[config.authHeader] = token;
+                        }
+
+                        return request;
+                    },
+                    responseError: function (response) {
+                        return $q.reject(response);
+                    }
+                };
+            }])
+        .config(['$httpProvider', function ($httpProvider) {
+            $httpProvider.interceptors.push('SatellizerInterceptor');
+        }]);
+
+})(window, window.angular);
+
+/**
+ * angular-permission
+ * Route permission and access control as simple as it can get
+ * @version v2.3.4 - 2016-04-08
+ * @link https://github.com/Narzerus/angular-permission
+ * @author Rafael Vidaurre <narzerus@gmail.com> (http://www.rafaelvidaurre.com), Blazej Krysiak <blazej.krysiak@gmail.com>
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+
+(function () {
+    'use strict';
+
+    /**
+     * @namespace permission
+     */
+
+    config.$inject = ['$stateProvider'];
+    run.$inject = ['$rootScope', 'TransitionProperties', 'TransitionEvents', 'StateAuthorization', 'StatePermissionMap'];
+    function config($stateProvider) {
+        /**
+         * This decorator is required to access full state object instead of it's configuration
+         * when trying to obtain full toState state object not it's configuration
+         * Can be removed when implemented https://github.com/angular-ui/ui-router/issues/13.
+         */
+        $stateProvider.decorator('parent', function (state, parentFn) {
+            state.self.$$state = function () {
+                return state;
+            };
+
+            state.self.areSetStatePermissions = function () {
+                return angular.isDefined(state.data) && angular.isDefined(state.data.permissions);
+            };
+
+            return parentFn(state);
+        });
+    }
+
+
+    function run($rootScope, TransitionProperties, TransitionEvents, StateAuthorization, StatePermissionMap) {
+        /**
+         * State transition interceptor
+         */
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams, options) {
+
+            if (!isAuthorizationFinished()) {
+                event.preventDefault();
+
+                setStateAuthorizationStatus(true);
+                setTransitionProperties();
+
+                if (!TransitionEvents.areStateEventsDefaultPrevented()) {
+                    TransitionEvents.broadcastStateChangePermissionStart();
+
+                    var statePermissionMap = new StatePermissionMap();
+
+                    StateAuthorization
+                        .authorize(statePermissionMap)
+                        .finally(function () {
+                            setStateAuthorizationStatus(false);
+                        });
+                }
+            }
+
+            /**
+             * Updates values of `TransitionProperties` holder object
+             * @method
+             * @private
+             */
+            function setTransitionProperties() {
+                TransitionProperties.toState = toState;
+                TransitionProperties.toParams = toParams;
+                TransitionProperties.fromState = fromState;
+                TransitionProperties.fromParams = fromParams;
+                TransitionProperties.options = options;
+            }
+
+            /**
+             * Sets internal state `$$finishedAuthorization` variable to prevent looping
+             * @method
+             * @private
+             *
+             *
+             * @param status {boolean} When true authorization has been already preceded
+             */
+            function setStateAuthorizationStatus(status) {
+                angular.extend(toState, {'$$isAuthorizationFinished': status});
+            }
+
+            /**
+             * Checks if state has been already checked for authorization
+             * @method
+             * @private
+             *
+             * @returns {boolean}
+             */
+            function isAuthorizationFinished() {
+                return toState.$$isAuthorizationFinished;
+            }
+        });
+    }
+
+    angular.module('permission', ['ui.router'])
+        .config(config)
+        .run(run);
+}());
+
+
+(function () {
+    'use strict';
+
+    /**
+     * Extends $q implementation by A+ *any* method
+     * @name $q
+     * @extends {angular.$q}
+     * @memberOf permission
+     *
+     * @param $delegate {Object} Angular promise implementation
+     */
+    $q.$inject = ['$delegate'];
+    function $q($delegate) {
+
+        $delegate.any = any;
+
+        /**
+         * Implementation of missing $q `any` method that wits for first resolution of provided promise set
+         * @method
+         *
+         * @param promises {Array|promise} Single or set of promises
+         *
+         * @returns {Promise} Returns a single promise that will be rejected with an array/hash of values,
+         *  each value corresponding to the promise at the same index/key in the `promises` array/hash.
+         *  If any of the promises is resolved, this resulting promise will be returned
+         *  with the same resolution value.
+         */
+        function any(promises) {
+            var deferred = $delegate.defer(),
+                counter = 0,
+                results = angular.isArray(promises) ? [] : {};
+
+            angular.forEach(promises, function (promise, key) {
+                counter++;
+                $delegate
+                    .when(promise)
+                    .then(function (value) {
+                        deferred.resolve(value);
+                    })
+                    .catch(function (reason) {
+                        results[key] = reason;
+                        if (!(--counter)) {
+                            deferred.reject(reason);
+                        }
+                    });
+            });
+
+            if (counter === 0) {
+                deferred.reject(results);
+            }
+
+            return deferred.promise;
+        }
+
+        return $delegate;
+    }
+
+    angular
+        .module('permission')
+        .decorator('$q', $q);
+
+})();
+
+
+(function () {
+    'use strict';
+
+    /**
+     * Pre-defined available configurable behaviours of directive `permission`
+     * @name PermissionStrategies
+     * @memberOf permission
+     * @readonly
+     *
+     * @example
+     * <div permission
+     *      permission-except="'MANAGER'"
+     *      permission-on-authorized="PermissionStrategies.renderContent"
+     *      permission-on-unauthorized="PermissionStrategies.removeContent">
+     * </div>
+     *
+     * @property enableElement {Function}
+     * @property disableElement {Function}
+     * @property showElement {Function}
+     * @property hideElement {Function}
+     */
+    var PermissionStrategies = {
+        enableElement: function ($element) {
+            $element.removeAttr('disabled');
+        },
+        disableElement: function ($element) {
+            $element.attr('disabled', 'disabled');
+        },
+        showElement: function ($element) {
+            $element.removeClass('ng-hide');
+        },
+        hideElement: function ($element) {
+            $element.addClass('ng-hide');
+        }
+    };
+
+    angular
+        .module('permission')
+        .constant('PermissionStrategies', PermissionStrategies);
+
+}());
+
+
+(function () {
+    'use strict';
+
+    /**
+     * Helper object used for storing ui-router transition parameters
+     * @name TransitionProperties
+     * @memberOf permission
+     *
+     * @type {Object.<String,Object>}
+     *
+     * @property toState {Object} Target state object
+     * @property toParams {Object} Target state params
+     * @property fromState {Object} Source state object
+     * @property fromParams {Object} Source state params
+     * @property options {Object} Transition options
+     */
+    var TransitionProperties = {
+        toState: undefined,
+        toParams: undefined,
+        fromState: undefined,
+        fromParams: undefined,
+        options: undefined
+    };
+
+    angular
+        .module('permission')
+        .value('TransitionProperties', TransitionProperties);
+
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Service responsible for managing and emitting events
+     * @name TransitionEvents
+     * @memberOf permission
+     *
+     * @param TransitionProperties {permission.TransitionProperties} Helper storing ui-router transition parameters
+     * @param $rootScope {Object} Top-level angular scope
+     */
+    TransitionEvents.$inject = ['$rootScope', 'TransitionProperties'];
+    function TransitionEvents($rootScope, TransitionProperties) {
+
+        this.areStateEventsDefaultPrevented = areStateEventsDefaultPrevented;
+        this.broadcastStateChangePermissionStart = broadcastStateChangePermissionStart;
+        this.broadcastStateChangePermissionAccepted = broadcastStateChangePermissionAccepted;
+        this.broadcastStateChangePermissionDenied = broadcastStateChangePermissionDenied;
+        this.broadcastStateChangeSuccess = broadcastStateChangeSuccess;
+
+        /**
+         * Checks if state events are not prevented by default
+         * @method
+         *
+         * @returns {boolean}
+         */
+        function areStateEventsDefaultPrevented() {
+            return isStateChangePermissionStartDefaultPrevented() || isStateChangeStartDefaultPrevented();
+        }
+
+        /**
+         * Broadcasts "$stateChangePermissionStart" event from $rootScope
+         * @method
+         */
+        function broadcastStateChangePermissionStart() {
+            $rootScope.$broadcast('$stateChangePermissionStart',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.options);
+        }
+
+        /**
+         * Broadcasts "$stateChangePermissionAccepted" event from $rootScope
+         * @method
+         */
+        function broadcastStateChangePermissionAccepted() {
+            $rootScope.$broadcast('$stateChangePermissionAccepted',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.options);
+        }
+
+        /**
+         * Broadcasts "$stateChangeSuccess" event from $rootScope
+         * @method
+         */
+        function broadcastStateChangeSuccess() {
+            $rootScope.$broadcast('$stateChangeSuccess',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.fromState, TransitionProperties.fromParams);
+        }
+
+        /**
+         * Broadcasts "$tateChangePermissionDenied" event from $rootScope
+         * @method
+         */
+        function broadcastStateChangePermissionDenied() {
+            $rootScope.$broadcast('$stateChangePermissionDenied',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.options);
+        }
+
+        /**
+         * Checks if event $stateChangeStart hasn't been disabled by default
+         * @method
+         * @private
+         *
+         * @returns {boolean}
+         */
+        function isStateChangeStartDefaultPrevented() {
+            return $rootScope.$broadcast('$stateChangeStart',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.fromState, TransitionProperties.fromParams,
+                TransitionProperties.options).defaultPrevented;
+        }
+
+        /**
+         * Checks if event $stateChangePermissionStart hasn't been disabled by default
+         * @method
+         * @private
+         *
+         * @returns {boolean}
+         */
+        function isStateChangePermissionStartDefaultPrevented() {
+            return $rootScope.$broadcast('$stateChangePermissionStart',
+                TransitionProperties.toState, TransitionProperties.toParams,
+                TransitionProperties.options).defaultPrevented;
+        }
+    }
+
+    angular
+        .module('permission')
+        .service('TransitionEvents', TransitionEvents);
+
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Access rights map factory
+     * @name PermissionMapFactory
+     *
+     * @param $q {Object} Angular promise implementation
+     * @param TransitionProperties {permission.TransitionProperties} Helper storing ui-router transition parameters
+     * @param RoleStore {permission.RoleStore} Role definition storage
+     * @param PermissionStore {permission.PermissionStore} Permission definition storage
+     *
+     * @return {permission.PermissionMap}
+     */
+    PermissionMapFactory.$inject = ['$q', 'TransitionProperties', 'RoleStore', 'PermissionStore'];
+    function PermissionMapFactory($q, TransitionProperties, RoleStore, PermissionStore) {
+        /**
+         * Constructs map object instructing authorization service how to handle authorizing
+         * @constructor PermissionMap
+         * @memberOf permission
+         *
+         * @param [permissionMap] {Object} Map of permissions provided to authorization service
+         * @param [permissionMap.only] {Array} List of exclusive access right names allowed for authorization
+         * @param [permissionMap.except] {Array} List of exclusive access right names denied for authorization
+         * @param [permissionMap.redirectTo] {String|Function|Object|promise} Handling redirection when rejected
+         *   authorization
+         */
+        function PermissionMap(permissionMap) {
+            // Suppress not defined object errors
+            permissionMap = permissionMap || {};
+
+            this.only = normalizeMapProperty(permissionMap.only);
+            this.except = normalizeMapProperty(permissionMap.except);
+            this.redirectTo = permissionMap.redirectTo;
+        }
+
+        /**
+         * Redirects to fallback states when permissions fail
+         * @method
+         * @methodOf permission.PermissionMap
+         *
+         * @param rejectedPermissionName {String} Permission name
+         *
+         * @return {Promise}
+         */
+        PermissionMap.prototype.resolveRedirectState = function (rejectedPermissionName) {
+            if (angular.isFunction(this.redirectTo)) {
+                return resolveFunctionRedirect(this.redirectTo, rejectedPermissionName);
+            }
+
+            if (angular.isObject(this.redirectTo)) {
+                return resolveObjectRedirect(this.redirectTo, rejectedPermissionName);
+            }
+
+            if (angular.isString(this.redirectTo)) {
+                return $q.resolve({
+                    state: this.redirectTo
+                });
+            }
+
+            // If redirectTo state is not defined stay where you are
+            return $q.reject(null);
+        };
+
+        /**
+         * Resolves weather permissions set for "only" or "except" property are valid
+         * @method
+         *
+         * @param property {permissionMap.only|permissionMap.except} "only" or "except" map property
+         * @returns {Array<Promise>}
+         */
+        PermissionMap.prototype.resolvePropertyValidity = function (property) {
+
+            return property.map(function (privilegeName) {
+
+                if (RoleStore.hasRoleDefinition(privilegeName)) {
+                    var role = RoleStore.getRoleDefinition(privilegeName);
+                    return role.validateRole();
+                }
+
+                if (PermissionStore.hasPermissionDefinition(privilegeName)) {
+                    var permission = PermissionStore.getPermissionDefinition(privilegeName);
+                    return permission.validatePermission();
+                }
+
+                return $q.reject(privilegeName);
+            });
+        };
+
+        /**
+         * Handles function based redirection for rejected permissions
+         * @method
+         * @methodOf permission.PermissionMap
+         * @throws {TypeError}
+         *
+         * @param redirectFunction {Function} Redirection function
+         * @param permission {String} Rejected permission
+         *
+         * @return {Promise}
+         */
+        function resolveFunctionRedirect(redirectFunction, permission) {
+            return $q
+                .when(redirectFunction.call(null, permission))
+                .then(function (redirectState) {
+                    if (angular.isString(redirectState)) {
+                        return {
+                            state: redirectState
+                        };
+                    }
+
+                    if (angular.isObject(redirectState)) {
+                        return redirectState;
+                    }
+
+                    throw new TypeError('When used "redirectTo" as function, returned value must be string or object');
+                });
+        }
+
+        /**
+         * Handles object based redirection for rejected permissions
+         * @method
+         * @throws {ReferenceError}
+         *
+         * @param redirectObject {Object} Redirection function
+         * @param permission {String} Rejected permission
+         *
+         * @return {Promise}
+         */
+        function resolveObjectRedirect(redirectObject, permission) {
+            if (!angular.isDefined(redirectObject['default'])) {
+                throw new ReferenceError('When used "redirectTo" as object, property "default" must be defined');
+            }
+
+            var redirectState = redirectObject[permission];
+
+            if (!angular.isDefined(redirectState)) {
+                redirectState = redirectObject['default'];
+            }
+
+            if (angular.isFunction(redirectState)) {
+                return resolveFunctionRedirect(redirectState, permission);
+            }
+
+            if (angular.isObject(redirectState)) {
+                return $q.resolve(redirectState);
+            }
+
+            if (angular.isString(redirectState)) {
+                return $q.resolve({
+                    state: redirectState
+                });
+            }
+        }
+
+        /**
+         * Handles extraction of permission map "only" and "except" properties and converts them into array objects
+         * @method
+         * @private
+         *
+         * @param property {String|Array|Function|Promise} Permission map property "only" or "except"
+         *
+         * @returns {Array<String>} Array of permission "only" or "except" names
+         */
+        function normalizeMapProperty(property) {
+            if (angular.isString(property)) {
+                return [property];
+            }
+
+            if (angular.isArray(property)) {
+                return property;
+            }
+
+            if (angular.isFunction(property)) {
+                return property.call(null, TransitionProperties);
+            }
+
+            return [];
+        }
+
+        return PermissionMap;
+    }
+
+    angular
+        .module('permission')
+        .factory('PermissionMap', PermissionMapFactory);
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * State Access rights map factory
+     * @name StatePermissionMapFactory
+     *
+     * @param TransitionProperties {permission.TransitionProperties} Helper storing ui-router transition parameters
+     * @param PermissionMap {permission.PermissionMap}
+     *
+     * @return {permission.StatePermissionMap}
+     */
+    StatePermissionMapFactory.$inject = ['TransitionProperties', 'PermissionMap'];
+    function StatePermissionMapFactory(TransitionProperties, PermissionMap) {
+
+        StatePermissionMap.prototype = new PermissionMap();
+        StatePermissionMap.constructor = StatePermissionMap;
+        StatePermissionMap.prototype.parent = PermissionMap.prototype;
+
+
+        /**
+         * Constructs map object instructing authorization service how to handle authorizing
+         * @constructor StatePermissionMap
+         * @extends PermissionMap
+         * @memberOf permission
+         */
+        function StatePermissionMap() {
+            this.parent.constructor.call(this);
+
+            var toStateObject = TransitionProperties.toState.$$state();
+            var toStatePath = toStateObject.path.slice().reverse();
+
+            angular.forEach(toStatePath, function (state) {
+
+                if (state.areSetStatePermissions()) {
+                    var permissionMap = new PermissionMap(state.data.permissions);
+                    this.extendPermissionMap(permissionMap);
+                }
+            }, this);
+        }
+
+        /**
+         * Extends permission map by pushing to it state's permissions
+         * @method
+         * @methodOf permission.StatePermissionMap
+         *
+         * @param permissionMap {permission.PermissionMap} Compensated permission map
+         */
+        StatePermissionMap.prototype.extendPermissionMap = function (permissionMap) {
+            if (permissionMap.only.length) {
+                this.only = this.only.concat([permissionMap.only]);
+            }
+            if (permissionMap.except.length) {
+                this.except = this.except.concat([permissionMap.except]);
+            }
+            this.redirectTo = permissionMap.redirectTo;
+        };
+
+        return StatePermissionMap;
+    }
+
+    angular
+        .module('permission')
+        .factory('StatePermissionMap', StatePermissionMapFactory);
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Permission definition factory
+     * @name PermissionFactory
+     *
+     * @param $q {Object} Angular promise implementation
+     * @param TransitionProperties {permission.TransitionProperties} Helper storing ui-router transition parameters
+     *
+     * @return {permission.Permission}
+     */
+    PermissionFactory.$inject = ['$q', 'TransitionProperties'];
+    function PermissionFactory($q, TransitionProperties) {
+        /**
+         * Permission definition object constructor
+         * @class Permission
+         * @memberOf permission
+         *
+         * @param permissionName {String} Name repressing permission
+         * @param validationFunction {Function} Function used to check if permission is valid
+         */
+        function Permission(permissionName, validationFunction) {
+            validateConstructor(permissionName, validationFunction);
+
+            this.permissionName = permissionName;
+            this.validationFunction = validationFunction;
+        }
+
+        /**
+         * Checks if permission is still valid
+         * @method
+         * @methodOf permission.Permission
+         *
+         * @returns {Promise}
+         */
+        Permission.prototype.validatePermission = function () {
+            var validationResult = this.validationFunction.call(null, this.permissionName, TransitionProperties);
+
+            if (!angular.isFunction(validationResult.then)) {
+                validationResult = wrapInPromise(validationResult, this.permissionName);
+            }
+
+            return validationResult;
+        };
+
+        /**
+         * Converts a value into a promise, if the value is truthy it resolves it, otherwise it rejects it
+         * @method
+         * @private
+         *
+         * @param result {Boolean} Function to be wrapped into promise
+         * @param permissionName {String} Returned value in promise
+         * @return {Promise}
+         */
+        function wrapInPromise(result, permissionName) {
+            var dfd = $q.defer();
+
+            if (result) {
+                dfd.resolve(permissionName);
+            } else {
+                dfd.reject(permissionName);
+            }
+
+            return dfd.promise;
+        }
+
+        /**
+         * Checks if provided permission has accepted parameter types
+         * @method
+         * @private
+         * @throws {TypeError}
+         */
+        function validateConstructor(permissionName, validationFunction) {
+            if (!angular.isString(permissionName)) {
+                throw new TypeError('Parameter "permissionName" name must be String');
+            }
+            if (!angular.isFunction(validationFunction)) {
+                throw new TypeError('Parameter "validationFunction" must be Function');
+            }
+        }
+
+        return Permission;
+    }
+
+    angular
+        .module('permission')
+        .factory('Permission', PermissionFactory);
+
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Role definition factory
+     * @name RoleFactory
+     *
+     * @param $q {Object} Angular promise implementation
+     * @param PermissionStore {permission.PermissionStore} Permission definition storage
+     * @param TransitionProperties {permission.TransitionProperties} Helper storing ui-router transition parameters
+     *
+     * @return {permission.Role}
+     */
+    RoleFactory.$inject = ['$q', 'PermissionStore', 'TransitionProperties'];
+    function RoleFactory($q, PermissionStore, TransitionProperties) {
+        /**
+         * Role definition constructor
+         * @class Role
+         * @memberOf permission
+         *
+         * @param roleName {String} Name representing role
+         * @param permissionNames {Array} List of permission names representing role
+         * @param [validationFunction] {Function} Optional function used to validate if permissions are still valid
+         */
+        function Role(roleName, permissionNames, validationFunction) {
+            validateConstructor(roleName, permissionNames, validationFunction);
+            this.roleName = roleName;
+            this.permissionNames = permissionNames || [];
+            this.validationFunction = validationFunction;
+
+            if (validationFunction) {
+                PermissionStore.defineManyPermissions(permissionNames, validationFunction);
+            }
+        }
+
+        /**
+         * Checks if role is still valid
+         * @method
+         * @methodOf permission.Role
+         *
+         * @returns {Promise} $q.promise object
+         */
+        Role.prototype.validateRole = function () {
+            // When permission set is provided check each of them
+            if (this.permissionNames.length) {
+                var promises = this.permissionNames.map(function (permissionName) {
+                    if (PermissionStore.hasPermissionDefinition(permissionName)) {
+                        var permission = PermissionStore.getPermissionDefinition(permissionName);
+                        var validationResult = permission.validationFunction.call(null, permission.permissionName, TransitionProperties);
+
+                        if (!angular.isFunction(validationResult.then)) {
+                            validationResult = wrapInPromise(validationResult);
+                        }
+
+                        return validationResult;
+                    }
+
+                    return $q.reject();
+                });
+
+                return $q.all(promises);
+            }
+
+            // If not call validation function manually
+            var validationResult = this.validationFunction.call(null, this.roleName, TransitionProperties);
+            if (!angular.isFunction(validationResult.then)) {
+                validationResult = wrapInPromise(validationResult, this.roleName);
+            }
+
+            return $q.resolve(validationResult);
+        };
+
+        /**
+         * Converts a value into a promise, if the value is truthy it resolves it, otherwise it rejects it
+         * @method
+         * @private
+         *
+         * @param result {Boolean} Function to be wrapped into promise
+         * @param [roleName] {String} Returned value in promise
+         *
+         * @return {Promise}
+         */
+        function wrapInPromise(result, roleName) {
+            var dfd = $q.defer();
+
+            if (result) {
+                dfd.resolve(roleName);
+            } else {
+                dfd.reject(roleName);
+            }
+
+            return dfd.promise;
+        }
+
+        /**
+         * Checks if provided permission has accepted parameter types
+         * @method
+         * @private
+         * @throws {TypeError}
+         */
+        function validateConstructor(roleName, permissionNames, validationFunction) {
+            if (!angular.isString(roleName)) {
+                throw new TypeError('Parameter "roleName" name must be String');
+            }
+
+            if (!angular.isArray(permissionNames)) {
+                throw new TypeError('Parameter "permissionNames" must be Array');
+            }
+
+            if (!permissionNames.length && !angular.isFunction(validationFunction)) {
+                throw new TypeError('Parameter "validationFunction" must be provided for empty "permissionNames" array');
+            }
+        }
+
+        return Role;
+    }
+
+    angular
+        .module('permission')
+        .factory('Role', RoleFactory);
+
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Permission definition storage
+     * @name PermissionStore
+     * @memberOf permission
+     *
+     * @param Permission {permission.PermissionFactory} Permission definition factory
+     */
+    PermissionStore.$inject = ['Permission'];
+    function PermissionStore(Permission) {
+        /**
+         * @property permissionStore
+         *
+         * @type {Object}
+         */
+        var permissionStore = {};
+
+        this.definePermission = definePermission;
+        this.defineManyPermissions = defineManyPermissions;
+        this.removePermissionDefinition = removePermissionDefinition;
+        this.hasPermissionDefinition = hasPermissionDefinition;
+        this.getPermissionDefinition = getPermissionDefinition;
+        this.getStore = getStore;
+        this.clearStore = clearStore;
+
+        /**
+         * Allows to define permission on application configuration
+         * @method
+         *
+         * @param permissionName {String} Name of defined permission
+         * @param validationFunction {Function} Function used to validate if permission is valid
+         */
+        function definePermission(permissionName, validationFunction) {
+            var permission = new Permission(permissionName, validationFunction);
+            permissionStore[permissionName] = permission;
+        }
+
+        /**
+         * Allows to define set of permissionNames with shared validation function on application configuration
+         * @method
+         * @throws {TypeError}
+         *
+         * @param permissionNames {Array<String>} Set of permission names
+         * @param validationFunction {Function} Function used to validate if permission is valid
+         */
+        function defineManyPermissions(permissionNames, validationFunction) {
+            if (!angular.isArray(permissionNames)) {
+                throw new TypeError('Parameter "permissionNames" name must be Array');
+            }
+
+            angular.forEach(permissionNames, function (permissionName) {
+                definePermission(permissionName, validationFunction);
+            });
+        }
+
+        /**
+         * Deletes permission
+         * @method
+         *
+         * @param permissionName {String} Name of defined permission
+         */
+        function removePermissionDefinition(permissionName) {
+            delete permissionStore[permissionName];
+        }
+
+        /**
+         * Checks if permission exists
+         * @method
+         *
+         * @param permissionName {String} Name of defined permission
+         * @returns {Boolean}
+         */
+        function hasPermissionDefinition(permissionName) {
+            return angular.isDefined(permissionStore[permissionName]);
+        }
+
+        /**
+         * Returns permission by it's name
+         * @method
+         *
+         * @returns {permission.Permission} Permissions definition object
+         */
+        function getPermissionDefinition(permissionName) {
+            return permissionStore[permissionName];
+        }
+
+        /**
+         * Returns all permissions
+         * @method
+         *
+         * @returns {Object} Permissions collection
+         */
+        function getStore() {
+            return permissionStore;
+        }
+
+        /**
+         * Removes all permissions
+         * @method
+         */
+        function clearStore() {
+            permissionStore = {};
+        }
+    }
+
+    angular
+        .module('permission')
+        .service('PermissionStore', PermissionStore);
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Role definition storage
+     * @name RoleStore
+     * @memberOf permission
+     *
+     * @param Role {permission.Role|Function} Role definition constructor
+     */
+    RoleStore.$inject = ['Role'];
+    function RoleStore(Role) {
+        var roleStore = {};
+
+        this.defineRole = defineRole;
+        this.getRoleDefinition = getRoleDefinition;
+        this.hasRoleDefinition = hasRoleDefinition;
+        this.removeRoleDefinition = removeRoleDefinition;
+        this.getStore = getStore;
+        this.clearStore = clearStore;
+
+        /**
+         * Allows to define role
+         * @method
+         *
+         * @param roleName {String} Name of defined role
+         * @param permissions {Array<String>} Set of permission names
+         * @param [validationFunction] {Function} Function used to validate if permissions in role are valid
+         */
+        function defineRole(roleName, permissions, validationFunction) {
+            roleStore[roleName] = new Role(roleName, permissions, validationFunction);
+        }
+
+        /**
+         * Deletes role from store
+         * @method
+         *
+         * @param roleName {String} Name of defined permission
+         */
+        function removeRoleDefinition(roleName) {
+            delete roleStore[roleName];
+        }
+
+        /**
+         * Checks if role is defined in store
+         * @method
+         *
+         * @param roleName {String} Name of role
+         * @returns {Boolean}
+         */
+        function hasRoleDefinition(roleName) {
+            return angular.isDefined(roleStore[roleName]);
+        }
+
+        /**
+         * Returns role definition object by it's name
+         * @method
+         *
+         * @returns {permission.Role} Role definition object
+         */
+        function getRoleDefinition(roleName) {
+            return roleStore[roleName];
+        }
+
+        /**
+         * Returns all role definitions
+         * @method
+         *
+         * @returns {Object} Defined roles collection
+         */
+        function getStore() {
+            return roleStore;
+        }
+
+        /**
+         * Removes all role definitions
+         * @method
+         */
+        function clearStore() {
+            roleStore = {};
+        }
+    }
+
+    angular
+        .module('permission')
+        .service('RoleStore', RoleStore);
+}());
+
+(function () {
+    'use strict';
+
+    /**
+     * Handles authorization based on provided permissions/roles.
+     * @name permissionDirective
+     * @memberOf permission
+     *
+     * Directive accepts single or combined attributes `permission-only` and `permission-except` that checks on
+     * DOM rendering if permissions/roles are met. Attributes can be passed either as String, Array or variable from
+     * parent scope. Directive also will watch for changes if applied and automatically update the view.
+     *
+     * @example
+     * <div permission
+     *      permission-only="'USER'">
+     * </div>
+     * <div permission
+     *      permission-only="['USER','ADMIN']"
+     *      permission-except="'MANAGER'">
+     * </div>
+     *
+     * By default directive will show/hide elements if provided permissions matches.
+     * You can override this behaviour by passing `permission-on-authorized` and `permission-on-unauthorized`
+     *   attributes that will pass to your function `$element` as argument that you can freely manipulate your DOM
+     *   behaviour.
+     *
+     * Important! Function should be as references - `vm.disableElement` not `vm.disableElement()` to be able to
+     *   accept passed $element reference from inside of permissionDirective
+     *
+     * @example
+     * <div permission
+     *      permission-only="['USER','ADMIN']"
+     *      permission-on-authorized="PermissionStrategies.disableElement"
+     *      permission-on-unauthorized="PermissionStrategies.enableElement">
+     * </div>
+     *
+     * @param $log {Object} Logging service
+     * @param Authorization {permission.Authorization} Authorization service
+     * @param PermissionMap {permission.PermissionMap} Map of state access rights
+     * @param PermissionStrategies {permission.PermissionStrategies} Set of pre-defined directive behaviours
+     *
+     * @returns {Object} Directive instance
+     */
+    permissionDirective.$inject = ['$log', 'Authorization', 'PermissionMap', 'PermissionStrategies'];
+    function permissionDirective($log, Authorization, PermissionMap, PermissionStrategies) {
+        return {
+            restrict: 'A',
+            scope: false,
+            bindToController: {
+                only: '=?permissionOnly',
+                except: '=?permissionExcept',
+                onAuthorized: '&?permissionOnAuthorized',
+                onUnauthorized: '&?permissionOnUnauthorized',
+                // Observing attribute `only` and `except` will be removed with version 2.3.0+
+                deprecatedOnly: '=only',
+                deprecatedExcept: '=except'
+            },
+            controllerAs: 'permission',
+            controller: ['$scope', '$element', function ($scope, $element) {
+                var permission = this;
+
+                if (angular.isDefined(permission.deprecatedOnly) || angular.isDefined(permission.deprecatedExcept)) {
+                    $log.warn('Attributes "only" and "except" are deprecated since 2.2.0+ and their support ' +
+                        'will be removed from 2.4.0. Use scoped "permission-only" and "permission-except" instead.');
+                }
+
+                /**
+                 * Observing attribute `only` and `except` will be removed with version 2.4.0+
+                 */
+                $scope.$watchGroup(['permission.only', 'permission.except',
+                        'permission.deprecatedOnly', 'permission.deprecatedExcept'],
+                    function () {
+                        try {
+                            var permissionMap = new PermissionMap({
+                                only: permission.only || permission.deprecatedOnly,
+                                except: permission.except || permission.deprecatedExcept
+                            });
+
+                            Authorization
+                                .authorize(permissionMap)
+                                .then(function () {
+                                    onAuthorizedAccess();
+                                })
+                                .catch(function () {
+                                    onUnauthorizedAccess();
+                                });
+                        } catch (e) {
+                            onUnauthorizedAccess();
+                            $log.error(e.message);
+                        }
+                    });
+
+                /**
+                 * Calls `onAuthorized` function if provided or show element
+                 * @private
+                 */
+                function onAuthorizedAccess() {
+                    if (angular.isFunction(permission.onAuthorized)) {
+                        permission.onAuthorized()($element);
+                    } else {
+                        PermissionStrategies.showElement($element);
+                    }
+                }
+
+                /**
+                 * Calls `onUnauthorized` function if provided or hide element
+                 * @private
+                 */
+                function onUnauthorizedAccess() {
+                    if (angular.isFunction(permission.onUnauthorized)) {
+                        permission.onUnauthorized()($element);
+                    } else {
+                        PermissionStrategies.hideElement($element);
+                    }
+                }
+            }]
+        };
+    }
+
+    angular
+        .module('permission')
+        .directive('permission', permissionDirective);
+
+}());
+
+
+(function () {
+    'use strict';
+
+    /**
+     * Service responsible for handling view based authorization
+     * @name Authorization
+     * @memberOf permission
+     *
+     * @param $q {Object} Angular promise implementation
+     */
+    Authorization.$inject = ['$q'];
+    function Authorization($q) {
+
+        /**
+         * @type {permission.PermissionMap}
+         * @private
+         */
+        var map;
+
+        this.authorize = authorize;
+
+        /**
+         * Handles authorization based on provided permissions map
+         * @method
+         *
+         * @param permissionsMap {permission.PermissionMap} Map of permission names
+         *
+         * @returns {promise} $q.promise object
+         */
+        function authorize(permissionsMap) {
+            map = permissionsMap;
+
+            return authorizePermissionMap();
+        }
+
+        /**
+         * Checks authorization for simple view based access
+         * @method
+         * @private
+         *
+         * @returns {promise} $q.promise object
+         */
+        function authorizePermissionMap() {
+            var deferred = $q.defer();
+
+            resolveExceptPrivilegeMap(deferred);
+
+            return deferred.promise;
+        }
+
+        /**
+         * Resolves flat set of "except" privileges
+         * @method
+         * @private
+         *
+         * @param deferred {Object} Promise defer
+         *
+         * @returns {Promise} $q.promise object
+         */
+        function resolveExceptPrivilegeMap(deferred) {
+            var exceptPromises = map.resolvePropertyValidity(map.except);
+
+            $q.any(exceptPromises)
+                .then(function (rejectedPermissions) {
+                    deferred.reject(rejectedPermissions);
+                })
+                .catch(function () {
+                    resolveOnlyPermissionMap(deferred);
+                });
+        }
+
+        /**
+         * Resolves flat set of "only" privileges
+         * @method
+         * @private
+         *
+         * @param deferred {Object} Promise defer
+         */
+        function resolveOnlyPermissionMap(deferred) {
+            if (!map.only.length) {
+                deferred.resolve();
+                return;
+            }
+
+            var onlyPromises = map.resolvePropertyValidity(map.only);
+            $q.any(onlyPromises)
+                .then(function (resolvedPermissions) {
+                    deferred.resolve(resolvedPermissions);
+                })
+                .catch(function (rejectedPermission) {
+                    deferred.reject(rejectedPermission);
+                });
+        }
+    }
+
+    angular
+        .module('permission')
+        .service('Authorization', Authorization);
+
+})();
+
+
+(function () {
+    'use strict';
+
+    /**
+     * Service responsible for handling state based authorization
+     * @name StateAuthorization
+     * @memberOf permission
+     *
+     * @param $q {Object} Angular promise implementation
+     * @param $location {Object} Angular location helper service
+     * @param $state {Object} Current state provider
+     * @param TransitionEvents {permission.TransitionEvents} Event management service
+     * @param TransitionProperties {permission.TransitionProperties} Transition properties holder
+     */
+    StateAuthorization.$inject = ['$q', '$location', '$state', 'TransitionEvents', 'TransitionProperties'];
+    function StateAuthorization($q, $location, $state, TransitionEvents, TransitionProperties) {
+
+        /**
+         * @type {permission.StatePermissionMap}
+         * @private
+         */
+        var map;
+
+        this.authorize = authorize;
+
+        /**
+         * Handles state authorization
+         * @method {permission.StatePermissionMap}
+         * @param statePermissionMap
+         *
+         * @return {promise}
+         */
+        function authorize(statePermissionMap) {
+            map = statePermissionMap;
+
+            return authorizeStatePermissionMap()
+                .then(function () {
+                    handleAuthorizedState();
+                })
+                .catch(function (rejectedPermission) {
+                    handleUnauthorizedState(rejectedPermission);
+                });
+        }
+
+        /**
+         * Checks authorization for complex state inheritance
+         * @method
+         * @private
+         *
+         * @returns {promise} $q.promise object
+         */
+        function authorizeStatePermissionMap() {
+            var deferred = $q.defer();
+
+            resolveExceptStatePermissionMap(deferred);
+
+            return deferred.promise;
+        }
+
+        /**
+         * Resolves compensated set of "except" privileges
+         * @method
+         * @private
+         *
+         * @param deferred {Object} Promise defer
+         */
+        function resolveExceptStatePermissionMap(deferred) {
+            var exceptPromises = resolveStatePermissionMap(map.except);
+
+            $q.all(exceptPromises)
+                .then(function (rejectedPermissions) {
+                    deferred.reject(rejectedPermissions);
+                })
+                .catch(function () {
+                    resolveOnlyStatePermissionMap(deferred);
+                });
+        }
+
+        /**
+         * Resolves compensated set of "only" privileges
+         * @method
+         * @private
+         *
+         * @param deferred {Object} Promise defer
+         */
+        function resolveOnlyStatePermissionMap(deferred) {
+            if (!map.only.length) {
+                deferred.resolve();
+                return;
+            }
+
+            var onlyPromises = resolveStatePermissionMap(map.only);
+
+            $q.all(onlyPromises)
+                .then(function (resolvedPermissions) {
+                    deferred.resolve(resolvedPermissions);
+                })
+                .catch(function (rejectedPermission) {
+                    deferred.reject(rejectedPermission);
+                });
+        }
+
+        /**
+         * Performs iteration over list of privileges looking for matches
+         * @method
+         * @private
+         *
+         * @param privilegesNames {Array} Array of sets of access rights
+         *
+         * @returns {Array<Promise>} Promise collection
+         */
+        function resolveStatePermissionMap(privilegesNames) {
+            if (!privilegesNames.length) {
+                return [$q.reject()];
+            }
+
+            return privilegesNames.map(function (statePrivileges) {
+                var resolvedStatePrivileges = map.resolvePropertyValidity(statePrivileges);
+                return $q.any(resolvedStatePrivileges);
+            });
+        }
+
+        /**
+         * Handles redirection for authorized access
+         * @method
+         * @private
+         */
+        function handleAuthorizedState() {
+
+            TransitionEvents.broadcastStateChangePermissionAccepted();
+            $location.replace();
+
+            // Overwrite notify option to broadcast it later
+            TransitionProperties.options = angular.extend({}, TransitionProperties.options, {notify: false});
+
+            $state
+                .go(TransitionProperties.toState.name, TransitionProperties.toParams, TransitionProperties.options)
+                .then(function () {
+                    TransitionEvents.broadcastStateChangeSuccess();
+                });
+        }
+
+        /**
+         * Handles redirection for unauthorized access
+         * @method
+         * @private
+         *
+         * @param rejectedPermission {String} Rejected access right
+         */
+        function handleUnauthorizedState(rejectedPermission) {
+            TransitionEvents.broadcastStateChangePermissionDenied();
+
+            map
+                .resolveRedirectState(rejectedPermission)
+                .then(function (redirect) {
+                    $state.go(redirect.state, redirect.params, redirect.options);
+                });
+        }
+    }
+
+    angular
+        .module('permission')
+        .service('StateAuthorization', StateAuthorization);
+
+})();
+
+var app = angular.module('app',
+    [
+        'app.controllers',
+        'ngMaterial',
+        'ui.router',
+        'satellizer',
+        'permission'
+    ]);
+
+app.run(function (PermissionStore, $auth) {
+    PermissionStore
+        .definePermission('admin', function (stateParams) {
+            return $auth.isAuthenticated();
+        });
+
+    PermissionStore.definePermission('anon', function (stateParams) {
+        return !$auth.isAuthenticated();
+    });
+
+});
+
+app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
+    function ($stateProvider, $urlRouterProvider, $authProvider) {
+        $authProvider.loginUrl = 'http://193.5.58.95/api/v1/authenticate/admin';
+        //$authProvider.loginUrl = 'http://localhost:8000/api/v1/authenticate/admin';
         $stateProvider
             .state('log', {
                 url: '/login',
-                    templateUrl: 'views/login.html',
-                    controller: 'LoginCtrl'
-                })
+                data: {
+                    permissions: {
+                        except: ['admin'],
+                        redirectTo: 'home'
+                    }
+                },
+                /*
+                 views: {
+                 'loginContent': {
+                 templateUrl: 'views/login.html',
+                 controller: 'LoginCtrl'
+                 }
+                 }
+                 */
+                templateUrl: 'views/login.html',
+                controller: 'LoginCtrl'
+            })
             .state('home', {
                 url: '/home',
+                data: {
+                    permissions: {
+                        except: ['anon'],
+                        redirectTo: 'log'
+                    }
+                },
+                /*
+                 views: {
+                 'homeContent': {
+
+                 }
+                 }*/
                 templateUrl: 'views/home.html',
                 controller: 'HomeCtrl'
-                });
+            });
 
         $urlRouterProvider.otherwise('/login');
-        }]);
+    }]);
+
 
 app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('orange')
         .accentPalette('red');
 });
-
-
-
-
 /**
  * Created by rijad on 23.03.16.
  */
 var app = angular.module('app.controllers', ['ngMaterial', 'ui.router']);
 
-app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state) {
-    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
+app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth) {
+//    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
     $scope.pictureUrl = "img/icon_without_radius.jpg";
-    console.log("bin im login Controller");
 
     $scope.logIn = function () {
-        var username = document.getElementById("email").value;
-        var password = document.getElementById("password").value;
-        var headers = {headers: {'Content-Type': 'application/json'}};
-        var data = {
-            username: username,
-            email: username,
+        var email = $scope.email;
+        var password = $scope.password;
+        //var headers = {headers: {'Content-Type': 'application/json'}};
+        var credentials = {
+            email: email,
             password: password
         };
 
-        $http.post(loginUrl, data, headers).then(function (resp) {
-            $rootScope.token = resp.data.token;
-            console.log("das ist der Token  " + $rootScope.token);
-            if (resp.status == 200) {
-                $state.go("home");
-            }
-        }, function (fail) {
-            console.log(fail);
+        $auth.login(credentials).then(function () {
+            $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
+                    var user = JSON.stringify(response.user);
+                    localStorage.setItem('user', user);
+                    $rootScope.currentUser = response.user;
+                    $state.go('home');
+                })
+                .error(function () {
+                    $scope.loginError = true;
+                    $scope.loginErrorText = error.data.error;
+                    console.log($scope.loginErrorText);
+                })
         });
+        /*$http.post(loginUrl, credentials, headers).then(function (resp) {
+         $rootScope.token = resp.data.token;
+         console.log("das ist der Token  " + $rootScope.token);
+         if (resp.status == 200) {
+         $state.go("home");
+         }
+         }, function (fail) {
+         console.log(fail);
+         });*/
     }
 });
 
 app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav) {
-
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
     });

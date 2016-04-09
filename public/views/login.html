@@ -1,18 +1,19 @@
-<div class="container-fluid" ng-cloak>
-    <div layout="column" layout-padding class=".md-whiteframe-2dp">
+<div class="container-fluid">
+
+    <div layout="column" layout-padding ng-cloak class=".md-whiteframe-2dp">
         <div class="container">
-            <div id="login-section" class="content">
+            <div class="content">
                 <div class="title">Car Tracker</div>
                 <div flex>
                     <md-input-container class="md-block">
                         <!-- Use floating placeholder instead of label -->
-                        <input id="email" ng-model="user.email" type="email" placeholder="Email (required)"
+                        <input id="email" ng-model="email" type="email" placeholder="Email (required)"
                                ng-required="true">
                     </md-input-container>
 
                     <md-input-container class="md-block">
                         <!-- Use floating placeholder instead of label -->
-                        <input id="password" ng-model="user.password" type="password"
+                        <input id="password" ng-model="password" type="password"
                                placeholder="Password (required)" ng-required="true">
                     </md-input-container>
                     <md-button class="md-raised md-primary" ng-click="logIn()">Login</md-button>

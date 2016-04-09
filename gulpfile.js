@@ -24,6 +24,8 @@ elixir(function (mix) {
         //'./resources/scripts/bower_components/angular-route/angular-route.js',
         './resources/scripts/bower_components/angular-ui-router/release/angular-ui-router.js',
         './resources/scripts/bower_components/angular-ui/build/angular-ui.js',
+        './resources/scripts/bower_components/satellizer/satellizer.js',
+        './resources/scripts/bower_components/angular-permission/dist/angular-permission.js',
         './resources/scripts/app.js',
         './resources/scripts/controllers.js'
     ]);
