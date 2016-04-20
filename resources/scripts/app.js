@@ -21,8 +21,9 @@ app.run(function (PermissionStore, $auth) {
 
 app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
     function ($stateProvider, $urlRouterProvider, $authProvider) {
-        $authProvider.loginUrl = 'http://193.5.58.95/api/v1/authenticate/admin';
-        //$authProvider.loginUrl = 'http://localhost:8000/api/v1/authenticate/admin';
+        //$authProvider.loginUrl = 'http://193.5.58.95/api/v1/authenticate/admin';
+        //$authProvider.loginUrl = 'http://localhost/api/v1/authenticate/admin';
+        $authProvider.loginUrl = 'http://localhost/api/v1/authenticate/admin';
         $stateProvider
             .state('log', {
                 url: '/login',
@@ -67,6 +68,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
 
 app.config(function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
-        .primaryPalette('orange')
+        .primaryPalette('deep-orange')
         .accentPalette('red');
 });

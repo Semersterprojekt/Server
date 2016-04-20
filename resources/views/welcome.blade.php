@@ -3,6 +3,7 @@
 <head>
     <title>Laravel</title>
     <link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" href="/css/all.css">
     <link rel="stylesheet" href="/css/app.css">
 </head>

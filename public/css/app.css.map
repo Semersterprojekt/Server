@@ -1,11 +1,1 @@
-{
-  "version": 3,
-  "sources": [
-    "app.css"
-  ],
-  "names": [],
-  "mappings": "AAAA",
-  "file": "app.css",
-  "sourceRoot": "/source/",
-  "sourcesContent": []
-}
+{"version":3,"sources":["app.scss"],"names":[],"mappings":"AAEA;EACE,aAAa;EACb,YAAY;EACZ,wBAAwB,EACzB;;AAED;EACE,UAAU;EACV,WAAW;EACX,oBAAoB,EACrB;;AAMD;EAHE,wBAAwB,EAKzB;;AAED;EACE,mBAAmB;EACnB,kBAAkB;EAClB,mBAAmB;EACnB,YAAY;EACZ,oBAAoB,EACrB;;AAED;EACE,mBAAmB;EACnB,sBAAsB;EACtB,YAAY,EACb;;AAED;EACE,iBAAiB;EACjB,gBAAgB;EAChB,oBAAoB,EACrB;;AAED;EACE,cAAc;EACd,YAAY,EACb;;AAED;EACE,iBAAiB,EAClB;;AAED;EACE,kBAAkB,EACnB;;AAED;EACE,cAAc;EACd,aAAa,EACd;;AAED;EACE,kBAAkB,EACnB;;AAED;EACE,iBAAiB,EAClB;;AAED;EACE,kBAAkB,EACnB;;AAED;EACE,gBAAgB,EACjB;;AAED;EACE,kBAAkB,EACnB;;AAED;EACE,sBAAsB,EACvB","file":"app.css","sourcesContent":["//@import \"/node_modules/bootstrap-sass/assets/stylesheets/bootstrap\";;\n\nhtml, body {\n  height: 100%;\n  width: 100%;\n  background-color: white;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: 'Lato';\n}\n\n@mixin def-clr{\n  background-color: white;\n}\n\n.content-holder, #line-container {\n  @include def-clr;\n}\n\n.container {\n  text-align: center;\n  margin-left: auto;\n  margin-right: auto;\n  width: 85vw;\n  vertical-align: top;\n}\n\n.content {\n  text-align: center;\n  display: inline-block;\n  margin: 5px;\n}\n\n.title {\n  font-weight: 100;\n  font-size: 96px;\n  margin-bottom: 20px;\n}\n\n.md-block {\n  padding: 10px;\n  width: auto;\n}\n\n.md-sidenav-left {\n  min-height: 100%;\n}\n\n#avatar-item {\n  min-height: 200px;\n}\n\n#avatar-image {\n  height: 100px;\n  width: 100px;\n}\n\n#options-menu {\n  margin-left: 20px;\n}\n\n.content-holder, #line-container{\n  margin-top: 25px;\n}\n\nmd-list-item {\n  padding: 2px 20px;\n}\n\nmd-backdrop {\n  position: fixed;\n}\n\n#login-container {\n  margin-top: 100px;\n}\n\nmd-card {\n  display: inline-block;\n}"],"sourceRoot":"/source/"}

@@ -3,7 +3,7 @@
  */
 var app = angular.module('app.controllers', ['ngMaterial', 'ui.router']);
 
-app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth) {
+app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, $mdToast) {
 //    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
     $scope.pictureUrl = "img/icon_without_radius.jpg";
 
@@ -16,19 +16,31 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth) 
             password: password
         };
 
-        $auth.login(credentials).then(function () {
-            $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
+        $auth.login(credentials).then(function (resp) {
+            //$http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
+            $http.get('http://localhost/api/v1/authenticate/user').success(function (response) {
                     var user = JSON.stringify(response.user);
                     localStorage.setItem('user', user);
                     $rootScope.currentUser = response.user;
                     $state.go('home');
                 })
                 .error(function () {
+                    console.log('fehler');
                     $scope.loginError = true;
                     $scope.loginErrorText = error.data.error;
                     console.log($scope.loginErrorText);
                 })
-        });
+        }).catch(function (response) {
+                // Handle errors here, such as displaying a notification
+                // for invalid email and/or password.
+                $mdToast.show({
+                    hideDelay: 3000,
+                    position: 'top left right',
+                    templateUrl: 'views/login-fail-toast.html'
+                });
+            }
+        );
+
         /*$http.post(loginUrl, credentials, headers).then(function (resp) {
          $rootScope.token = resp.data.token;
          console.log("das ist der Token  " + $rootScope.token);
@@ -39,11 +51,17 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth) 
          console.log(fail);
          });*/
     }
-});
+})
+;
 
 app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav) {
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
+
+        $http.get('http://localhost/api/v1/admin/users').success(function (response) {
+            //var parsed = JSON.parse(response);
+            $scope.users = response;
+        });
     });
 
     $scope.close = function () {
@@ -51,4 +69,32 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
     };
 
     $scope.radius = Math.floor(Math.random() * 100);
+
+    /**
+     * Line Chart function
+     */
+    $(function () {
+        $('#line-container').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Angemeldete User '
+            },
+            xAxis: {
+                categories: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni']
+            },
+            yAxis: {
+                title: {
+                    text: 'User Anzahl'
+                }
+            },
+            series: [{
+                name: 'User',
+                data: [1, 0, 4, 2, 1, 0, 1, 2, 5, 3]
+            }],
+        });
+    });
 });
+
+

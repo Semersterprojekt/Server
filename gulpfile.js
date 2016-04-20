@@ -27,15 +27,20 @@ elixir(function (mix) {
         './resources/scripts/bower_components/satellizer/satellizer.js',
         './resources/scripts/bower_components/angular-permission/dist/angular-permission.js',
         './resources/scripts/app.js',
-        './resources/scripts/controllers.js'
+        './resources/scripts/controllers.js',
+        './resources/scripts/jquery-1.11.3.min.js',
+        './resources/scripts/jquery-ui.min.js',
+        './resources/scripts/highcharts.js',
+        './resources/scripts/highcharts-more.js',
     ]);
 
     mix.styles([
         './resources/scripts/bower_components/angular-material/angular-material.min.css',
         './resources/scripts/bower_components/angular-material/angular-material.layouts.min.css',
-        './resources/assets/sass/style.css',
+        //'./resources/assets/sass/style.css',
     ]);
 
+    mix.sass('app.scss');
 
     mix.copy('./resources/views/templates/*.html', 'public/views/');
     // Application Scripts

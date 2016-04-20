@@ -12,50 +12,25 @@
     </md-toolbar>
 
     <!-- Content starts here -->
-    <div class="container">
-        <div id="content-holder" layout="row" layout-xs="column" layout-align="start start">
-            <div layout="column" class="md-whiteframe-1dp" layout-align="start start" flex="66" class="content">
-                <div layout="row" layout-align="start start">
-                    <md-card>
+    <div class="container" layout="column" layout-sm="column" layout-xs="column" flex-sm="100" flex-xs="100">
+        <div class="content-holder" layout="row" flex="100" layout-lt-md="column">
+            <div layout="column" class="content md-whiteframe-1dp" layout-align="start start" flex="100" flex-sm="100"
+                 flex-xs="100">
+                <div ng-repeat="oneuser in users" layout="row" layout-align="start start" layout-xs="column"
+                     layout-sm="column" flex="66">
+                    <md-card flex-gt-sm="66" flex-sm="100" ng-repeat="user in oneuser">
                         <img src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
                              class="md-card-image" alt="image caption">
                         <md-card-content>
-                            <h2>Benutzerdaten</h2>
-                            <p>Benutzerdaten</p>
+                            <h2>{{ user.username}}</h2>
+                            <p>{{ user.email }}</p>
                         </md-card-content>
-                        <md-card-footer>
-                            Benutzerdaten
-                        </md-card-footer>
-                    </md-card>
-
-                    <md-card>
-                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                             class="md-card-image" alt="image caption">
-                        <md-card-content>
-                            <h2>Benutzerdaten</h2>
-                            <p>Benutzerdaten</p>
-                        </md-card-content>
-                        <md-card-footer>
-                            Benutzerdaten
-                        </md-card-footer>
-                    </md-card>
-
-                    <md-card>
-                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                             class="md-card-image" alt="image caption">
-                        <md-card-content>
-                            <h2>Benutzerdaten</h2>
-                            <p>Benutzerdaten</p>
-                        </md-card-content>
-                        <md-card-footer>
-                            Benutzerdaten
-                        </md-card-footer>
                     </md-card>
                 </div>
             </div>
 
-            <div id="options-menu" layout="column" class="md-whiteframe-1dp" layout-align="center center" flex="33"
-                 layout-padding>
+            <!-- Options Container -->
+            <div id="options-menu" layout="column" class="md-whiteframe-1dp" flex="33" layout-padding="5px">
                 <h3>Zusatz-Optionen</h3>
                 <md-content>
 
@@ -72,8 +47,19 @@
                     <md-button class="md-raised md-primary">OKd</md-button>
                 </md-content>
             </div>
+            <!-- END -->
 
         </div>
+
+        <!-- <div class="content-holder" layout="row" layout-xs="column" layout-sm="column" flex-sm="100" flex-xs="100" layout-align="start start">
+            </div> -->
+
+        <!-- Graph Container  -->
+        <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
+             class="md-whiteframe-1dp" style="height: 400px">
+        </div>
+        <!-- END  -->
+
     </div>
     <!-- END -->
 
@@ -104,7 +90,7 @@
 
                     <div class="md-toolbar-tools">
                         <md-list>
-                            <md-list-item id="avatar-item" class="md-3-line">
+                            <md-list-item ng-click="" id="avatar-item" class="md-3-line">
                                 <img id="avatar-image" class="md-avatar"
                                      ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
                                 <div class="md-list-item-text">
@@ -118,22 +104,21 @@
                     <md-content flex>
                         <section>
                             <md-list>
-                                <md-list-item class="md-3-line">
-                                    <div class="md-list-item-text">
-                                        <h3>Start</h3></div>
-                                </md-list-item>
+                                <md-button ng-click="close()">
+                                    Aktuelles
+                                </md-button>
                                 <md-divider></md-divider>
                                 <md-list-item class="md-3-line">
                                     <div class="md-list-item-text">
                                         <h3>Aktuelles</h3></div>
                                 </md-list-item>
                                 <md-divider></md-divider>
-                                <md-list-item class="md-3-line">
+                                <md-list-item ng-click="" class="md-3-line">
                                     <div class="md-list-item-text">
                                         <h3>Benutzerdaten</h3></div>
                                 </md-list-item>
                                 <md-divider></md-divider>
-                                <md-list-item class="md-3-line">
+                                <md-list-item ng-click="" class="md-3-line">
                                     <div class="md-list-item-text">
                                         <h3>Fahrzeuge</h3></div>
                                 </md-list-item>
@@ -145,9 +130,7 @@
     </div>
 
 
-    <!--
-
-
+    <!--  Could be useful later on:
     <md-list-item class="md-3-line" ng-repeat="item in todos">
                 <img ng-src="{{item.face}}" alt="{{item.who}}" class="md-avatar">
                 <div class="md-list-item-text">
@@ -172,6 +155,12 @@
             narrow your display.
         </p>
     </md-content>-->
+
+    <script>
+        $(function () {
+            window.dispatchEvent(new Event('resize'));
+        });
+    </script>
 
 
 </div>

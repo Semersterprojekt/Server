@@ -50,6 +50,7 @@ class TestsController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * Separate the image and save it to disk.
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -106,11 +107,60 @@ class TestsController extends Controller
     }
 
 
-    //Für Semesterprojekt nur
+    /**
+     * Show all created Posts
+     * Only for admins
+     *
+     * @return mixed
+     */
     public function adminPosts()
     {
         if (Auth::check()) {
-            return Test::all();
+            $id = Auth::user()->id;
+            $user = User::find($id);
+
+            if ($user->role == 5) {
+                return response()->json([
+                    'data' => Test::all()
+                ], 200);
+            }
+
+            return response()->json([
+                'error' => 'Not Admin'
+            ], 401);
+        } else {
+            return response()->json([
+                'error' => 'Not logged in'
+            ], 401);
+        }
+
+    }
+
+    /**
+     * Show all created users
+     * Only for admins
+     *
+     * @return mixed
+     */
+    public function adminUsers()
+    {
+        if (Auth::check()) {
+            $id = Auth::user()->id;
+            $user = User::find($id);
+
+            if ($user->role == 5) {
+                return response()->json([
+                    'data' => User::all()
+                ], 200);
+            }
+
+            return response()->json([
+                'error' => 'Not Admin'
+            ], 401);
+        } else {
+            return response()->json([
+                'error' => 'Not logged in'
+            ], 401);
         }
     }
 
