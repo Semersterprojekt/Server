@@ -34,11 +34,16 @@ class AuthenticateController extends Controller
         if ($validator->fails()) {
             return response()->json([$validator->errors()], 400);
         } else {
-
             $user = User::create();
             $user->username = $request->username;
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
+
+            $image = Image::make($request->base64);
+            $image->resize(1200, 800)->save('img/users/' . $user->id . '.jpg');
+            $image->resize(300, 300)->save('img/users_tmbn/' . $user->id . '.jpg');
+
+            $user->img_path = $user->id . ".jpg";
             $user->save();
 
             $credentials = $request->only('email', 'password');

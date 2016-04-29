@@ -16,8 +16,8 @@ class CreateTestsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->text('img_path');
-            $table->text('data');
-            $table->text('comment');
+            $table->text('brand');
+            $table->text('model');
             $table->timestamps();
         });
     }

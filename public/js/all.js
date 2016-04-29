@@ -68023,7 +68023,6 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
         };
 
         $auth.login(credentials).then(function (resp) {
-            //$http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
             $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
                     var user = JSON.stringify(response.user);
                     localStorage.setItem('user', user);
@@ -68066,12 +68065,20 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
 
         $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
             //var parsed = JSON.parse(response);
-            $scope.users = response;
+            $scope.users = response.data;
         });
     });
 
     $scope.close = function () {
         $mdSidenav('left').toggle();
+
+        for (var prop in $scope.users) {
+            if (!$scope.users.hasOwnProperty(prop)) {
+                //The current property is not a direct property of p
+                continue;
+            }
+            console.log(prop.username);
+        }
     };
 
     $scope.radius = Math.floor(Math.random() * 100);
