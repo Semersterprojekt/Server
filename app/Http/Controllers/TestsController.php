@@ -57,13 +57,13 @@ class TestsController extends Controller
      */
     public function store(Request $request)
     {
-        $image = Image::make($request->base64);
         $test = Test::create($request->except('base64'));
-
-        $image->resize(1200, 800)->save('img/test/' . $test->id . '.jpg');
-        $image->resize(300, 300)->save('img/test_tmbn/' . $test->id . '.jpg');
-
-        $test->img_path = $test->id . '.jpg';
+        if ($request->base64 != null) {
+            $image = Image::make($request->base64);
+            $image->resize(1200, 800)->save('img/test/' . $test->id . '.jpg');
+            $image->resize(300, 300)->save('img/test_tmbn/' . $test->id . '.jpg');
+            $test->img_path = $test->id . '.jpg';
+        }
         $test->save();
 
         return response()->json([

@@ -19,7 +19,7 @@ class CreateTestsTable extends Migration
             $table->text('brand');
             $table->text('model');
             $table->float('geoX', 10, 6)->nullable();
-            $table->float('geoX', 10, 6)->nullable();;
+            $table->float('geoY', 10, 6)->nullable();;
             $table->timestamps();
         });
     }
