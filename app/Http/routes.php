@@ -47,6 +47,7 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
     Route::group(['middleware' => ['jwt.auth', 'admin', 'cors']], function () {
         Route::get('admin/posts', 'TestsController@adminPosts');
         Route::get('admin/users', 'TestsController@adminUsers');
+        Route::get('admin/userposts/{id}', 'TestsController@adminUserPosts');
     });
 });
 

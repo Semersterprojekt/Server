@@ -1,166 +1,171 @@
-<div class="container-fluid" ng-cloak>
-    <!-- Toolbar -->
-    <md-toolbar ng-cloak>
-        <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-click="close();">
-                <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-            </md-button>
-            <h2 class="md-toolbar-tools" layout-align="center center">
-                Chosen Tool
-            </h2>
+<!-- Toolbar -->
+<md-toolbar layout="row">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-click="close();">
+            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        </md-button>
+        <h2 class="md-toolbar-tools" layout-align="center center">
+            Chosen Tool
+        </h2>
+    </div>
+    <md-button class="logout-button" ui-sref="logout">Logout</md-button>
+</md-toolbar>
+
+<!-- Content Starts here -->
+<div class="container content-holder md-whiteframe-1dp" layout="column" layout-sm="column" layout-xs="column"
+     flex-sm="100" flex-xs="100">
+    <div layout="row" flex class="content-wrapper md-whiteframe-z2">
+        <div layout="column" flex="20">
+            <h4>Registrierte User:</h4>
+            <md-divider></md-divider>
+            <md-list class="muppet-list">
+                <md-item ng-repeat="oneuser in users">
+                    <md-item-content>
+                        <md-button ng-click="selectUser(oneuser)" ng-class="{'selected' : oneuser === selected }"
+                                   aria-label="userLabel">
+                            <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+                                 class="face" alt="">
+                            {{oneuser.username}}
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+            </md-list>
         </div>
-    </md-toolbar>
 
-    <!-- Content starts here -->
-    <div class="container" layout="column" layout-sm="column" layout-xs="column" flex-sm="100" flex-xs="100">
-        <div class="content-holder" layout="row" flex="100" layout-lt-md="column">
-            <div layout="column" class="content md-whiteframe-1dp" layout-align="start start" flex="100" flex-sm="100"
-                 flex-xs="100">
-                <div ng-repeat="oneuser in users" layout="row" layout-align="start start" layout-xs="column"
-                     layout-sm="column" flex="66">
-                    <md-card flex="33" flex-sm="100">
-                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                             class="md-card-image" alt="image caption">
-                        <md-card-content>
-                            <h2>{{ oneuser.username}}</h2>
-                            <p>{{ oneuser.email }}</p>
-                        </md-card-content>
-                    </md-card>
-                </div>
+        <md-divider></md-divider>
+
+        <div layout="column" flex class="content-wrapper content-holder" id="primary-col">
+            <div layout="row md-list-item-text">
+                <h3 class="title">{{selected.username}}</h3>
             </div>
-
-            <!-- Options Container -->
-            <div id="options-menu" layout="column" class="md-whiteframe-1dp" flex="33" layout-padding="5px">
-                <h3>Zusatz-Optionen</h3>
-                <md-content>
-
-                    <md-slider-container ng-disabled="readonly">
-                        <md-input-container>
-                            <input flex type="number" ng-model="master" aria-label="master"
-                                   aria-controls="master-slider">
-                        </md-input-container>
-                        <md-slider flex ng-model="master" md-discrete aria-label="Master" md-vertical step="10"
-                                   ng-readonly="readonly"></md-slider>
-                        <h5>Master</h5>
-                    </md-slider-container>
-
-                    <md-button class="md-raised md-primary">OKd</md-button>
+            <div layout="row">
+                <md-content layout="column" flex class="md-padding">
+                    <h2>{{selected.username}}</h2>
+                    <p>{{selected.email}}</p>
+                    <div class="cell">
+                        <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+                             alt="{{selected.username}}">
+                        <p>{{selected.username}}</p>
+                    </div>
                 </md-content>
             </div>
-            <!-- END -->
-
+            <!--  <md-divider></md-divider>
+            <div layout="row">
+                <md-content layout="column" flex class="md-padding">
+                    <h2>{{selected.username}}</h2>
+                    <p>{{selected.email}}</p>
+                    <div class="cell">
+                        <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+                             alt="{{selected.username}}">
+                        <p>{{selected.username}}</p>
+                    </div>
+                </md-content>
+            </div>-->
         </div>
-
-        <!-- <div class="content-holder" layout="row" layout-xs="column" layout-sm="column" flex-sm="100" flex-xs="100" layout-align="start start">
-            </div> -->
-
-        <!-- Graph Container  -->
-        <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
-             class="md-whiteframe-1dp" style="height: 400px">
-        </div>
-        <!-- END  -->
-
     </div>
-    <!-- END -->
+</div>
+<!-- END -->
 
+<!-- Sidebar navigation starts here -->
+<div layout="column" ng-cloak>
+    <section layout="row" flex>
+        <md-sidenav
+                class="md-sidenav-left"
+                md-component-id="left"
+                md-disable-backdrop
+                md-whiteframe="4">
+            <md-toolbar class="md-theme-indigo">
+                <div class="md-toolbar-tools">
+                    <h1 class="md-toolbar-tools" layout-align="center center">Admin Panel</h1>
+                    <span flex></span>
+                    <md-button class="md-icon-button" aria-label="Settings" ng-click="close()">
+                        <md-icon id="back-arrow" md-svg-icon="/img/icons/arrow_back.svg"></md-icon>
+                    </md-button>
+                </div>
 
-    <!-- Sidebar navigation starts here -->
-    <div layout="column" ng-cloak>
-        <section layout="row" flex>
-            <md-sidenav
-                    class="md-sidenav-left"
-                    md-component-id="left"
-                    md-disable-backdrop
-                    md-whiteframe="4">
-                <md-toolbar class="md-theme-indigo">
-                    <div class="md-toolbar-tools">
-                        <h1 class="md-toolbar-tools" layout-align="center center">Admin Panel</h1>
-                        <span flex></span>
-                        <md-button class="md-icon-button" aria-label="Settings" ng-click="close()">
-                            <md-icon id="back-arrow" md-svg-icon="/img/icons/arrow_back.svg"></md-icon>
-                        </md-button>
-                    </div>
+                <div class="md-toolbar-tools">
+                    <md-list>
+                        <md-list-item class="md-3-line">
+                        </md-list-item>
+                    </md-list>
+                </div>
 
-                    <div class="md-toolbar-tools">
+                <div class="md-toolbar-tools">
+                    <md-list>
+                        <md-list-item ng-click="" id="avatar-item" class="md-3-line">
+                            <img id="avatar-image" class="md-avatar"
+                                 ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
+                            <div class="md-list-item-text">
+                                <p>Aktiver Admin</p>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                    | GET|HEAD | api/v1/cars/{cars} | api.v1.cars.show
+                </div>
+            </md-toolbar>
+            <md-toolbar class="md-accent">
+                <md-content flex>
+                    <section>
                         <md-list>
-                            <md-list-item class="md-3-line">
-                            </md-list-item>
-                        </md-list>
-                    </div>
-
-                    <div class="md-toolbar-tools">
-                        <md-list>
-                            <md-list-item ng-click="" id="avatar-item" class="md-3-line">
-                                <img id="avatar-image" class="md-avatar"
-                                     ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
+                            <md-divider></md-divider>
+                            <md-subheader>Auswahl</md-subheader>
+                            <md-list-item ng-click="" class="md-3-line" md-ink-ripple>
                                 <div class="md-list-item-text">
-                                    <p>Aktiver Admin</p>
+                                    <h3>User und Posts</h3>
                                 </div>
                             </md-list-item>
+
+                            <md-list-item ui-sref="car-owned" class="md-3-line" md-ink-ripple>
+                                <div class="md-list-item-text">
+                                    <h3>Administratives</h3></div>
+                            </md-list-item>
+
+                            <md-divider></md-divider>
+                            <md-subheader>Profil</md-subheader>
+
+                            <md-list-item ng-click="" class="md-3-line" md-ink-ripple>
+                                <div class="md-list-item-text">
+                                    <h3>Bearbeiten</h3></div>
+                            </md-list-item>
+
                         </md-list>
-                    </div>
-                </md-toolbar>
-                <md-toolbar class="md-accent">
-                    <md-content flex>
-                        <section>
-                            <md-list>
-                                <md-button ng-click="close()">
-                                    Aktuelles
-                                </md-button>
-                                <md-divider></md-divider>
-                                <md-list-item class="md-3-line">
-                                    <div class="md-list-item-text">
-                                        <h3>Aktuelles</h3></div>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                                <md-list-item ng-click="" class="md-3-line">
-                                    <div class="md-list-item-text">
-                                        <h3>Benutzerdaten</h3></div>
-                                </md-list-item>
-                                <md-divider></md-divider>
-                                <md-list-item ng-click="" class="md-3-line">
-                                    <div class="md-list-item-text">
-                                        <h3>Fahrzeuge</h3></div>
-                                </md-list-item>
-                            </md-list>
-                        </section>
-                    </md-content>
-            </md-sidenav>
-        </section>
-    </div>
+                    </section>
+                </md-content>
+        </md-sidenav>
+    </section>
+</div>
 
-
-    <!--  Could be useful later on:
-    <md-list-item class="md-3-line" ng-repeat="item in todos">
-                <img ng-src="{{item.face}}" alt="{{item.who}}" class="md-avatar">
-                <div class="md-list-item-text">
-                    <h3>{{item.what}}</h3>
-                    <h4>{{item.who}}</h4>
-                    <p>
-                        {{item.notes}}
-                    </p>
-                </div>
-                <md-divider inset></md-divider>
-            </md-list-item>
+<!--  Could be useful later on:
+<md-list-item class="md-3-line" ng-repeat="item in todos">
+            <img ng-src="{{item.face}}" alt="{{item.who}}" class="md-avatar">
+            <div class="md-list-item-text">
+                <h3>{{item.what}}</h3>
+                <h4>{{item.who}}</h4>
+                <p>
+                    {{item.notes}}
+                </p>
+            </div>
+            <md-divider inset></md-divider>
+        </md-list-item>
 
 
 
 
-    <md-content layout-padding>
-        <md-button ng-click="close()" class="md-primary" hide-gt-md>
-            Close Sidenav Left
-        </md-button>
-        <p hide-md show-gt-md>
-            This sidenav is locked open on your device. To go back to the default behavior,
-            narrow your display.
-        </p>
-    </md-content>-->
+<md-content layout-padding>
+    <md-button ng-click="close()" class="md-primary" hide-gt-md>
+        Close Sidenav Left
+    </md-button>
+    <p hide-md show-gt-md>
+        This sidenav is locked open on your device. To go back to the default behavior,
+        narrow your display.
+    </p>
+</md-content>-->
 
-    <script>
-        $(function () {
-            window.dispatchEvent(new Event('resize'));
-        });
-    </script>
+<script>
+    $(function () {
+        window.dispatchEvent(new Event('resize'));
+    });
+</script>
 
 
 </div>

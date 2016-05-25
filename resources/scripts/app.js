@@ -33,14 +33,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
                         redirectTo: 'home'
                     }
                 },
-                /*
-                 views: {
-                 'loginContent': {
-                 templateUrl: 'views/login.html',
-                 controller: 'LoginCtrl'
-                 }
-                 }
-                 */
                 templateUrl: 'views/login.html',
                 controller: 'LoginCtrl'
             })
@@ -52,15 +44,19 @@ app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
                         redirectTo: 'log'
                     }
                 },
-                /*
-                 views: {
-                 'homeContent': {
-
-                 }
-                 }*/
                 templateUrl: 'views/home.html',
                 controller: 'HomeCtrl'
-            });
+            }).state('logout', {
+            url: '/login',
+            data: {
+                permissions: {
+                    except: ['anon'],
+                    redirectTo: 'log'
+                }
+            },
+            templateUrl: 'views/login.html',
+            controller: 'LogoutCtrl'
+        });
 
         $urlRouterProvider.otherwise('/login');
     }]);

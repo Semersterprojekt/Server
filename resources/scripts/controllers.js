@@ -10,7 +10,6 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
     $scope.logIn = function () {
         var email = $scope.email;
         var password = $scope.password;
-        //var headers = {headers: {'Content-Type': 'application/json'}};
         var credentials = {
             email: email,
             password: password
@@ -18,11 +17,12 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
 
         $auth.login(credentials).then(function (resp) {
             $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
-                    var user = JSON.stringify(response.user);
-                    localStorage.setItem('user', user);
-                    $rootScope.currentUser = response.user;
-                    $state.go('home');
-                })
+                var user = JSON.stringify(response.user);
+                localStorage.setItem('user', user);
+                localStorage.setItem('adminUsername', user.username);
+                $rootScope.currentUser = response.user;
+                $state.go('home');
+            })
                 .error(function () {
                     console.log('fehler');
                     $scope.loginError = true;
@@ -39,21 +39,10 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
                 });
             }
         );
-
-        /*$http.post(loginUrl, credentials, headers).then(function (resp) {
-         $rootScope.token = resp.data.token;
-         console.log("das ist der Token  " + $rootScope.token);
-         if (resp.status == 200) {
-         $state.go("home");
-         }
-         }, function (fail) {
-         console.log(fail);
-         });*/
     }
-})
-;
+});
 
-app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav) {
+app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state) {
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
 
@@ -76,6 +65,13 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
     };
 
     $scope.radius = Math.floor(Math.random() * 100);
+    $scope.selected = null;
+
+    $scope.selectUser = function (user) {
+        $scope.selected = user;
+        console.log('selected' + user.username);
+    };
+
 
     /**
      * Line Chart function
@@ -101,6 +97,13 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
                 data: [1, 0, 4, 2, 1, 0, 1, 2, 5, 3]
             }],
         });
+    });
+});
+
+
+app.controller('LogoutCtrl', function ($scope, $state) {
+    $scope.$on('$viewContentLoaded', function () {
+        localStorage.clear();
     });
 });
 

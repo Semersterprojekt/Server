@@ -46,7 +46,9 @@ body {
 }
 
 .md-sidenav-left {
+  text-align: left;
   min-height: 100%;
+  position: fixed;
 }
 
 #avatar-item {
@@ -66,8 +68,8 @@ body {
   margin-top: 25px;
 }
 
-md-list-item {
-  padding: 2px 20px;
+md-list .md-button {
+  width: 100%;
 }
 
 md-backdrop {
@@ -80,4 +82,49 @@ md-backdrop {
 
 md-card {
   display: inline-block;
+}
+
+.md-button.md-icon-button.menuBtn {
+  margin-top: 6px;
+  margin-right: 0;
+}
+
+.muppet-list .md-button {
+  color: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+.muppet-list .selected {
+  color: #03a9f4;
+}
+
+.face {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  display: inline-block;
+  margin: 4px 16px;
+  vertical-align: middle;
+  width: 48px;
+}
+
+.content-wrapper {
+  position: relative;
+}
+
+#primary-col {
+  overflow: hidden;
+}
+
+#primary-col .md-button {
+  margin: 8px auto 16px 0;
+}
+
+#primary-col .cell {
+  flex: 1 1 auto;
+}
+
+#primary-col img {
+  display: block;
+  max-width: 100%;
 }

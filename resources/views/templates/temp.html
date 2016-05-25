@@ -1,0 +1,20 @@
+<!-- Content starts here -->
+<div class="container content-holder" layout="row" layout-sm="column" layout-wrap>
+    <md-card ng-repeat="oneuser in users" flex>
+        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+             class="md-card-image" alt="image caption">
+        <md-card-content>
+            <h2>{{ oneuser.username}}</h2>
+            <p>{{ oneuser.email }}</p>
+        </md-card-content>
+    </md-card>
+</div>
+
+<!-- <div class="content-holder" layout="row" layout-xs="column" layout-sm="column" flex-sm="100" flex-xs="100" layout-align="start start">
+    </div> -->
+
+<!-- Graph Container  -->
+<div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
+     class="container content-holder md-whiteframe-1dp" style="height: 400px">
+</div>
+<!-- END  -->

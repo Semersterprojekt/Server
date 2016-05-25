@@ -24,8 +24,6 @@ class TestsController extends Controller
      */
     public function index()
     {
-        //$tests = Test::all();
-
         if (Auth::check()) {
             $id = Auth::user()->id;
             $user = User::find($id);
@@ -36,16 +34,6 @@ class TestsController extends Controller
                 'data' => $tests
             ], 200);
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -84,30 +72,6 @@ class TestsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
-    /**
      * Show all created Posts
      * Only for admins
      *
@@ -133,7 +97,6 @@ class TestsController extends Controller
                 'error' => 'Not logged in'
             ], 401);
         }
-
     }
 
     /**
@@ -162,6 +125,23 @@ class TestsController extends Controller
                 'error' => 'Not logged in'
             ], 401);
         }
+    }
+
+    /**
+     * Gets all the Posts posted by the user with $id
+     *
+     * @param $id user id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminUserPosts($id)
+    {
+        $user = User::find($id);
+        $posts = $user->tests()->get();
+
+
+        return response()->json([
+            'data' => $posts
+        ], 200);
     }
 
 
