@@ -26,6 +26,7 @@ elixir(function (mix) {
         './resources/scripts/bower_components/angular-ui/build/angular-ui.js',
         './resources/scripts/bower_components/satellizer/satellizer.js',
         './resources/scripts/bower_components/angular-permission/dist/angular-permission.js',
+        './resources/scripts/bower_components/underscore/underscore.js',
         './resources/scripts/app.js',
         './resources/scripts/controllers.js',
         './resources/scripts/jquery-1.11.3.min.js',

@@ -46,7 +46,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
                 },
                 templateUrl: 'views/home.html',
                 controller: 'HomeCtrl'
-            }).state('logout', {
+            }).state('tools', {
+            url: '/tools',
+            data: {
+                permissions: {
+                    except: ['anon'],
+                    redirectTo: 'log'
+                }
+            },
+            templateUrl: 'views/tools.html',
+            controller: 'ToolsCtrl'
+        }).state('logout', {
             url: '/login',
             data: {
                 permissions: {

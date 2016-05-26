@@ -84,18 +84,34 @@ md-card {
   display: inline-block;
 }
 
+.post-card {
+  height: 300px;
+  width: 350px;
+}
+
 .md-button.md-icon-button.menuBtn {
   margin-top: 6px;
   margin-right: 0;
 }
 
-.muppet-list .md-button {
+.user-list {
+  min-width: 250px;
+  max-height: 85%;
+  height: 85%;
+  overflow: hidden;
+}
+
+#user-list-container {
+  min-width: 200px;
+}
+
+.user-list .md-button {
   color: inherit;
   text-align: left;
   width: 100%;
 }
 
-.muppet-list .selected {
+.user-list .selected {
   color: #03a9f4;
 }
 
@@ -112,8 +128,24 @@ md-card {
   position: relative;
 }
 
+.usersandposts {
+  height: 85vh;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.middle-align {
+  width: 99%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2%;
+}
+
 #primary-col {
   overflow: hidden;
+  height: 85%;
+  max-height: 85%;
 }
 
 #primary-col .md-button {
@@ -127,4 +159,9 @@ md-card {
 #primary-col img {
   display: block;
   max-width: 100%;
+}
+
+#map {
+  height: 500px;
+  width: 100%;
 }

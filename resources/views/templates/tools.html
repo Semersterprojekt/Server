@@ -5,52 +5,29 @@
             <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
         </md-button>
         <h2 class="md-toolbar-tools" layout-align="center center">
-            Users and Posts
+            Tools
         </h2>
     </div>
     <md-button class="logout-button" ui-sref="logout">Logout</md-button>
 </md-toolbar>
 
+
 <!-- Content Starts here -->
 <div class="container content-holder md-whiteframe-1dp" layout="column" layout-sm="column" layout-xs="column"
      flex-sm="100" flex-xs="100">
-    <div layout="row" flex class="content-wrapper md-whiteframe-z2">
 
-        <!-- Users -->
-
-        <div id="user-list-container" class="usersandposts" layout="column" flex="20">
-            <h4>Registrierte User:</h4>
-            <md-divider></md-divider>
-            <md-list class="user-list" hide-sm hide-xs>
-                <md-item ng-repeat="oneuser in users">
-                    <md-item-content>
-                        <md-button ng-click="selectUser(oneuser)" ng-class="{'selected' : oneuser === selected }"
-                                   aria-label="userLabel">
-                            <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                                 class="face" alt="">
-                            {{oneuser.username}}
-                        </md-button>
-                    </md-item-content>
-                </md-item>
-            </md-list>
-        </div>
-
-        <md-divider></md-divider>
-
-        <!-- Posts -->
-        <div layout="column" class="content-wrapper content-holder middle-align" id="primary-col" flex="80" layout-wrap>
-            <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
-                <md-card class="post-card" ng-repeat="post in selectedPosts">
-                    <div class="cell">
-                        <img ng-src="http://193.5.58.95/img/test/{{post.img_path}}" alt="{{post.model}}">
-                    </div>
-                    <md-content layout="column">
-                        <h4>{{post.brand}} {{post.model}}</h4>
-                    </md-content>
-                </md-card>
-            </div>
-        </div>
+    <!-- Graph Container  -->
+    <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
+         class="container content-holder md-whiteframe-1dp" style="height: 100%">
     </div>
+    <!-- END  -->
+
+</div>
+<!-- END -->
+
+<div class="container content-holder md-whiteframe-1dp" layout="column">
+    <!-- Map Container -->
+    <div id="map"></div>
 </div>
 <!-- END -->
 
@@ -123,29 +100,10 @@
     </section>
 </div>
 
-<!--  Could be useful later on:
-<md-list-item class="md-3-line" ng-repeat="item in todos">
-            <img ng-src="{{item.face}}" alt="{{item.who}}" class="md-avatar">
-            <div class="md-list-item-text">
-                <h3>{{item.what}}</h3>
-                <h4>{{item.who}}</h4>
-                <p>
-                    {{item.notes}}
-                </p>
-            </div>
-            <md-divider inset></md-divider>
-        </md-list-item>
-
-
-
-
-<md-content layout-padding>
-    <md-button ng-click="close()" class="md-primary" hide-gt-md>
-        Close Sidenav Left
-    </md-button>
-    <p hide-md show-gt-md>
-        This sidenav is locked open on your device. To go back to the default behavior,
-        narrow your display.
-    </p>
-</md-content>-->
+<script>
+    $(function () {
+        window.dispatchEvent(new Event('resize'));
+    });
+</script>
+</div>
 

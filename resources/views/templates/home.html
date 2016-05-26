@@ -5,7 +5,7 @@
             <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
         </md-button>
         <h2 class="md-toolbar-tools" layout-align="center center">
-            Chosen Tool
+            Users and Posts
         </h2>
     </div>
     <md-button class="logout-button" ui-sref="logout">Logout</md-button>
@@ -15,10 +15,13 @@
 <div class="container content-holder md-whiteframe-1dp" layout="column" layout-sm="column" layout-xs="column"
      flex-sm="100" flex-xs="100">
     <div layout="row" flex class="content-wrapper md-whiteframe-z2">
-        <div layout="column" flex="20">
+
+        <!-- Users -->
+
+        <div id="user-list-container" class="usersandposts" layout="column" flex="20">
             <h4>Registrierte User:</h4>
             <md-divider></md-divider>
-            <md-list class="muppet-list">
+            <md-list class="user-list" hide-sm hide-xs>
                 <md-item ng-repeat="oneuser in users">
                     <md-item-content>
                         <md-button ng-click="selectUser(oneuser)" ng-class="{'selected' : oneuser === selected }"
@@ -34,33 +37,18 @@
 
         <md-divider></md-divider>
 
-        <div layout="column" flex class="content-wrapper content-holder" id="primary-col">
-            <div layout="row md-list-item-text">
-                <h3 class="title">{{selected.username}}</h3>
-            </div>
-            <div layout="row">
-                <md-content layout="column" flex class="md-padding">
-                    <h2>{{selected.username}}</h2>
-                    <p>{{selected.email}}</p>
+        <!-- Posts -->
+        <div layout="column" class="content-wrapper content-holder middle-align" id="primary-col" flex="80" layout-wrap>
+            <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
+                <md-card class="post-card" ng-repeat="post in selectedPosts">
                     <div class="cell">
-                        <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                             alt="{{selected.username}}">
-                        <p>{{selected.username}}</p>
+                        <img ng-src="http://193.5.58.95/img/test/{{post.img_path}}" alt="{{post.model}}">
                     </div>
-                </md-content>
+                    <md-content layout="column">
+                        <h4>{{post.brand}} {{post.model}}</h4>
+                    </md-content>
+                </md-card>
             </div>
-            <!--  <md-divider></md-divider>
-            <div layout="row">
-                <md-content layout="column" flex class="md-padding">
-                    <h2>{{selected.username}}</h2>
-                    <p>{{selected.email}}</p>
-                    <div class="cell">
-                        <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                             alt="{{selected.username}}">
-                        <p>{{selected.username}}</p>
-                    </div>
-                </md-content>
-            </div>-->
         </div>
     </div>
 </div>
@@ -96,11 +84,11 @@
                             <img id="avatar-image" class="md-avatar"
                                  ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
                             <div class="md-list-item-text">
-                                <p>Aktiver Admin</p>
+                                <p>Aktiver Admin:</p>
+                                <p>{{username}}</p>
                             </div>
                         </md-list-item>
                     </md-list>
-                    | GET|HEAD | api/v1/cars/{cars} | api.v1.cars.show
                 </div>
             </md-toolbar>
             <md-toolbar class="md-accent">
@@ -109,15 +97,15 @@
                         <md-list>
                             <md-divider></md-divider>
                             <md-subheader>Auswahl</md-subheader>
-                            <md-list-item ng-click="" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="home" class="md-3-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>User und Posts</h3>
                                 </div>
                             </md-list-item>
 
-                            <md-list-item ui-sref="car-owned" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="tools" class="md-3-line" md-ink-ripple>
                                 <div class="md-list-item-text">
-                                    <h3>Administratives</h3></div>
+                                    <h3>Analyse Tools</h3></div>
                             </md-list-item>
 
                             <md-divider></md-divider>
@@ -160,13 +148,4 @@
         narrow your display.
     </p>
 </md-content>-->
-
-<script>
-    $(function () {
-        window.dispatchEvent(new Event('resize'));
-    });
-</script>
-
-
-</div>
 
