@@ -67982,7 +67982,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {
             exports = module.exports = _;
-        }
+    }
         exports._ = _;
     } else {
         root._ = _;
@@ -68016,7 +68016,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         }
         return function () {
             return func.apply(context, arguments);
-        };
+    };
     };
 
     // A mostly-internal function to generate callbacks that can be applied
@@ -68047,7 +68047,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 }
             }
             return obj;
-        };
+    };
     };
 
     // An internal function for creating a new object that inherits from another.
@@ -68063,7 +68063,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     var property = function (key) {
         return function (obj) {
             return obj == null ? void 0 : obj[key];
-        };
+    };
     };
 
     // Helper for collection methods to determine whether a collection
@@ -68122,7 +68122,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 memo = iteratee(memo, obj[currentKey], currentKey, obj);
             }
             return memo;
-        }
+    }
 
         return function (obj, iteratee, memo, context) {
             iteratee = optimizeCb(iteratee, context, 4);
@@ -68243,7 +68243,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 value = obj[i];
                 if (value > result) {
                     result = value;
-                }
+        }
             }
         } else {
             iteratee = cb(iteratee, context);
@@ -68252,7 +68252,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 if (computed > lastComputed || computed === -Infinity && result === -Infinity) {
                     result = value;
                     lastComputed = computed;
-                }
+        }
             });
         }
         return result;
@@ -68268,7 +68268,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 value = obj[i];
                 if (value < result) {
                     result = value;
-                }
+        }
             }
         } else {
             iteratee = cb(iteratee, context);
@@ -68338,7 +68338,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 behavior(result, value, key);
             });
             return result;
-        };
+    };
     };
 
     // Groups the object's values by a criterion. Pass either a string attribute
@@ -68436,7 +68436,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 output.length += len;
                 while (j < len) {
                     output[idx++] = value[j++];
-                }
+        }
             } else if (!strict) {
                 output[idx++] = value;
             }
@@ -68476,7 +68476,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 if (!_.contains(seen, computed)) {
                     seen.push(computed);
                     result.push(value);
-                }
+        }
             } else if (!_.contains(result, value)) {
                 result.push(value);
             }
@@ -68558,7 +68558,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 if (predicate(array[index], index, array)) return index;
             }
             return -1;
-        };
+    };
     }
 
     // Returns the first index on an array-like that passes a predicate test
@@ -68574,7 +68574,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         while (low < high) {
             var mid = Math.floor((low + high) / 2);
             if (iteratee(array[mid]) < value) low = mid + 1; else high = mid;
-        }
+    }
         return low;
     };
 
@@ -68587,7 +68587,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                     i = idx >= 0 ? idx : Math.max(idx + length, i);
                 } else {
                     length = idx >= 0 ? Math.min(idx + 1, length) : idx + length + 1;
-                }
+        }
             } else if (sortedIndex && idx && length) {
                 idx = sortedIndex(array, item);
                 return array[idx] === item ? idx : -1;
@@ -68600,7 +68600,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 if (array[idx] === item) return idx;
             }
             return -1;
-        };
+    };
     }
 
     // Return the position of the first occurrence of an item in an array,
@@ -68617,7 +68617,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         if (stop == null) {
             stop = start || 0;
             start = 0;
-        }
+    }
         step = step || 1;
 
         var length = Math.max(Math.ceil((stop - start) / step), 0);
@@ -68652,7 +68652,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         var args = slice.call(arguments, 2);
         var bound = function () {
             return executeBound(func, bound, context, this, args.concat(slice.call(arguments)));
-        };
+    };
         return bound;
     };
 
@@ -68669,7 +68669,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             }
             while (position < arguments.length) args.push(arguments[position++]);
             return executeBound(func, bound, this, this, args);
-        };
+    };
         return bound;
     };
 
@@ -68693,7 +68693,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             var address = '' + (hasher ? hasher.apply(this, arguments) : key);
             if (!_.has(cache, address)) cache[address] = func.apply(this, arguments);
             return cache[address];
-        };
+    };
         memoize.cache = {};
         return memoize;
     };
@@ -68726,7 +68726,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             timeout = null;
             result = func.apply(context, args);
             if (!timeout) context = args = null;
-        };
+    };
         return function () {
             var now = _.now();
             if (!previous && options.leading === false) previous = now;
@@ -68781,7 +68781,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             }
 
             return result;
-        };
+    };
     };
 
     // Returns the first function passed as an argument to the second,
@@ -68795,7 +68795,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     _.negate = function (predicate) {
         return function () {
             return !predicate.apply(this, arguments);
-        };
+    };
     };
 
     // Returns a function that is the composition of a list of functions, each
@@ -68808,7 +68808,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             var result = args[start].apply(this, arguments);
             while (i--) result = args[i].call(this, result);
             return result;
-        };
+    };
     };
 
     // Returns a function that will only be executed on and after the Nth call.
@@ -68817,7 +68817,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             if (--times < 1) {
                 return func.apply(this, arguments);
             }
-        };
+    };
     };
 
     // Returns a function that will only be executed up to (but not including) the Nth call.
@@ -68829,7 +68829,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             }
             if (times <= 1) func = null;
             return memo;
-        };
+    };
     };
 
     // Returns a function that will be executed at most one time, no matter how
@@ -68858,7 +68858,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             if (prop in obj && obj[prop] !== proto[prop] && !_.contains(keys, prop)) {
                 keys.push(prop);
             }
-        }
+    }
     }
 
     // Retrieve the names of an object's own properties.
@@ -69158,7 +69158,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     _.each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp', 'Error'], function (name) {
         _['is' + name] = function (obj) {
             return toString.call(obj) === '[object ' + name + ']';
-        };
+    };
     });
 
     // Define a fallback version of the method in browsers (ahem, IE < 9), where
@@ -69166,7 +69166,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     if (!_.isArguments(arguments)) {
         _.isArguments = function (obj) {
             return _.has(obj, 'callee');
-        };
+    };
     }
 
     // Optimize `isFunction` if appropriate. Work around some typeof bugs in old v8,
@@ -69174,7 +69174,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     if (typeof /./ != 'function' && typeof Int8Array != 'object') {
         _.isFunction = function (obj) {
             return typeof obj == 'function' || false;
-        };
+    };
     }
 
     // Is a given object a finite number?
@@ -69227,7 +69227,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     _.constant = function (value) {
         return function () {
             return value;
-        };
+    };
     };
 
     _.noop = function () {
@@ -69240,7 +69240,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         return obj == null ? function () {
         } : function (key) {
             return obj[key];
-        };
+    };
     };
 
     // Returns a predicate for checking whether an object has a given set of
@@ -69249,7 +69249,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         attrs = _.extendOwn({}, attrs);
         return function (obj) {
             return _.isMatch(obj, attrs);
-        };
+    };
     };
 
     // Run a function **n** times.
@@ -69289,7 +69289,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
     var createEscaper = function (map) {
         var escaper = function (match) {
             return map[match];
-        };
+    };
         // Regexes for identifying a key that needs to be escaped
         var source = '(?:' + _.keys(map).join('|') + ')';
         var testRegexp = RegExp(source);
@@ -69297,7 +69297,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         return function (string) {
             string = string == null ? '' : '' + string;
             return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
-        };
+    };
     };
     _.escape = createEscaper(escapeMap);
     _.unescape = createEscaper(unescapeMap);
@@ -69401,7 +69401,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
 
         var template = function (data) {
             return render.call(this, data, _);
-        };
+    };
 
         // Provide the compiled source as a convenience for precompilation.
         var argument = settings.variable || 'obj';
@@ -69437,7 +69437,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 push.apply(args, arguments);
                 return result(this, func.apply(_, args));
             };
-        });
+    });
     };
 
     // Add all of the Underscore functions to the wrapper object.
@@ -69451,7 +69451,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             method.apply(obj, arguments);
             if ((name === 'shift' || name === 'splice') && obj.length === 0) delete obj[0];
             return result(this, obj);
-        };
+    };
     });
 
     // Add all accessor Array functions to the wrapper.
@@ -69459,7 +69459,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         var method = ArrayProto[name];
         _.prototype[name] = function () {
             return result(this, method.apply(this._wrapped, arguments));
-        };
+    };
     });
 
     // Extracts the result from a wrapped and chained object.
@@ -69613,7 +69613,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
     }
 });
 
-app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state) {
+app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state, $mdDialog) {
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
 
@@ -69624,21 +69624,56 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
         $scope.username = localStorage.getItem('adminUsername');
     });
 
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+    };
+
+    $scope.redial = function (event, post) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete the post?')
+            .textContent('This will remove the post from the online database.')
+            .ariaLabel('Deletition')
+            .parent('body')
+            .ok('Yes')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function () {
+            $scope.status = 'You have deleted the Post.';
+            console.log(post);
+        });
+
+
+        originatorEv = null;
+
+        /*$mdDialog.show(
+         $mdDialog.alert()
+         .targetEvent(originatorEv)
+         .clickOutsideToClose(true)
+         .parent('body')
+         .title('Suddenly, a redial')
+         .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
+         .ok('That was easy')
+         );*/
+    };
+
+
     $scope.close = function () {
         $mdSidenav('left').toggle();
 
-        for (var prop in $scope.users) {
-            if (!$scope.users.hasOwnProperty(prop)) {
-                //The current property is not a direct property of p
-                continue;
-            }
-        }
+        /*for (var prop in $scope.users) {
+         if (!$scope.users.hasOwnProperty(prop)) {
+         //The current property is not a direct property of p
+         continue;
+         }
+         }*/
     };
 
     $scope.radius = Math.floor(Math.random() * 100);
     $scope.selected = null;
 
-    $scope.selectUser = function (user) {
+    $scope.loadPosts = function (user) {
         $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
             $scope.selectedPosts = response.data;
         });
@@ -69648,8 +69683,7 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
 });
 
 
-app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $state) {
-
+app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $state, $interval) {
     $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
         $scope.users = response.data;
 
@@ -69677,13 +69711,14 @@ app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $stat
         }
 
         //$scope.userCount.pop();
+        $scope.map = null;
 
         /**
          * Google Maps function
          */
         function initMap() {
             var mapDiv = document.getElementById('map');
-            var map = new google.maps.Map(mapDiv, {
+            $scope.map = new google.maps.Map(mapDiv, {
                 center: {lat: 46.8095958, lng: 7.1032696},
                 zoom: 8
             });
@@ -69720,6 +69755,59 @@ app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $stat
         console.log($scope.userUsernames);
     });
 
+    $scope.$on('$viewContentLoaded', function () {
+
+        $interval(function () {
+            $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+                $scope.allPosts = response.data;
+
+                console.log('Interval done');
+                // set multiple marker
+                for (var i = 0; i < $scope.allPosts.length; i++) {
+                    // init markers
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng($scope.allPosts[i].geoX, $scope.allPosts[i].geoY),
+                        map: $scope.map,
+                        title: 'Post' + i,
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                    });
+
+                    // process multiple info windows
+                    (function (marker, i) {
+                        // add click event
+
+                        function toggleBounce(mark) {
+                            if (mark.getAnimation() !== null) {
+                                mark.setAnimation(null);
+                            } else {
+                                mark.setAnimation(google.maps.Animation.BOUNCE);
+                            }
+                        }
+
+                        var contentString = '<md-card class="post-card" ng-repeat="post in selectedPosts">' +
+                            '<div class="cell">' +
+                            '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
+                            '</div>' +
+                            '<md-content layout="row">' +
+                            '<md-content layout="column" layout-align="center center" flex>' +
+                            '<h4>' + $scope.allPosts[i].brand + '  ' + $scope.allPosts[i].model + '</h4>' +
+                            '</md-content>' +
+                            '</md-content>' +
+                            '</md-card>';
+
+                        google.maps.event.addListener(marker, 'click', function () {
+                            $scope.map.panTo(marker.getPosition());
+                            infowindow = new google.maps.InfoWindow({
+                                content: contentString
+                            });
+                            infowindow.open($scope.map, marker);
+                            toggleBounce(marker);
+                        });
+                    })(marker, i);
+                }
+            });
+        }, 2000);
+    });
 
     $scope.close = function () {
         $mdSidenav('left').toggle();

@@ -43,7 +43,7 @@ app.controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, 
     }
 });
 
-app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state) {
+app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state, $mdDialog) {
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
 
@@ -54,21 +54,56 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
         $scope.username = localStorage.getItem('adminUsername');
     });
 
+    var originatorEv;
+    $scope.openMenu = function ($mdOpenMenu, ev) {
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+    };
+
+    $scope.redial = function (event, post) {
+        // Appending dialog to document.body to cover sidenav in docs app
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete the post?')
+            .textContent('This will remove the post from the online database.')
+            .ariaLabel('Deletition')
+            .parent('body')
+            .ok('Yes')
+            .cancel('Cancel');
+        $mdDialog.show(confirm).then(function () {
+            $scope.status = 'You have deleted the Post.';
+            console.log(post);
+        });
+
+
+        originatorEv = null;
+
+        /*$mdDialog.show(
+         $mdDialog.alert()
+         .targetEvent(originatorEv)
+         .clickOutsideToClose(true)
+         .parent('body')
+         .title('Suddenly, a redial')
+         .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
+         .ok('That was easy')
+         );*/
+    };
+
+
     $scope.close = function () {
         $mdSidenav('left').toggle();
 
         /*for (var prop in $scope.users) {
-            if (!$scope.users.hasOwnProperty(prop)) {
-                //The current property is not a direct property of p
-                continue;
-            }
+         if (!$scope.users.hasOwnProperty(prop)) {
+         //The current property is not a direct property of p
+         continue;
+         }
          }*/
     };
 
     $scope.radius = Math.floor(Math.random() * 100);
     $scope.selected = null;
 
-    $scope.selectUser = function (user) {
+    $scope.loadPosts = function (user) {
         $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
             $scope.selectedPosts = response.data;
         });
@@ -78,8 +113,7 @@ app.controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSid
 });
 
 
-app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $state) {
-
+app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $state, $interval) {
     $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
         $scope.users = response.data;
 
@@ -107,13 +141,14 @@ app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $stat
         }
 
         //$scope.userCount.pop();
+        $scope.map = null;
 
         /**
          * Google Maps function
          */
         function initMap() {
             var mapDiv = document.getElementById('map');
-            var map = new google.maps.Map(mapDiv, {
+            $scope.map = new google.maps.Map(mapDiv, {
                 center: {lat: 46.8095958, lng: 7.1032696},
                 zoom: 8
             });
@@ -150,6 +185,59 @@ app.controller('ToolsCtrl', function ($scope, $http, $timeout, $mdSidenav, $stat
         console.log($scope.userUsernames);
     });
 
+    $scope.$on('$viewContentLoaded', function () {
+
+        $interval(function () {
+            $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+                $scope.allPosts = response.data;
+
+                console.log('Interval done');
+                // set multiple marker
+                for (var i = 0; i < $scope.allPosts.length; i++) {
+                    // init markers
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng($scope.allPosts[i].geoX, $scope.allPosts[i].geoY),
+                        map: $scope.map,
+                        title: 'Post' + i,
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                    });
+
+                    // process multiple info windows
+                    (function (marker, i) {
+                        // add click event
+
+                        function toggleBounce(mark) {
+                            if (mark.getAnimation() !== null) {
+                                mark.setAnimation(null);
+                            } else {
+                                mark.setAnimation(google.maps.Animation.BOUNCE);
+                            }
+                        }
+
+                        var contentString = '<md-card class="post-card" ng-repeat="post in selectedPosts">' +
+                            '<div class="cell">' +
+                            '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
+                            '</div>' +
+                            '<md-content layout="row">' +
+                            '<md-content layout="column" layout-align="center center" flex>' +
+                            '<h4>' + $scope.allPosts[i].brand + '  ' + $scope.allPosts[i].model + '</h4>' +
+                            '</md-content>' +
+                            '</md-content>' +
+                            '</md-card>';
+
+                        google.maps.event.addListener(marker, 'click', function () {
+                            $scope.map.panTo(marker.getPosition());
+                            infowindow = new google.maps.InfoWindow({
+                                content: contentString
+                            });
+                            infowindow.open($scope.map, marker);
+                            toggleBounce(marker);
+                        });
+                    })(marker, i);
+                }
+            });
+        }, 2000);
+    });
 
     $scope.close = function () {
         $mdSidenav('left').toggle();

@@ -12,24 +12,57 @@
 </md-toolbar>
 
 <!-- Content Starts here -->
-<div class="container content-holder md-whiteframe-1dp" layout="column" layout-sm="column" layout-xs="column"
+<div class="container content-holder" layout="column" layout-sm="column" layout-xs="column"
      flex-sm="100" flex-xs="100">
+
+    <div layout="column" hide-gt-sm>
+        <h2>User Auswahl:</h2>
+        <md-select ng-model="selectedUser" aria-label="Selection">
+            <md-label>Registrierte User:</md-label>
+            <md-option ng-repeat="oneuser in users" ng-click="loadPosts(oneuser)">
+                <md-button ng-class="{'selected' : oneuser === selected }"
+                           aria-label="userLabel">
+                    <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+                         class="face" alt="">
+                    {{oneuser.username}}
+                </md-button>
+            </md-option>
+        </md-select>
+    </div>
+
     <div layout="row" flex class="content-wrapper md-whiteframe-z2">
 
         <!-- Users -->
-
-        <div id="user-list-container" class="usersandposts" layout="column" flex="20">
+        <div id="user-list-container" class="usersandposts" layout="column" flex="20" hide-sm hide-xs>
             <h4>Registrierte User:</h4>
             <md-divider></md-divider>
-            <md-list class="user-list" hide-sm hide-xs>
+            <md-list class="user-list">
                 <md-item ng-repeat="oneuser in users">
                     <md-item-content>
-                        <md-button ng-click="selectUser(oneuser)" ng-class="{'selected' : oneuser === selected }"
-                                   aria-label="userLabel">
-                            <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
-                                 class="face" alt="">
-                            {{oneuser.username}}
-                        </md-button>
+                        <div layout="row" layout-align="space-around center">
+                            <div layout="column" flex="70">
+                                <md-button ng-click="loadPosts(oneuser)" ng-class="{'selected' : oneuser === selected }"
+                                           aria-label="userLabel">
+                                    <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
+                                         class="face" alt="">
+                                    {{oneuser.username}}
+                                </md-button>
+                            </div>
+                            <div layout="column" flex="30">
+                                <md-menu>
+                                    <md-button aria-label="Delete Post" ng-click="openMenu($mdOpenMenu, $event)">
+                                        <img class="delete-cross" src="img/icons/delete_cross.svg" alt="Close">
+                                    </md-button>
+                                    <md-menu-content width="2">
+                                        <md-menu-item>
+                                            <md-button ng-click="redial($event, oneuser.id)">
+                                                Delete this User?
+                                            </md-button>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+                            </div>
+                        </div>
                     </md-item-content>
                 </md-item>
             </md-list>
@@ -44,8 +77,22 @@
                     <div class="cell">
                         <img ng-src="http://193.5.58.95/img/test/{{post.img_path}}" alt="{{post.model}}">
                     </div>
-                    <md-content layout="column">
-                        <h4>{{post.brand}} {{post.model}}</h4>
+                    <md-content layout="row">
+                        <md-content layout="column" layout-align="center center" flex>
+                            <h4>{{post.brand}} {{post.model}}</h4>
+                        </md-content>
+                        <md-menu>
+                            <md-button aria-label="Delete Post" ng-click="openMenu($mdOpenMenu, $event)">
+                                <img class="delete-cross" src="img/icons/delete_cross.svg" alt="Close">
+                            </md-button>
+                            <md-menu-content width="2">
+                                <md-menu-item>
+                                    <md-button ng-click="redial($event, post.id)">
+                                        Delete this Post?
+                                    </md-button>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
                     </md-content>
                 </md-card>
             </div>

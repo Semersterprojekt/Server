@@ -68,7 +68,7 @@ body {
   margin-top: 25px;
 }
 
-md-list .md-button {
+.md-list .md-button {
   width: 100%;
 }
 
@@ -85,7 +85,6 @@ md-card {
 }
 
 .post-card {
-  height: 300px;
   width: 350px;
 }
 
@@ -164,4 +163,14 @@ md-card {
 #map {
   height: 500px;
   width: 100%;
+}
+
+.delete-cross {
+  height: 16px;
+  width: 16px;
+}
+
+.md-content {
+  padding-left: 5px;
+  padding-right: 5px;
 }
