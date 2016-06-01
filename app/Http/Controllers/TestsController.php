@@ -80,7 +80,7 @@ class TestsController extends Controller
     public function adminPosts()
     {
         return response()->json([
-            'data' => Test::all()->orderBy('created_at', 'desc')->get()
+            'data' => Test::orderBy('created_at', 'desc')->get()
         ], 200);
     }
 
@@ -107,7 +107,7 @@ class TestsController extends Controller
     public function adminUserPosts($id)
     {
         $user = User::find($id);
-        $posts = $user->tests()->get();
+        $posts = $user->tests()->orderBy('created_at', 'desc')->get();
 
 
         return response()->json([
