@@ -31,12 +31,17 @@
     </div>
 
     <div layout="row" flex class="content-wrapper md-whiteframe-z2">
-
         <!-- Users -->
         <div id="user-list-container" class="usersandposts" layout="column" flex="20" hide-sm hide-xs>
             <h4>Registrierte User:</h4>
             <md-divider></md-divider>
             <md-list class="user-list">
+                <md-item ng-show="!usersLoaded">
+                    <md-progress-circular class="md-accent"
+                                          md-diameter="40" md-mode='indeterminate'>
+                    </md-progress-circular>
+                </md-item>
+
                 <md-item ng-repeat="oneuser in users">
                     <md-item-content>
                         <div layout="row" layout-align="space-around center">
@@ -72,6 +77,7 @@
 
         <!-- Posts -->
         <div layout="column" class="content-wrapper content-holder middle-align" id="primary-col" flex="80" layout-wrap>
+            <div ng-show="noneSelected">Wählen Sie einen User aus!</div>
             <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
                 <md-card class="post-card" ng-repeat="post in selectedPosts">
                     <div class="cell">

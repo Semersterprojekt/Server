@@ -11,25 +11,44 @@
     <md-button class="logout-button" ui-sref="logout">Logout</md-button>
 </md-toolbar>
 
+<md-tabs class="container content-holder md-whiteframe-2dp" md-dynamic-height md-border-bottom>
+    <md-tab label="Graphen">
+        <!-- Content Starts here -->
 
-<!-- Content Starts here -->
-<div class="container content-holder md-whiteframe-1dp" layout="column" layout-sm="column" layout-xs="column"
-     flex-sm="100" flex-xs="100">
+        <!-- Spinner until data is loaded -->
+        <div class="container content-holder" ng-show="!dataLoaded" layout="column" layout-align="center center">
+            <md-progress-circular class="md-accent"
+                                  md-diameter="100" md-mode='indeterminate'>
+            </md-progress-circular>
+        </div>
 
-    <!-- Graph Container  -->
-    <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
-         class="container content-holder md-whiteframe-1dp" style="height: 100%">
-    </div>
-    <!-- END  -->
+        <!-- Graph Container  -->
+        <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
+             class="container content-holder" style="height: 30vh">
+        </div>
+        <!-- END  -->
 
-</div>
-<!-- END -->
+        <div layout="row" layout-xs="column" layout-sm="column">
+            <div id="pie-container" layout="column" layout-xs="column" layout-sm="column" layout-align="start start"
+                 class="container content-holder md-whiteframe-1dp" style="height: 100%" flex="50" flex-sm="100"
+                 flex-xs="100"></div>
 
-<div class="container content-holder md-whiteframe-1dp" layout="column">
-    <!-- Map Container -->
-    <div id="map"></div>
-</div>
-<!-- END -->
+            <div id="pie-sub-container" layout="column" layout-xs="column" layout-sm="column" layout-align="start start"
+                 class="container content-holder md-whiteframe-1dp" style="height: 100%" flex="50" flex-sm="100"
+                 flex-xs="100">
+
+                <h3 ng-show="!brandSelected"> Wählen Sie ein Fahrzeugbrand aus</h3>
+            </div>
+        </div>
+
+
+    </md-tab>
+
+    <md-tab label="Map">
+        <!-- Map Container -->
+        <div id="map"></div>
+    </md-tab>
+</md-tabs>
 
 <!-- Sidebar navigation starts here -->
 <div layout="column" ng-cloak>

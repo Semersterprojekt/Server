@@ -69580,10 +69580,13 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
 
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
+        $scope.noneSelected = true;
+        $scope.usersLoaded = false;
 
         $interval.cancel($rootScope.ToolPromise);
         $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
             $scope.users = response.data;
+            $scope.usersLoaded = true;
         });
         $scope.username = localStorage.getItem('adminUsername');
     });
@@ -69630,7 +69633,10 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
 
 
             $http.delete('http://193.5.58.95/api/v1/admin/deleteuser/' + user.id).success(function (response) {
-                $scope.loadPosts($scope.selectedUser);
+                $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+                    $scope.users = response.data;
+                    $scope.selectedUser = undefined;
+                });
             });
             console.log(user);
         });
@@ -69654,6 +69660,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
     $scope.selected = null;
 
     $scope.loadPosts = function (user) {
+        $scope.noneSelected = false;
         $scope.selectedUser = user;
 
         $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
@@ -69735,31 +69742,17 @@ angular.module('app.controllers').controller('LogoutCtrl', function ($rootScope,
  * Created by rijad on 01.06.16.
  */
 angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state, $interval) {
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.dataLoaded = false;
+        $scope.brandSelected = false;
+        $interval.cancel($rootScope.HomePromise);
+        $rootScope.ToolPromise = $interval(function () {
+            $scope.setMarkers();
+        }, 4000);
+    });
+
     $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
         $scope.users = response.data;
-
-        $scope.groupedUsers = _.groupBy($scope.users, function (item) {
-            return item.created_at;
-        });
-
-        console.log($scope.users);
-        console.log($scope.groupedUsers);
-
-        $scope.userDates = [];
-        $scope.userUsernames = [];
-        $scope.userCount = [];
-
-        for (var key in $scope.groupedUsers) {
-            $scope.userDates.push(key);
-            //console.log(key);
-            //console.log($scope.groupedUsers[key]);
-            var innerObject = $scope.groupedUsers[key];
-            $scope.userCount.push(innerObject.length);
-            for (var inner in innerObject) {
-                //console.log(innerObject[inner]);
-                $scope.userUsernames.push(innerObject[inner].username);
-            }
-        }
         $scope.map = null;
 
         /**
@@ -69768,12 +69761,45 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         function initMap() {
             var mapDiv = document.getElementById('map');
             $scope.map = new google.maps.Map(mapDiv, {
-                center: {lat: 46.8095958, lng: 7.1032696},
+                center: {lat: 47.3775499, lng: 8.4666756},
                 zoom: 8
             });
+
+            //Global variable for infowindow toggle
+            $scope.infowindow = null;
         }
 
         initMap();
+
+        $scope.groupedUsersDate = _.groupBy($scope.users, function (item) {
+            return item.created_at;
+        });
+
+
+        console.log($scope.users);
+        console.log($scope.groupedUsersDate);
+
+        $scope.userDates = [];
+        $scope.userData = [];
+        $scope.userUsernames = [];
+        $scope.userCount = [];
+        $scope.userTotal = $scope.users.length;
+
+        for (var key in $scope.groupedUsersDate) {
+            var userObject = {};
+            $scope.userDates.push(key);
+            //console.log(key);
+            //console.log($scope.groupedUsers[key]);
+            var innerObject = $scope.groupedUsersDate[key];
+            $scope.userCount.push(innerObject.length);
+            userObject.y = innerObject.length;
+
+            for (var inner in innerObject) {
+                //console.log(innerObject[inner]);
+                $scope.userUsernames.push(innerObject[inner].username);
+                userObject
+            }
+        }
 
         /**
          * Line Chart function
@@ -69783,7 +69809,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 type: 'line'
             },
             title: {
-                text: 'Registrierte User'
+                text: 'Registrierte User: ' + $scope.userTotal
             },
             xAxis: {
                 categories: $scope.userDates
@@ -69794,69 +69820,230 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 }
             },
             series: [{
-                name: 'User registriert',
-                dataLabel: $scope.userUsernames,
-                data: $scope.userCount
+                name: 'User',
+                data: $scope.userCount,
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y}',
+                }
+
             }]
         });
 
+
         console.log($scope.userCount);
         console.log($scope.userUsernames);
+
+        $scope.dataLoaded = true;
+        $scope.setMarkers();
+        $scope.initPie();
     });
 
-    $scope.$on('$viewContentLoaded', function () {
+    $scope.initPie = function () {
+        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+            $scope.allPosts = response.data;
 
-        $interval.cancel($rootScope.HomePromise);
-        $rootScope.ToolPromise = $interval(function () {
-            $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
-                $scope.allPosts = response.data;
+            console.log('Interval done');
 
-                console.log('Interval done');
-                // set multiple marker
-                for (var i = 0; i < $scope.allPosts.length; i++) {
-                    // init markers
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng($scope.allPosts[i].geoX, $scope.allPosts[i].geoY),
-                        map: $scope.map,
-                        title: 'Post' + i,
-                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-                    });
 
-                    // process multiple info windows
-                    (function (marker, i) {
-                        // add click event
-                        function toggleBounce(mark) {
-                            if (mark.getAnimation() !== null) {
-                                mark.setAnimation(null);
-                            } else {
-                                mark.setAnimation(google.maps.Animation.BOUNCE);
+            $scope.groupedPostsBrand = _.groupBy($scope.allPosts, function (item) {
+                return item.brand;
+            });
+
+            console.log($scope.groupedPostsBrand);
+
+            var postsLength = $scope.allPosts.length;
+            var brandsLength = 0;
+            $scope.brandArray = [];
+
+            console.log(postsLength);
+
+            for (var key in $scope.groupedPostsBrand) {
+                var brandObject = {};
+                var brandCount = $scope.groupedPostsBrand[key].length;
+
+                brandObject.name = key;
+                console.log(brandObject.name);
+                console.log(brandCount);
+
+                brandObject.y = (100 / (postsLength) * brandCount);
+                brandObject.y = parseFloat(brandObject.y.toFixed(2));
+
+                brandsLength++;
+                $scope.brandArray.push(brandObject);
+            }
+
+            console.log($scope.brandArray);
+
+            $('#pie-container').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Brands der registrierten Fahrzeuge: ' + brandsLength + '<br> Mit ' + postsLength + ' Fahrzeugen'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                             }
                         }
-
-                        var contentString = '<md-card class="post-card" ng-repeat="post in selectedPosts">' +
-                            '<div class="cell">' +
-                            '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
-                            '</div>' +
-                            '<md-content layout="row">' +
-                            '<md-content layout="column" layout-align="center center" flex>' +
-                            '<h4>' + $scope.allPosts[i].brand + '  ' + $scope.allPosts[i].model + '</h4>' +
-                            '</md-content>' +
-                            '</md-content>' +
-                            '</md-card>';
-
-                        google.maps.event.addListener(marker, 'click', function () {
-                            $scope.map.panTo(marker.getPosition());
-                            infowindow = new google.maps.InfoWindow({
-                                content: contentString
-                            });
-                            infowindow.open($scope.map, marker);
-                            toggleBounce(marker);
-                        });
-                    })(marker, i);
-                }
+                    }
+                },
+                series: [{
+                    name: 'Anteil',
+                    colorByPoint: true,
+                    data: $scope.brandArray,
+                    point: {
+                        events: {
+                            click: function (event) {
+                                loadModels(this.name);
+                                $scope.brandSelected = true;
+                            }
+                        }
+                    }
+                }]
             });
-        }, 4000);
-    });
+
+            function loadModels(brand) {
+                $scope.models = $scope.groupedPostsBrand[brand];
+
+                /*$scope.groupedPostsModel = _.groupBy($scope.allPosts, function (item) {
+                 if(item.brand === brand) {
+                 return item.model;
+                 }
+                 else{
+                 return null;
+                 }
+                 });*/
+
+                $scope.groupedModels = _.groupBy($scope.models, function (item) {
+                    return item.model;
+                });
+
+                console.log($scope.models);
+                console.log($scope.groupedModels);
+
+                var allModelsLength = $scope.models.length;
+                var modelsLength = 0;
+
+                console.log(allModelsLength);
+
+                $scope.modelsArray = [];
+
+                for (var key in $scope.groupedModels) {
+                    var modelObject = {};
+                    var modelCount = $scope.groupedModels[key].length;
+                    modelObject.name = key;
+                    modelObject.y = (100 / (allModelsLength) * modelCount);
+                    modelObject.y = parseFloat(brandObject.y.toFixed(2));
+
+                    modelsLength++;
+                    $scope.modelsArray.push(modelObject);
+                }
+
+                $('#pie-sub-container').highcharts({
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Modele des ausgewählten Brands: ' + modelsLength + '<br>Mit ' + allModelsLength + ' Fahrzeugen'
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Brands',
+                        colorByPoint: true,
+                        data: $scope.modelsArray
+                    }]
+                });
+            }
+        });
+    };
+
+    $scope.setMarkers = function () {
+        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+            $scope.allPosts = response.data;
+
+            console.log('Interval done');
+
+            // set multiple marker
+            for (var i = 0; i < $scope.allPosts.length; i++) {
+                // init markers
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng($scope.allPosts[i].geoX, $scope.allPosts[i].geoY),
+                    map: $scope.map,
+                    title: 'Post' + i,
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
+
+                // process multiple info windows
+                (function (marker, i) {
+                    // add click event
+                    var contentString = '<md-card class="post-card" ng-repeat="post in selectedPosts">' +
+                        '<div class="cell">' +
+                        '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
+                        '</div>' +
+                        '<md-content layout="row">' +
+                        '<md-content layout="column" layout-align="center center" flex>' +
+                        '<h4>' + $scope.allPosts[i].brand + '  ' + $scope.allPosts[i].model + '</h4>' +
+                        '</md-content>' +
+                        '</md-content>' +
+                        '</md-card>';
+
+                    google.maps.event.addListener(marker, 'click', function () {
+
+                        if ($scope.infowindow) {
+                            $scope.infowindow.close();
+                        }
+
+                        //$scope.map.panTo(marker.getPosition());
+                        $scope.infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        $scope.infowindow.open($scope.map, marker);
+                        $scope.toggleBounce(marker);
+                    });
+                })(marker, i);
+            }
+        });
+    };
+
+    $scope.toggleBounce = function (mark) {
+        if (mark.getAnimation() !== null) {
+            mark.setAnimation(null);
+        } else {
+            mark.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    };
 
     $scope.close = function () {
         $mdSidenav('left').toggle();

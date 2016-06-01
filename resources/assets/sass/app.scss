@@ -68,6 +68,14 @@ body {
   margin-top: 25px;
 }
 
+#line-container, #pie-container {
+  height: 100%;
+}
+
+#line-content-holder {
+  height: 300px;
+}
+
 md-list {
   padding: 0px;
 }
@@ -164,7 +172,7 @@ md-card {
 }
 
 #map {
-  height: 500px;
+  height: 80vh;
   width: 100%;
 }
 
