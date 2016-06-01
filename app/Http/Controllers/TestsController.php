@@ -108,8 +108,7 @@ class TestsController extends Controller
     {
         $user = User::find($id);
         $posts = $user->tests()->orderBy('created_at', 'desc')->get();
-
-
+        
         return response()->json([
             'data' => $posts
         ], 200);

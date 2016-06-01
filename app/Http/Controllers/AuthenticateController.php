@@ -65,7 +65,6 @@ class AuthenticateController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
-
         try {
             // verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -141,7 +140,7 @@ class AuthenticateController extends Controller
                 $user->delete();
 
                 return response()->json([
-                    'message' => 'User' + $user . username
+                    'message' => 'User' . $user->username
                 ], 200);
             }
         }

@@ -68095,7 +68095,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             for (i = 0, length = keys.length; i < length; i++) {
                 iteratee(obj[keys[i]], keys[i], obj);
             }
-        }
+    }
         return obj;
     };
 
@@ -69613,18 +69613,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             console.log(post);
         });
 
-
         originatorEv = null;
-
-        /*$mdDialog.show(
-         $mdDialog.alert()
-         .targetEvent(originatorEv)
-         .clickOutsideToClose(true)
-         .parent('body')
-         .title('Suddenly, a redial')
-         .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
-         .ok('That was easy')
-         );*/
     };
 
     $scope.redialUser = function (event, user) {
@@ -69646,18 +69635,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             console.log(user);
         });
 
-
         originatorEv = null;
-
-        /*$mdDialog.show(
-         $mdDialog.alert()
-         .targetEvent(originatorEv)
-         .clickOutsideToClose(true)
-         .parent('body')
-         .title('Suddenly, a redial')
-         .textContent('You just called a friend; who told you the most amazing story. Have a cookie!')
-         .ok('That was easy')
-         );*/
     };
 
 
@@ -69684,7 +69662,9 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         console.log('selected: ' + user.username);
     };
 
-
+    /**
+     * Start of the Users and Posts update interval (with return of HomePromise)
+     */
     $rootScope.HomePromise = $interval(function () {
         $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
             //var parsed = JSON.parse(response);
@@ -69780,8 +69760,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 $scope.userUsernames.push(innerObject[inner].username);
             }
         }
-
-        //$scope.userCount.pop();
         $scope.map = null;
 
         /**
@@ -69847,7 +69825,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     // process multiple info windows
                     (function (marker, i) {
                         // add click event
-
                         function toggleBounce(mark) {
                             if (mark.getAnimation() !== null) {
                                 mark.setAnimation(null);
@@ -69878,7 +69855,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     })(marker, i);
                 }
             });
-        }, 2000);
+        }, 4000);
     });
 
     $scope.close = function () {
