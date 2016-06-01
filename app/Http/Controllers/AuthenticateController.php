@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\User;
 use Illuminate\Http\Request;
 use JWTAuth;
+use Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
