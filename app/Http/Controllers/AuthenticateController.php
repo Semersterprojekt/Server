@@ -132,8 +132,8 @@ class AuthenticateController extends Controller
     public function destroy($id)
     {
         if (Auth::check()) {
-            $id = Auth::user()->id;
-            $user = User::find($id);
+            $userId = Auth::user()->id;
+            $user = User::find($userId);
 
             if ($user->role == 5) {
                 $user = User::find($id);
