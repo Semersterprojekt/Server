@@ -8,7 +8,7 @@
             Users and Posts
         </h2>
     </div>
-    <md-button class="logout-button" ui-sref="logout">Logout</md-button>
+    <md-button class="logout-button" ui-sref="logout" layout-align="center center">Logout</md-button>
 </md-toolbar>
 
 <!-- Content Starts here -->
@@ -40,7 +40,7 @@
                 <md-item ng-repeat="oneuser in users">
                     <md-item-content>
                         <div layout="row" layout-align="space-around center">
-                            <div layout="column" flex="70">
+                            <div layout="column" flex="80">
                                 <md-button ng-click="loadPosts(oneuser)" ng-class="{'selected' : oneuser === selected }"
                                            aria-label="userLabel">
                                     <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
@@ -48,14 +48,14 @@
                                     {{oneuser.username}}
                                 </md-button>
                             </div>
-                            <div layout="column" flex="30">
+                            <div layout="column" flex="20">
                                 <md-menu>
                                     <md-button aria-label="Delete Post" ng-click="openMenu($mdOpenMenu, $event)">
                                         <img class="delete-cross" src="img/icons/delete_cross.svg" alt="Close">
                                     </md-button>
                                     <md-menu-content width="2">
                                         <md-menu-item>
-                                            <md-button ng-click="redial($event, oneuser.id)">
+                                            <md-button ng-click="redialUser($event, oneuser)">
                                                 Delete this User?
                                             </md-button>
                                         </md-menu-item>
@@ -75,7 +75,7 @@
             <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
                 <md-card class="post-card" ng-repeat="post in selectedPosts">
                     <div class="cell">
-                        <img ng-src="http://193.5.58.95/img/test/{{post.img_path}}" alt="{{post.model}}">
+                        <img ng-src="http://193.5.58.95/img/test_tmbn/{{post.img_path}}" alt="{{post.model}}">
                     </div>
                     <md-content layout="row">
                         <md-content layout="column" layout-align="center center" flex>
@@ -144,7 +144,7 @@
                         <md-list>
                             <md-divider></md-divider>
                             <md-subheader>Auswahl</md-subheader>
-                            <md-list-item ui-sref="home" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="home" ng-click="close();" class="md-3-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>User und Posts</h3>
                                 </div>
@@ -169,30 +169,4 @@
         </md-sidenav>
     </section>
 </div>
-
-<!--  Could be useful later on:
-<md-list-item class="md-3-line" ng-repeat="item in todos">
-            <img ng-src="{{item.face}}" alt="{{item.who}}" class="md-avatar">
-            <div class="md-list-item-text">
-                <h3>{{item.what}}</h3>
-                <h4>{{item.who}}</h4>
-                <p>
-                    {{item.notes}}
-                </p>
-            </div>
-            <md-divider inset></md-divider>
-        </md-list-item>
-
-
-
-
-<md-content layout-padding>
-    <md-button ng-click="close()" class="md-primary" hide-gt-md>
-        Close Sidenav Left
-    </md-button>
-    <p hide-md show-gt-md>
-        This sidenav is locked open on your device. To go back to the default behavior,
-        narrow your display.
-    </p>
-</md-content>-->
 

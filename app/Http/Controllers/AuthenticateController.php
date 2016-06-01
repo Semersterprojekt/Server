@@ -129,4 +129,25 @@ class AuthenticateController extends Controller
         // the token is valid and we have found the user via the sub claim
         return response()->json(compact('user'));
     }
+
+    public function destroy($id)
+    {
+        if (Auth::check()) {
+            $id = Auth::user()->id;
+            $user = User::find($id);
+
+            if ($user->role == 5) {
+                $user = User::find($id);
+                $user->delete();
+
+                return response()->json([
+                    'message' => 'User' + $user . username
+                ], 200);
+            }
+        }
+
+        return response()->json([
+            'error' => 'Not Admin'
+        ], 403);
+    }
 }

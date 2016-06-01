@@ -41,4 +41,12 @@ class User extends Authenticatable
         return $this->hasMany('App\Test');
     }
 
+    public function delete()
+    {
+        
+        Test::where('user_id', '=', $this->id)->delete();
+
+        return parent::delete();
+    }
+
 }

@@ -27,12 +27,17 @@ elixir(function (mix) {
         './resources/scripts/bower_components/satellizer/satellizer.js',
         './resources/scripts/bower_components/angular-permission/dist/angular-permission.js',
         './resources/scripts/bower_components/underscore/underscore.js',
-        './resources/scripts/app.js',
-        './resources/scripts/controllers.js',
-        './resources/scripts/jquery-1.11.3.min.js',
-        './resources/scripts/jquery-ui.min.js',
-        './resources/scripts/highcharts.js',
-        './resources/scripts/highcharts-more.js',
+        './resources/scripts/main/app.js',
+        './resources/scripts/main/controllers.js',
+        './resources/scripts/main/HomeCtrl.js',
+        './resources/scripts/main/LoginCtrl.js',
+        './resources/scripts/main/LoginCtrl.js',
+        './resources/scripts/main/LogoutCtrl.js',
+        './resources/scripts/main/ToolsCtrl.js',
+        './resources/scripts/utils/jquery-1.11.3.min.js',
+        './resources/scripts/utils/jquery-ui.min.js',
+        './resources/scripts/utils/highcharts.js',
+        './resources/scripts/utils/highcharts-more.js',
     ]);
 
     mix.styles([

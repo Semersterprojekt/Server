@@ -50,7 +50,11 @@ body {
 .content-holder, #line-container {
   margin-top: 25px; }
 
-.md-list .md-button {
+md-list {
+  padding: 0px;
+}
+
+md-list .md-button {
   width: 100%; }
 
 md-backdrop {
@@ -72,13 +76,12 @@ md-card {
 
 .user-list {
   min-width: 250px;
-  max-height: 85%;
-  height: 85%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #user-list-container {
-  min-width: 200px;
+  min-width: 250px;
 }
 
 .user-list .md-button {

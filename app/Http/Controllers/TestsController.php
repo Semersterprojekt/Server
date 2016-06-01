@@ -79,24 +79,9 @@ class TestsController extends Controller
      */
     public function adminPosts()
     {
-        if (Auth::check()) {
-            $id = Auth::user()->id;
-            $user = User::find($id);
-
-            if ($user->role == 5) {
-                return response()->json([
-                    'data' => Test::all()
-                ], 200);
-            }
-
-            return response()->json([
-                'error' => 'Not Admin'
-            ], 401);
-        } else {
-            return response()->json([
-                'error' => 'Not logged in'
-            ], 401);
-        }
+        return response()->json([
+            'data' => Test::all()->orderBy('created_at', 'desc')->get()
+        ], 200);
     }
 
     /**
@@ -107,24 +92,10 @@ class TestsController extends Controller
      */
     public function adminUsers()
     {
-        if (Auth::check()) {
-            $id = Auth::user()->id;
-            $user = User::find($id);
+        return response()->json([
+            'data' => User::all()
+        ], 200);
 
-            if ($user->role == 5) {
-                return response()->json([
-                    'data' => User::all()
-                ], 200);
-            }
-
-            return response()->json([
-                'error' => 'Not Admin'
-            ], 401);
-        } else {
-            return response()->json([
-                'error' => 'Not logged in'
-            ], 401);
-        }
     }
 
     /**
