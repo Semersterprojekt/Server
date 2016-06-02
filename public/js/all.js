@@ -69583,7 +69583,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         $scope.noneSelected = true;
         $scope.usersLoaded = false;
 
-        $interval.cancel($rootScope.ToolPromise);
+        $interval.cancel($rootScope.ToolsPromise);
         $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
             $scope.users = response.data;
             $scope.usersLoaded = true;
@@ -69613,7 +69613,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             $http.delete('http://193.5.58.95/api/v1/tests/' + post).success(function (response) {
                 $scope.loadPosts($scope.selectedUser);
             });
-            console.log(post);
+
         });
 
         originatorEv = null;
@@ -69638,7 +69638,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
                     $scope.selectedUser = undefined;
                 });
             });
-            console.log(user);
+
         });
 
         originatorEv = null;
@@ -69666,7 +69666,6 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
             $scope.selectedPosts = response.data;
         });
-        console.log('selected: ' + user.username);
     };
 
     /**
@@ -69682,7 +69681,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             $http.get('http://193.5.58.95/api/v1/admin/userposts/' + $scope.selectedUser.id).success(function (response) {
                 $scope.selectedPosts = response.data;
             });
-    }, 4000);
+    }, 5000);
 
 });
 
@@ -69734,7 +69733,7 @@ angular.module('app.controllers').controller('LoginCtrl', function ($rootScope, 
 angular.module('app.controllers').controller('LogoutCtrl', function ($rootScope, $scope, $state, $interval) {
     $scope.$on('$viewContentLoaded', function () {
         $interval.cancel($rootScope.HomePromise);
-        $interval.cancel($rootScope.ToolPromise);
+        $interval.cancel($rootScope.ToolsPromise);
         localStorage.clear();
     });
 });
@@ -69746,12 +69745,18 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $scope.dataLoaded = false;
         $scope.brandSelected = false;
         $scope.username = localStorage.getItem('adminUsername');
+        $scope.markers = [];
 
         $interval.cancel($rootScope.HomePromise);
-        $rootScope.ToolPromise = $interval(function () {
+        $scope.startToolsInterval();
+    });
+
+    $scope.startToolsInterval = function () {
+        $rootScope.ToolsPromise = $interval(function () {
             $scope.setMarkers();
         }, 4000);
-    });
+    }
+
 
     $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
         $scope.users = response.data;
@@ -69760,7 +69765,14 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         /**
          * Google Maps function
          */
-        function initMap() {
+        google.maps.Map.prototype.clearMarkers = function () {
+            for (var i = 0; i < this.markers.length; i++) {
+                this.markers[i].setMap(null);
+            }
+            this.markers = new Array();
+        };
+
+        $scope.initMap = function () {
             var mapDiv = document.getElementById('map');
             $scope.map = new google.maps.Map(mapDiv, {
                 center: {lat: 47.3775499, lng: 8.4666756},
@@ -69769,17 +69781,13 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
             //Global variable for infowindow toggle
             $scope.infowindow = null;
-        }
+        };
 
-        initMap();
+        $scope.initMap();
 
         $scope.groupedUsersDate = _.groupBy($scope.users, function (item) {
             return item.created_at;
         });
-
-
-        console.log($scope.users);
-        console.log($scope.groupedUsersDate);
 
         $scope.userDates = [];
         $scope.userData = [];
@@ -69791,14 +69799,11 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
             var userObject = {};
             var usernameArray = [];
             $scope.userDates.push(key);
-            //console.log(key);
-            //console.log($scope.groupedUsers[key]);
             var innerObject = $scope.groupedUsersDate[key];
             $scope.userCount.push(innerObject.length);
             userObject.y = innerObject.length;
 
             for (var inner in innerObject) {
-                //console.log(innerObject[inner]);
                 $scope.userUsernames.push(innerObject[inner].username);
                 usernameArray.push(innerObject[inner].username);
             }
@@ -69835,10 +69840,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
             }]
         });
 
-
-        console.log($scope.userCount);
-        console.log($scope.userUsernames);
-
         $scope.dataLoaded = true;
         $scope.setMarkers();
         $scope.initPie();
@@ -69848,41 +69849,28 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
 
-            console.log('Interval done');
-
-
             $scope.groupedPostsBrand = _.groupBy($scope.allPosts, function (item) {
                 return item.brand;
             });
 
-            console.log($scope.groupedPostsBrand);
-
             var postsLength = $scope.allPosts.length;
             var brandsLength = 0;
             $scope.brandArray = [];
-
-            console.log(postsLength);
 
             for (var key in $scope.groupedPostsBrand) {
                 var brandObject = {};
                 var brandCount = $scope.groupedPostsBrand[key].length;
 
                 brandObject.name = key;
-                console.log(brandObject.name);
-                console.log(brandCount);
-
                 brandObject.y = (100 / postsLength) * brandCount;
 
                 if (isFloat(brandObject.y)) {
                     brandObject.y = parseFloat(brandObject.y.toFixed(2));
-                    console.log(brandObject.y + " ---> modelPercent Float");
                 }
 
                 brandsLength++;
                 $scope.brandArray.push(brandObject);
             }
-
-            console.log($scope.brandArray);
 
             $('#pie-container').highcharts({
                 chart: {
@@ -69927,6 +69915,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
             function loadModels(brand) {
                 $scope.models = $scope.groupedPostsBrand[brand];
+                console.log($scope.models);
 
                 /*$scope.groupedPostsModel = _.groupBy($scope.allPosts, function (item) {
                  if(item.brand === brand) {
@@ -69941,28 +69930,20 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     return item.model;
                 });
 
-                console.log($scope.models);
-                console.log($scope.groupedModels);
-
                 var allModelsLength = $scope.models.length;
                 var modelsLength = 0;
-
-                console.log(allModelsLength);
 
                 $scope.modelsArray = [];
 
                 for (var key in $scope.groupedModels) {
                     var modelObject = {};
                     var modelCount = $scope.groupedModels[key].length;
-                    console.log(modelCount + " ---> modelCount");
+
                     modelObject.name = key;
                     modelObject.y = (100 / allModelsLength) * modelCount;
 
-                    console.log(modelObject.y + " ---> modelPercent before parsed");
-
                     if (isFloat(modelObject.y)) {
                         modelObject.y = parseFloat(modelObject.y.toFixed(2));
-                        console.log(modelObject.y + " ---> modelPercent Float");
                     }
 
                     modelsLength++;
@@ -70009,8 +69990,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
 
-            console.log('Interval done');
-
             // set multiple marker
             for (var i = 0; i < $scope.allPosts.length; i++) {
                 // init markers
@@ -70021,10 +70000,12 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
                 });
 
+                $scope.markers.push(marker);
+
                 // process multiple info windows
                 (function (marker, i) {
                     // add click event
-                    var contentString = '<md-card class="post-card" ng-repeat="post in selectedPosts">' +
+                    var contentString = '<md-card class="post-card">' +
                         '<div class="cell">' +
                         '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
                         '</div>' +
@@ -70036,33 +70017,97 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                         '</md-card>';
 
                     google.maps.event.addListener(marker, 'click', function () {
-
                         if ($scope.infowindow) {
                             $scope.infowindow.close();
                         }
+
+                        $scope.loadDetails($scope.allPosts[i]);
 
                         //$scope.map.panTo(marker.getPosition());
                         $scope.infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
                         $scope.infowindow.open($scope.map, marker);
-                        $scope.toggleBounce(marker);
                     });
                 })(marker, i);
             }
         });
     };
 
-    $scope.toggleBounce = function (mark) {
-        if (mark.getAnimation() !== null) {
-            mark.setAnimation(null);
-        } else {
-            mark.setAnimation(google.maps.Animation.BOUNCE);
+    $scope.close = function () {
+        $mdSidenav('left').toggle();
+    };
+
+    $scope.setBrand = function (brand) {
+        $interval.cancel($rootScope.ToolsPromise);
+
+        $scope.modelsMap = $scope.groupedPostsBrand[brand.name];
+        console.log($scope.groupedPostsBrand);
+        console.log($scope.modelsMap);
+
+        for (i = 0; i < $scope.markers.length; i++) {
+            $scope.markers[i].setMap(null);
+        }
+
+        // set multiple marker
+        for (var i = 0; i < $scope.modelsMap.length; i++) {
+            // init markers
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng($scope.modelsMap[i].geoX, $scope.modelsMap[i].geoY),
+                map: $scope.map,
+                title: 'Post' + i,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            });
+
+            $scope.markers.push(marker);
+
+            // process multiple info windows
+            (function (marker, i) {
+                // add click event
+                var contentString = '<md-card class="post-card">' +
+                    '<div class="cell">' +
+                    '<img src="http://193.5.58.95/img/test/' + $scope.modelsMap[i].img_path + '">' +
+                    '</div>' +
+                    '<md-content layout="row">' +
+                    '<md-content layout="column" layout-align="center center" flex>' +
+                    '<h4>' + $scope.modelsMap[i].brand + '  ' + $scope.modelsMap[i].model + '</h4>' +
+                    '</md-content>' +
+                    '</md-content>' +
+                    '</md-card>';
+
+                google.maps.event.addListener(marker, 'click', function () {
+
+                    if ($scope.infowindow) {
+                        $scope.infowindow.close();
+                    }
+
+                    $scope.infowindow = new google.maps.InfoWindow({
+                        content: contentString
+                    });
+                    $scope.infowindow.open($scope.map, marker);
+                });
+            })(marker, i);
         }
     };
 
-    $scope.close = function () {
-        $mdSidenav('left').toggle();
+    $scope.loadDetails = function (post) {
+        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+
+
+            $scope.brand = post.brand;
+            $scope.model = post.model;
+
+        });
+    };
+
+    $scope.resetMap = function () {
+        $scope.selector = undefined;
+
+        for (i = 0; i < $scope.markers.length; i++) {
+            $scope.markers[i].setMap(null);
+        }
+        $scope.setMarkers();
+        $scope.startToolsInterval();
     };
 
     function isFloat(n) {

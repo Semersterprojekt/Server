@@ -48,6 +48,7 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
         Route::get('admin/posts', 'TestsController@adminPosts');
         Route::get('admin/users', 'TestsController@adminUsers');
         Route::get('admin/userposts/{id}', 'TestsController@adminUserPosts');
+        Route::get('admin/postbelongs/{id}', 'TestsController@adminPostBelongs');   
         Route::delete('admin/deleteuser/{id}', 'AuthenticateController@destroy');
     });
 });

@@ -185,3 +185,16 @@ md-card {
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.brand-checkboxes {
+  height: 100%;
+  align-items: flex-start;
+  text-align: left;
+  float: left;
+}
+
+#controll-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

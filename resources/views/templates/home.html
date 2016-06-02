@@ -1,6 +1,6 @@
 <!-- Toolbar -->
 <md-toolbar layout="row">
-    <div class="md-toolbar-tools">
+    <div class="md-toolbar-tools" layout-align="center center">
         <md-button class="md-icon-button" aria-label="Settings" ng-click="close();">
             <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
         </md-button>
@@ -17,7 +17,7 @@
 
     <div layout="column" hide-gt-sm>
         <h2>User Auswahl:</h2>
-        <md-select ng-model="selectedUser" aria-label="Selection">
+        <md-select placeholder="User" ng-model="selecter" aria-label="Selection">
             <md-label>Registrierte User:</md-label>
             <md-option ng-repeat="oneuser in users" ng-click="loadPosts(oneuser)">
                 <md-button ng-class="{'selected' : oneuser === selected }"
@@ -133,7 +133,7 @@
 
                 <div class="md-toolbar-tools">
                     <md-list>
-                        <md-list-item ng-click="" id="avatar-item" class="md-3-line">
+                        <md-list-item id="avatar-item" class="md-3-line">
                             <img id="avatar-image" class="md-avatar"
                                  ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
                             <div class="md-list-item-text">
@@ -150,13 +150,13 @@
                         <md-list>
                             <md-divider></md-divider>
                             <md-subheader>Auswahl</md-subheader>
-                            <md-list-item ui-sref="home" ng-click="close();" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="home" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>User und Posts</h3>
                                 </div>
                             </md-list-item>
 
-                            <md-list-item ui-sref="tools" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="tools" ng-click="close();" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>Analyse Tools</h3></div>
                             </md-list-item>
@@ -164,7 +164,7 @@
                             <md-divider></md-divider>
                             <md-subheader>Profil</md-subheader>
 
-                            <md-list-item ng-click="" class="md-3-line" md-ink-ripple>
+                            <md-list-item ng-click="" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>Bearbeiten</h3></div>
                             </md-list-item>

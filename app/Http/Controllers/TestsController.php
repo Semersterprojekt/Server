@@ -98,6 +98,15 @@ class TestsController extends Controller
 
     }
 
+
+    public function adminPostBelongs($id)
+    {
+        return response()->json([
+            'user' => Test::find($id)->user()->get()
+        ], 200);
+    }
+
+
     /**
      * Gets all the Posts posted by the user with $id
      *

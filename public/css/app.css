@@ -158,4 +158,19 @@ md-card {
   padding-right: 5px;
 }
 
+.brand-checkboxes {
+  height: 100%;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  text-align: left;
+  float: left;
+}
+
+#controll-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /*# sourceMappingURL=app.css.map */

@@ -12,8 +12,8 @@
 </md-toolbar>
 
 <md-tabs class="container content-holder md-whiteframe-2dp" md-dynamic-height md-border-bottom>
+    <!-- 1 Tab -->
     <md-tab label="Graphen">
-        <!-- Content Starts here -->
 
         <!-- Spinner until data is loaded -->
         <div class="container content-holder" ng-show="!dataLoaded" layout="column" layout-align="center center">
@@ -22,12 +22,13 @@
             </md-progress-circular>
         </div>
 
-        <!-- Graph Container  -->
+        <!-- Line Graph Container  -->
         <div id="line-container" layout="row" layout-xs="column" layout-sm="column" layout-align="start start"
              class="container content-holder" style="height: 30vh">
         </div>
         <!-- END  -->
 
+        <!-- Pie Graph Container -->
         <div layout="row" layout-xs="column" layout-sm="column">
             <div id="pie-container" layout="column" layout-xs="column" layout-sm="column" layout-align="start start"
                  class="container content-holder md-whiteframe-1dp" style="height: 100%" flex="50" flex-sm="100"
@@ -40,15 +41,47 @@
                 <h3 ng-show="!brandSelected"> Wählen Sie ein Fahrzeugbrand aus</h3>
             </div>
         </div>
-
-
+        <!-- END -->
     </md-tab>
 
+    <!-- 2 Tab -->
     <md-tab label="Map">
-        <!-- Map Container -->
-        <div id="map"></div>
+        <div layout="row" layout-sm="column" layout-xs="column">
+            <!-- Map Container -->
+            <div id="map" layout="column" flex="80" flex-sm="100" flex-xs="100" flex-order="1" flex-order-sm="2"
+                 flex-order-xs="2"></div>
+
+            <!-- View Control -->
+            <div id="controll-container" layout="column" flex="20" flex-sm="100"
+                 flex-xs="100" flex-order="2"
+                 flex-order-sm="1" flex-order-xs="1">
+
+                <div layout="column">
+                    <h4>Brand Auswahl:</h4>
+                    <md-select id="map-selector" ng-model="selector" name="mapSelector" placeholder="Brand"
+                               aria-label="Selection">
+                        <md-label>Auto Brands</md-label>
+                        <md-option ng-repeat="brand in brandArray" ng-click="setBrand(brand)">
+                            <md-button ng-class="{'selected' : brand === selected }"
+                                       aria-label="Brand Auswahl">
+                                {{brand.name}}
+                            </md-button>
+                        </md-option>
+                    </md-select>
+
+                    <div layout="column">
+                        <md-button class="md-raised md-primary" ng-click="resetMap()"> Reset</md-button>
+                    </div>
+                </div>
+
+                <div layout="column">
+
+                </div>
+            </div>
+        </div>
     </md-tab>
 </md-tabs>
+
 
 <!-- Sidebar navigation starts here -->
 <div layout="column" ng-cloak>
@@ -93,13 +126,13 @@
                         <md-list>
                             <md-divider></md-divider>
                             <md-subheader>Auswahl</md-subheader>
-                            <md-list-item ui-sref="home" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="home" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>User und Posts</h3>
                                 </div>
                             </md-list-item>
 
-                            <md-list-item ui-sref="tools" ng-click="close();" class="md-3-line" md-ink-ripple>
+                            <md-list-item ui-sref="tools" ng-click="close();" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>Analyse Tools</h3></div>
                             </md-list-item>
@@ -107,7 +140,7 @@
                             <md-divider></md-divider>
                             <md-subheader>Profil</md-subheader>
 
-                            <md-list-item ng-click="" class="md-3-line" md-ink-ripple>
+                            <md-list-item ng-click="" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>Bearbeiten</h3></div>
                             </md-list-item>

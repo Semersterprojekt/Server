@@ -18,3 +18,55 @@
      class="container content-holder md-whiteframe-1dp" style="height: 400px">
 </div>
 <!-- END  -->
+
+
+<!-- Checkliste -->
+<fieldset layout="column" layout-sm="row" layout-xs="row">
+    <legend>Anzeige Kontrolle</legend>
+    <div layout="column" layout-sm="row" layout-xs="row" layout-wrap flex>
+        <div flex-xs flex="100">
+            <md-checkbox class="brand-checkboxes" ng-repeat="brand in brandArray" aria-label="Select All"
+                         ng-checked="isChecked()"
+                         md-indeterminate="isIndeterminate()"
+                         ng-click="toggleAll(brand)">
+                <span ng-if="isChecked()">Un-</span>{{brand.name}}
+            </md-checkbox>
+        </div>
+        <div flex="100" ng-repeat="model in modelsArray">
+            <md-checkbox ng-checked="exists(brand, selected)" ng-click="toggle(model, selected)">
+                {{ model.name }}
+            </md-checkbox>
+        </div>
+    </div>
+</fieldset>$
+
+
+<!--
+$scope.selected = [];
+
+    $scope.toggle = function (item, list) {
+        var idx = list.indexOf(item);
+        if (idx > -1) {
+            list.splice(idx, 1);
+        }
+        else {
+            list.push(item);
+        }
+    };
+    $scope.exists = function (item, list) {
+        return list.indexOf(item) > -1;
+    };
+    $scope.isIndeterminate = function() {
+        return ($scope.selected.length !== 0 &&
+        $scope.selected.length !== $scope.brandArray.length);
+    };
+    $scope.isChecked = function() {
+        return $scope.selected.length === $scope.brandArray.length;
+    };
+    $scope.toggleAll = function(brand) {
+        if ($scope.selected.length === $scope.brandArray.length) {
+            $scope.selected = [];
+        } else if ($scope.selected.length === 0 || $scope.selected.length > 0) {
+            $scope.selected = $scope.brandArray.slice(0);
+        }
+    }; -->
