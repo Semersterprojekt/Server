@@ -69589,6 +69589,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             $scope.usersLoaded = true;
         });
         $scope.username = localStorage.getItem('adminUsername');
+        $scope.userImage = localStorage.getItem('adminImage');
     });
 
     var originatorEv;
@@ -69706,6 +69707,7 @@ angular.module('app.controllers').controller('LoginCtrl', function ($rootScope, 
                 var userObject = response.user;
                 localStorage.setItem('user', user);
                 localStorage.setItem('adminUsername', userObject.username);
+                localStorage.setItem('adminImage', userObject.img_path);
                 $rootScope.currentUser = response.user;
                 $state.go('home');
             })
@@ -69744,6 +69746,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     $scope.$on('$viewContentLoaded', function () {
         $scope.dataLoaded = false;
         $scope.brandSelected = false;
+        $scope.detailsLoaded = false;
         $scope.username = localStorage.getItem('adminUsername');
         $scope.markers = [];
 
@@ -69915,7 +69918,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
             function loadModels(brand) {
                 $scope.models = $scope.groupedPostsBrand[brand];
-                console.log($scope.models);
 
                 /*$scope.groupedPostsModel = _.groupBy($scope.allPosts, function (item) {
                  if(item.brand === brand) {
@@ -70007,7 +70009,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     // add click event
                     var contentString = '<md-card class="post-card">' +
                         '<div class="cell">' +
-                        '<img src="http://193.5.58.95/img/test/' + $scope.allPosts[i].img_path + '">' +
+                        '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.allPosts[i].img_path + '">' +
                         '</div>' +
                         '<md-content layout="row">' +
                         '<md-content layout="column" layout-align="center center" flex>' +
@@ -70042,8 +70044,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $interval.cancel($rootScope.ToolsPromise);
 
         $scope.modelsMap = $scope.groupedPostsBrand[brand.name];
-        console.log($scope.groupedPostsBrand);
-        console.log($scope.modelsMap);
 
         for (i = 0; i < $scope.markers.length; i++) {
             $scope.markers[i].setMap(null);
@@ -70066,7 +70066,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 // add click event
                 var contentString = '<md-card class="post-card">' +
                     '<div class="cell">' +
-                    '<img src="http://193.5.58.95/img/test/' + $scope.modelsMap[i].img_path + '">' +
+                    '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.modelsMap[i].img_path + '">' +
                     '</div>' +
                     '<md-content layout="row">' +
                     '<md-content layout="column" layout-align="center center" flex>' +
@@ -70076,10 +70076,10 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     '</md-card>';
 
                 google.maps.event.addListener(marker, 'click', function () {
-
                     if ($scope.infowindow) {
                         $scope.infowindow.close();
                     }
+                    $scope.loadDetails($scope.modelsMap[i]);
 
                     $scope.infowindow = new google.maps.InfoWindow({
                         content: contentString
@@ -70091,12 +70091,24 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     };
 
     $scope.loadDetails = function (post) {
-        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+        $scope.detailsLoaded = true;
+        $http.get('http://193.5.58.95/api/v1/admin/postbelongs/' + post.id).success(function (response) {
+
+            var theUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
+                '' + post.geoX + ',' + post.geoY + '&key=AIzaSyC7iEtfjUuGybd2KYJC7ml80UmpbKpZwK0';
+
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    var address = JSON && JSON.parse(xmlHttp.responseText) || $.parseJSON(xmlHttp.responseText);
+                $scope.postAddress = address.results[0].formatted_address;
+            };
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.send(null);
 
 
-            $scope.brand = post.brand;
-            $scope.model = post.model;
-
+            $scope.postDetailed = post;
+            $scope.postUser = response.user[0];
         });
     };
 
@@ -70106,6 +70118,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         for (i = 0; i < $scope.markers.length; i++) {
             $scope.markers[i].setMap(null);
         }
+        $scope.detailsLoaded = false;
         $scope.setMarkers();
         $scope.startToolsInterval();
     };

@@ -48,15 +48,15 @@
     <md-tab label="Map">
         <div layout="row" layout-sm="column" layout-xs="column">
             <!-- Map Container -->
-            <div id="map" layout="column" flex="80" flex-sm="100" flex-xs="100" flex-order="1" flex-order-sm="2"
+            <div id="map" layout="column" flex="70" flex-sm="100" flex-xs="100" flex-order="1" flex-order-sm="2"
                  flex-order-xs="2"></div>
 
             <!-- View Control -->
-            <div id="controll-container" layout="column" flex="20" flex-sm="100"
+            <div id="controll-container" layout="column" flex="30" flex-sm="100"
                  flex-xs="100" flex-order="2"
                  flex-order-sm="1" flex-order-xs="1">
 
-                <div layout="column">
+                <div layout="column" style="margin-bottom: 2%;">
                     <h4>Brand Auswahl:</h4>
                     <md-select id="map-selector" ng-model="selector" name="mapSelector" placeholder="Brand"
                                aria-label="Selection">
@@ -74,8 +74,22 @@
                     </div>
                 </div>
 
-                <div layout="column">
+                <div id="detailed-container" layout="column" ng-show="detailsLoaded" flex="100">
+                    <md-card class="detail-card" flex="100">
+                        <img id="detail-image" ng-src="http://193.5.58.95/img/test/{{postDetailed.img_path}}"
+                             alt="{{postDetailed.model}}" flex="100">
+                        <md-content id="detail-content" layout-align="space-around">
+                            <h3>Detail Infos </h3>
+                            <p>Brand : {{postDetailed.brand}}</p>
+                            <p>Model: {{postDetailed.model}}</p>
+                            <p>Ort: {{postAddress}}</p>
+                            <p>Datum: {{postDetailed.created_at}}</p>
+                            <br>
+                            <p>Besitzer: {{postUser.username}}</p>
+                            <p>Besitzer Email: {{postUser.email}}</p>
 
+                        </md-content>
+                    </md-card>
                 </div>
             </div>
         </div>

@@ -8,6 +8,10 @@ body {
   padding: 0;
   font-family: 'Lato'; }
 
+p {
+  margin: 0;
+}
+
 .content-holder, #line-container {
   background-color: white; }
 
@@ -69,13 +73,26 @@ md-backdrop {
   position: fixed; }
 
 #login-container {
-  margin-top: 100px; }
+  margin-top: 10%;
+}
 
 md-card {
   display: inline-block; }
 
 .post-card {
   width: 350px;
+}
+
+.detail-card {
+  width: 100%;
+}
+
+#detail-content {
+  padding: 10px;
+}
+
+#detailed-container {
+  margin-top: 2%;
 }
 
 .md-button.md-icon-button.menuBtn {
@@ -171,6 +188,10 @@ md-card {
   max-height: 80vh;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+#detail-image {
+  width: 100%;
 }
 
 /*# sourceMappingURL=app.css.map */
