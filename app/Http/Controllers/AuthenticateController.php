@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
 use JWTAuth;
-use Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
 
@@ -40,11 +40,12 @@ class AuthenticateController extends Controller
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
 
-            $image = Image::make($request->base64);
-            $image->resize(1200, 800)->save('img/users/' . $user->id . '.jpg');
-            $image->resize(300, 300)->save('img/users_tmbn/' . $user->id . '.jpg');
-
-            $user->img_path = $user->id . ".jpg";
+            if ($request->base64 != "") {
+                $image = Image::make($request->base64);
+                $image->resize(1200, 800)->save('img/users/' . $user->id . '.jpg');
+                $image->resize(300, 300)->save('img/users_tmbn/' . $user->id . '.jpg');
+                $user->img_path = $user->id . ".jpg";
+            }
             $user->save();
 
             $credentials = $request->only('email', 'password');
@@ -62,6 +63,37 @@ class AuthenticateController extends Controller
             return response()->json(compact('token'));
         }
     }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::first($id);
+
+        if ($request->base64 != "") {
+            $userImage = Image::make($request->base64);
+            $userImage->resize(1200, 800);
+            $userImage->save('img/users/' . $user->id . '.jpg');
+            $userImage->resize(300, 300)->save('img/users_tmbn/' . $user->id . '.jpg');
+
+            $user->img_path = $user->id . '.jpg';
+        }
+
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->surname = $request->surname;
+        $user->gender = $request->gender;
+        $user->birthdate = $request->birthdate;
+        $user->geoX = $request->geoX;
+        $user->geoY = $request->geoY;
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Update successful',
+            'status' => 200
+        ], 200);
+    }
+
 
     public function authenticate(Request $request)
     {

@@ -69745,6 +69745,8 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     $scope.$on('$viewContentLoaded', function () {
         $scope.dataLoaded = false;
         $scope.brandSelected = false;
+        $scope.username = localStorage.getItem('adminUsername');
+
         $interval.cancel($rootScope.HomePromise);
         $rootScope.ToolPromise = $interval(function () {
             $scope.setMarkers();
@@ -69787,6 +69789,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
         for (var key in $scope.groupedUsersDate) {
             var userObject = {};
+            var usernameArray = [];
             $scope.userDates.push(key);
             //console.log(key);
             //console.log($scope.groupedUsers[key]);
@@ -69797,8 +69800,10 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
             for (var inner in innerObject) {
                 //console.log(innerObject[inner]);
                 $scope.userUsernames.push(innerObject[inner].username);
-                userObject
+                usernameArray.push(innerObject[inner].username);
             }
+            userObject.name = usernameArray;
+            $scope.userData.push(userObject);
         }
 
         /**
@@ -69821,7 +69826,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
             },
             series: [{
                 name: 'User',
-                data: $scope.userCount,
+                data: $scope.userData,
                 dataLabels: {
                     enabled: true,
                     format: '<b>{point.name}</b>: {point.y}',
@@ -69866,8 +69871,12 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 console.log(brandObject.name);
                 console.log(brandCount);
 
-                brandObject.y = (100 / (postsLength) * brandCount);
-                brandObject.y = parseFloat(brandObject.y.toFixed(2));
+                brandObject.y = (100 / postsLength) * brandCount;
+
+                if (isFloat(brandObject.y)) {
+                    brandObject.y = parseFloat(brandObject.y.toFixed(2));
+                    console.log(brandObject.y + " ---> modelPercent Float");
+                }
 
                 brandsLength++;
                 $scope.brandArray.push(brandObject);
@@ -69945,9 +69954,16 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 for (var key in $scope.groupedModels) {
                     var modelObject = {};
                     var modelCount = $scope.groupedModels[key].length;
+                    console.log(modelCount + " ---> modelCount");
                     modelObject.name = key;
-                    modelObject.y = (100 / (allModelsLength) * modelCount);
-                    modelObject.y = parseFloat(brandObject.y.toFixed(2));
+                    modelObject.y = (100 / allModelsLength) * modelCount;
+
+                    console.log(modelObject.y + " ---> modelPercent before parsed");
+
+                    if (isFloat(modelObject.y)) {
+                        modelObject.y = parseFloat(modelObject.y.toFixed(2));
+                        console.log(modelObject.y + " ---> modelPercent Float");
+                    }
 
                     modelsLength++;
                     $scope.modelsArray.push(modelObject);
@@ -69961,7 +69977,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                         type: 'pie'
                     },
                     title: {
-                        text: 'Modele des ausgewählten Brands: ' + modelsLength + '<br>Mit ' + allModelsLength + ' Fahrzeugen'
+                        text: 'Modele von ' + brand + ': ' + modelsLength + '<br>Mit ' + allModelsLength + ' Fahrzeugen'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -70048,6 +70064,14 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     $scope.close = function () {
         $mdSidenav('left').toggle();
     };
+
+    function isFloat(n) {
+        return n === +n && n !== (n | 0);
+    }
+
+    function isInteger(n) {
+        return n === +n && n === (n | 0);
+    }
 
 });
 /*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
