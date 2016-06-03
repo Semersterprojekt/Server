@@ -15,17 +15,40 @@
 <div class="container content-holder" layout="column" layout-sm="column" layout-xs="column"
      flex-sm="100" flex-xs="100">
 
-    <div layout="column" hide-gt-sm>
+    <div layout="column" hide-gt-sm ng-show="!beingEdited">
         <h2>User Auswahl:</h2>
-        <md-select placeholder="User" ng-model="selecter" aria-label="Selection">
-            <md-label>Registrierte User:</md-label>
-            <md-option ng-repeat="oneuser in users" ng-click="loadPosts(oneuser)">
+        <md-select id="user-select" placeholder="User" ng-model="selecter" aria-label="Selection">
+            <md-label>Registrierte User:
+                <md-button ng-click="toggleSync()" class="md-primary md-raised"> Sync
+                    <span ng-show="!syncOn">On</span>
+                    <span ng-show="syncOn">Off</span>
+                </md-button>
+            </md-label>
+            <md-option ng-repeat="oneuser in users" ng-click="loadPosts(oneuser)" layout="row">
                 <md-button ng-class="{'selected' : oneuser === selected }"
                            aria-label="userLabel">
                     <img ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
                          class="face" alt="">
                     {{oneuser.username}}
                 </md-button>
+
+                <md-menu>
+                    <md-button aria-label="Delete Post" ng-click="openMenu($mdOpenMenu, $event)">
+                        <img class="delete-cross" src="img/icons/delete_cross.svg" alt="Close">
+                    </md-button>
+                    <md-menu-content width="2">
+                        <md-menu-item>
+                            <md-button ng-click="redialEditUser($event, oneuser)">
+                                Edit User
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="redialUser($event, oneuser)">
+                                Delete
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
             </md-option>
         </md-select>
     </div>
@@ -33,7 +56,14 @@
     <div layout="row" flex class="content-wrapper md-whiteframe-z2">
         <!-- Users -->
         <div id="user-list-container" class="usersandposts" layout="column" flex="20" hide-sm hide-xs>
-            <h4>Registrierte User:</h4>
+            <div layout="row" layout-align="space-around">
+                <h4>Registrierte User:</h4>
+                <md-button ng-click="toggleSync()" class="md-primary md-raised"> Sync
+                    <span ng-show="!syncOn">On</span>
+                    <span ng-show="syncOn">Off</span>
+                </md-button>
+            </div>
+
             <md-divider></md-divider>
             <md-list class="user-list">
                 <md-item ng-show="!usersLoaded">
@@ -90,7 +120,7 @@
             <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
                 <md-card class="post-card" ng-repeat="post in selectedPosts">
                     <div class="cell">
-                        <img ng-src="http://193.5.58.95/img/test_tmbn/{{post.img_path}}" alt="{{post.model}}">
+                        <img ng-src="http://193.5.58.95/img/cars_tmbn/{{post.img_path}}" alt="{{post.model}}">
 
                     </div>
                     <md-content layout="row">
@@ -175,11 +205,6 @@
 
                             <md-divider></md-divider>
                             <md-subheader>Profil</md-subheader>
-
-                            <md-list-item ng-click="close();" class="md-2-line" md-ink-ripple>
-                                <div class="md-list-item-text">
-                                    <h3>Bearbeiten</h3></div>
-                            </md-list-item>
                         </md-list>
                     </section>
                 </md-content>

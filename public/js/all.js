@@ -69579,21 +69579,39 @@ angular.module('app.controllers', ['ngMaterial', 'ui.router']);
 angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
                                                                    $scope, $http, $timeout, $mdSidenav,
                                                                    $state, $mdDialog, $mdMedia, $interval) {
+    /**
+     * Executed immediately upon View Loaded
+     */
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
+
+        //Flags for showing / hiding html elements
         $scope.noneSelected = true;
         $scope.usersLoaded = false;
+        $scope.beingEdited = false;
+        $scope.syncOn = true;
 
         $interval.cancel($rootScope.ToolsPromise);
+        $rootScope.ToolsPromise = null;
+        $scope.startHomeInterval();
+
         $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
             $scope.users = response.data;
             $scope.usersLoaded = true;
         });
+
+        // Active admin data
         $scope.username = localStorage.getItem('adminUsername');
         $scope.userImage = localStorage.getItem('adminImage');
     });
 
     var originatorEv;
+
+    /**
+     * Open the Menu with aditional functionality
+     * @param $mdOpenMenu
+     * @param ev
+     */
     $scope.openMenu = function ($mdOpenMenu, ev) {
         originatorEv = ev;
         $mdOpenMenu(ev);
@@ -69615,14 +69633,10 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function () {
             $scope.status = 'It is deleted.';
-
-
-            $http.delete('http://193.5.58.95/api/v1/tests/' + post).success(function (response) {
+            $http.delete('http://193.5.58.95/api/v1/cars/' + post).success(function (response) {
                 $scope.loadPosts($scope.selectedUser);
             });
-
         });
-
         originatorEv = null;
     };
 
@@ -69642,16 +69656,13 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function () {
             $scope.status = 'It is deleted.';
-
             $http.delete('http://193.5.58.95/api/v1/admin/deleteuser/' + user.id).success(function (response) {
                 $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
                     $scope.users = response.data;
                     $scope.selectedUser = undefined;
                 });
             });
-
         });
-
         originatorEv = null;
     };
 
@@ -69686,24 +69697,20 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
         });
     };
 
+    /**
+     * Closes the Sidenav
+     */
     $scope.close = function () {
         $mdSidenav('left').toggle();
-
-        /*for (var prop in $scope.users) {
-         if (!$scope.users.hasOwnProperty(prop)) {
-         //The current property is not a direct property of p
-         continue;
-         }
-         }*/
     };
 
-    $scope.radius = Math.floor(Math.random() * 100);
-    $scope.selected = null;
-
+    /**
+     * Load Posts from the selected user in the user list
+     * @param user
+     */
     $scope.loadPosts = function (user) {
         $scope.noneSelected = false;
         $scope.selectedUser = user;
-
         $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
             $scope.selectedPosts = response.data;
         });
@@ -69712,21 +69719,46 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
     /**
      * Start of the Users and Posts update interval (with return of HomePromise)
      */
-    $rootScope.HomePromise = $interval(function () {
-        $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
-            //var parsed = JSON.parse(response);
-            $scope.users = response.data;
-        });
-
-        if ($scope.selectedUser != undefined)
-            $http.get('http://193.5.58.95/api/v1/admin/userposts/' + $scope.selectedUser.id).success(function (response) {
-                $scope.selectedPosts = response.data;
+    $scope.startHomeInterval = function () {
+        $rootScope.HomePromise = $interval(function () {
+            $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+                //var parsed = JSON.parse(response);
+                $scope.users = response.data;
             });
-    }, 5000);
 
-    function DialogController($scope, $mdDialog, items) {
+            if ($scope.selectedUser != undefined)
+                $http.get('http://193.5.58.95/api/v1/admin/userposts/' + $scope.selectedUser.id).success(function (response) {
+                    $scope.selectedPosts = response.data;
+                });
+        }, 5000);
+    };
+
+    /**
+     * Toggles the $interval with the promise HomePromise
+     */
+    $scope.toggleSync = function () {
+        if ($rootScope.HomePromise != null) {
+            $interval.cancel($rootScope.HomePromise);
+            $rootScope.HomePromise = null;
+            $scope.syncOn = false;
+        }
+        else {
+            $scope.startHomeInterval();
+            $scope.syncOn = true;
+        }
+    };
+
+    /**
+     * Private Controller for the Dialog on User edit function
+     *
+     * @param $rootScope
+     * @param $scope
+     * @param $mdDialog
+     * @param items
+     * @constructor
+     */
+    function DialogController($rootScope, $scope, $mdDialog, items) {
         $scope.loading = false;
-
         $scope.items = items;
 
         $scope.hide = function () {
@@ -69739,8 +69771,13 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             $mdDialog.hide(answer);
         };
 
+        /**
+         * Updates the Inputted user data via PUT request
+         * @param user
+         */
         $scope.updateUser = function (user) {
             $scope.loading = true;
+            $rootScope.beingEdited = true;
 
             var url = 'http://193.5.58.95/api/v1/admin/updateuser/' + user.id;
             var headers = {headers: {'Content-Type': 'application/json'}};
@@ -69750,19 +69787,12 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
                 base64: user.img_path
             };
 
-            console.log(user);
-
-
             $http.put(url, data, headers).success(function (response) {
                 $scope.loading = false;
-                console.log(resonse);
                 $mdDialog.hide();
             });
-
-
         }
     }
-
 });
 
 /**
@@ -69780,6 +69810,9 @@ angular.module('app.controllers').controller('LoginCtrl', function ($rootScope, 
             password: password
         };
 
+        /**
+         * Login process with an error message if user is not admin
+         */
         $auth.login(credentials).then(function (resp) {
             $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
                 var user = JSON.stringify(response.user);
@@ -69824,6 +69857,7 @@ angular.module('app.controllers').controller('LogoutCtrl', function ($rootScope,
 angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state, $interval) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.dataLoaded = false;
+        $scope.postsLoaded = false;
         $scope.brandSelected = false;
         $scope.detailsLoaded = false;
         $scope.username = localStorage.getItem('adminUsername');
@@ -69832,8 +69866,12 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         //Stop the HomeCtrl interval
         $interval.cancel($rootScope.HomePromise);
         $scope.startToolsInterval();
+        $scope.initPie();
     });
 
+    /**
+     * Start the ToolsCtrl $interval and store the promise to ToolsPromise
+     */
     $scope.startToolsInterval = function () {
         $rootScope.ToolsPromise = $interval(function () {
             $scope.setMarkers();
@@ -69843,89 +69881,141 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     /**
      * Get all user data for line graph
      */
-    $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
-        $scope.users = response.data;
-        $scope.map = null;
+    function lineGraphInit() {
+        $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+            $scope.users = response.data;
+            $scope.map = null;
 
-        /**
-         * Google Maps function
-         */
-        $scope.initMap = function () {
-            var mapDiv = document.getElementById('map');
-            $scope.map = new google.maps.Map(mapDiv, {
-                center: {lat: 47.3775499, lng: 8.4666756},
-                zoom: 8
+            /**
+             * Google Maps function
+             */
+            $scope.initMap = function () {
+                var mapDiv = document.getElementById('map');
+                $scope.map = new google.maps.Map(mapDiv, {
+                    center: {lat: 47.3775499, lng: 8.4666756},
+                    zoom: 8
+                });
+
+                //Global variable for infowindow toggle
+                $scope.infowindow = null;
+            };
+
+            $scope.initMap();
+
+            //Take the user data, group it by creation date and form it for the line graph
+            for (var key in $scope.users) {
+                if ($scope.users.hasOwnProperty(key)) {
+                    $scope.users[key].created_at = formatDate($scope.users[key].created_at);
+                }
+            }
+
+            for (var key in $scope.allPosts) {
+                if ($scope.allPosts.hasOwnProperty(key)) {
+                    $scope.allPosts[key].created_at = formatDate($scope.allPosts[key].created_at);
+                }
+            }
+
+            $scope.groupedUsersDate = _.groupBy($scope.users, function (item) {
+                return item.created_at;
             });
 
-            //Global variable for infowindow toggle
-            $scope.infowindow = null;
-        };
+            //Inverse the Array because of the last date
+            var posts = $scope.allPosts;
+            posts.reverse();
 
-        $scope.initMap();
+            $scope.groupedPostsDate = _.groupBy(posts, function (item) {
+                return item.created_at;
+            });
+
+            Object.keys($scope.groupedPostsDate).reverse();
+
+            $scope.userDates = [];
+            $scope.userData = [];
+            $scope.userUsernames = [];
+            $scope.userCount = [];
+            $scope.userTotal = $scope.users.length;
+
+            $scope.postsData = [];
+            $scope.postDates = [];
+            $scope.postCount = [];
 
 
-        /**
-         * Take the user data, group it by creation date and form it for the line graph
-         */
-        $scope.groupedUsersDate = _.groupBy($scope.users, function (item) {
-            return item.created_at;
-        });
+            // Data preparation for the graph
+            for (var key in $scope.groupedUsersDate) {
+                var userObject = {};
+                var usernameArray = [];
+                $scope.userDates.push(key);
+                var innerObject = $scope.groupedUsersDate[key];
+                $scope.userCount.push(innerObject.length);
+                userObject.y = innerObject.length;
 
-        $scope.userDates = [];
-        $scope.userData = [];
-        $scope.userUsernames = [];
-        $scope.userCount = [];
-        $scope.userTotal = $scope.users.length;
-
-        for (var key in $scope.groupedUsersDate) {
-            var userObject = {};
-            var usernameArray = [];
-            $scope.userDates.push(key);
-            var innerObject = $scope.groupedUsersDate[key];
-            $scope.userCount.push(innerObject.length);
-            userObject.y = innerObject.length;
-
-            for (var inner in innerObject) {
-                $scope.userUsernames.push(innerObject[inner].username);
-                usernameArray.push(innerObject[inner].username);
+                for (var inner in innerObject) {
+                    $scope.userUsernames.push(innerObject[inner].username);
+                    usernameArray.push(innerObject[inner].username);
+                }
+                userObject.name = usernameArray;
+                $scope.userData.push(userObject);
             }
-            userObject.name = usernameArray;
-            $scope.userData.push(userObject);
-        }
 
-        /**
-         * Line Chart function
-         */
-        $('#line-container').highcharts({
-            chart: {
-                type: 'line'
-            },
-            title: {
-                text: 'Registrierte User: ' + $scope.userTotal
-            },
-            xAxis: {
-                categories: $scope.userDates
-            },
-            yAxis: {
+            for (var key in $scope.groupedPostsDate) {
+                var postObject = {};
+                var postBrands = [];
+                $scope.postDates.push(key);
+                var innerObject = $scope.groupedPostsDate[key];
+                $scope.postCount.push(innerObject.length);
+                postObject.y = innerObject.length;
+                for (var inner in innerObject) {
+                    postBrands.push(innerObject[inner].brand);
+                }
+                postObject.name = postBrands;
+                $scope.postsData.push(postObject);
+            }
+
+            /**
+             * Line Chart function
+             */
+            $('#line-container').highcharts({
+                chart: {
+                    type: 'line'
+                },
                 title: {
-                    text: 'User Anzahl'
-                }
-            },
-            series: [{
-                name: 'User',
-                data: $scope.userData,
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.y}',
-                }
+                    text: 'Registrierte User: ' + $scope.userTotal + ', Posts: ' + $scope.allPosts.length
+                },
+                xAxis: [{
+                    categories: $scope.postDates
+                }, {
+                    categories: $scope.userDates,
+                }],
+                yAxis: {
+                    title: {
+                        text: 'User Anzahl'
+                    }
+                },
+                series: [{
+                    name: 'User',
+                    type: 'spline',
+                    data: $scope.userData,
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.y}',
+                    }
 
-            }]
+                }, {
+                    name: 'Posts',
+                    type: 'spline',
+                    data: $scope.postsData,
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.y}',
+                    }
+                }]
+            });
+
+            $scope.dataLoaded = true;
+            $scope.setMarkers();
+
         });
-
-        $scope.dataLoaded = true;
-        $scope.setMarkers();
-        $scope.initPie();
-    });
+    }
 
     /**
      * Initialise the Pie Chart with the Brand and Model data
@@ -69933,6 +70023,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
     $scope.initPie = function () {
         $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
+            lineGraphInit();
 
             $scope.groupedPostsBrand = _.groupBy($scope.allPosts, function (item) {
                 return item.brand;
@@ -69957,6 +70048,9 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 $scope.brandArray.push(brandObject);
             }
 
+            /**
+             * Initialise the Pie Chart container for available brands
+             */
             $('#pie-container').highcharts({
                 chart: {
                     plotBackgroundColor: null,
@@ -69999,17 +70093,12 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 }]
             });
 
+            /**
+             * Load the model Data associated with the selected brand
+             * @param brand
+             */
             function loadModels(brand) {
                 $scope.models = $scope.groupedPostsBrand[brand];
-
-                /*$scope.groupedPostsModel = _.groupBy($scope.allPosts, function (item) {
-                 if(item.brand === brand) {
-                 return item.model;
-                 }
-                 else{
-                 return null;
-                 }
-                 });*/
 
                 $scope.groupedModels = _.groupBy($scope.models, function (item) {
                     return item.model;
@@ -70035,6 +70124,9 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     $scope.modelsArray.push(modelObject);
                 }
 
+                /**
+                 * Initialise the Pie Chart container for the models associated with brand
+                 */
                 $('#pie-sub-container').highcharts({
                     chart: {
                         plotBackgroundColor: null,
@@ -70071,6 +70163,10 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         });
     };
 
+    /**
+     * Set all markers on the google map
+     * The markers represents all the Cars that have been posted by all users.
+     */
     $scope.setMarkers = function () {
         $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
@@ -70093,7 +70189,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
                     var contentString = '<md-card class="post-card">' +
                         '<div class="cell">' +
-                        '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.allPosts[i].img_path + '">' +
+                        '<img src="http://193.5.58.95/img/cars_tmbn/' + $scope.allPosts[i].img_path + '">' +
                         '</div>' +
                         '<md-content layout="row">' +
                         '<md-content layout="column" layout-align="center center" flex>' +
@@ -70154,7 +70250,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
                 var contentString = '<md-card class="post-card">' +
                     '<div class="cell">' +
-                    '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.modelsMap[i].img_path + '">' +
+                    '<img src="http://193.5.58.95/img/cars_tmbn/' + $scope.modelsMap[i].img_path + '">' +
                     '</div>' +
                     '<md-content layout="row">' +
                     '<md-content layout="column" layout-align="center center" flex>' +
@@ -70232,6 +70328,11 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
     function isInteger(n) {
         return n === +n && n === (n | 0);
+    }
+
+    function formatDate(date) {
+        var d = new Date(date.replace(/-/g, '/'));
+        return d.getDate() + '-' + d.getMonth() + '-' + d.getFullYear();//+ " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
     }
 
 });

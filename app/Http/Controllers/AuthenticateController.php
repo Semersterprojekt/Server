@@ -66,7 +66,7 @@ class AuthenticateController extends Controller
 
     public function updateUser(Request $request, $id)
     {
-        $user = User::first($id);
+        $user = User::find($id);
 
         if ($request->base64 != "") {
             $userImage = Image::make($request->base64);
