@@ -82,7 +82,7 @@
                                          ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg"
                                          class="face" alt="">
                                     <img ng-show="oneuser.img_path.length>1"
-                                         ng-src="http://193.5.58.95/img/user_tmbn/{{onseuser.img_path}}" class="face"
+                                         ng-src="http://localhost:8000/img/user_tmbn/{{onseuser.img_path}}" class="face"
                                          alt="">
                                     {{oneuser.username}}
                                 </md-button>
@@ -120,7 +120,7 @@
             <div class="usersandposts middle-align" layout="row" layout-wrap layout-align="start start">
                 <md-card class="post-card" ng-repeat="post in selectedPosts">
                     <div class="cell">
-                        <img ng-src="http://193.5.58.95/img/cars_tmbn/{{post.img_path}}" alt="{{post.model}}">
+                        <img ng-src="http://localhost:8000/img/cars_tmbn/{{post.img_path}}" alt="{{post.model}}">
 
                     </div>
                     <md-content layout="row">
@@ -177,7 +177,7 @@
                             <img ng-show="userImage.length < 1" id="avatar-image" class="md-avatar"
                                  ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
                             <img ng-show="userImage.length > 2" id="avatar-image" class="md-avatar"
-                                 ng-src="http://193.5.58.95/img/user_tmbn/{{userImage}}">
+                                 ng-src="http://localhost:8000/img/user_tmbn/{{userImage}}">
                             <div class="md-list-item-text">
                                 <p>Aktiver Admin:</p>
                                 <p>{{username}}</p>

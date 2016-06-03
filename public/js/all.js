@@ -69512,9 +69512,7 @@ app.run(function (PermissionStore, $auth) {
 
 app.config(['$stateProvider', '$urlRouterProvider', '$authProvider',
     function ($stateProvider, $urlRouterProvider, $authProvider) {
-        //$authProvider.loginUrl = 'http://193.5.58.95/api/v1/authenticate/admin';
-        //$authProvider.loginUrl = 'http://localhost/api/v1/authenticate/admin';
-        $authProvider.loginUrl = 'http://193.5.58.95/api/v1/authenticate/admin';
+        $authProvider.loginUrl = 'http://localhost:8000/api/v1/authenticate/admin';
         $stateProvider
             .state('log', {
                 url: '/login',
@@ -69595,7 +69593,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
         $rootScope.ToolsPromise = null;
         $scope.startHomeInterval();
 
-        $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/users').success(function (response) {
             $scope.users = response.data;
             $scope.usersLoaded = true;
         });
@@ -69633,7 +69631,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function () {
             $scope.status = 'It is deleted.';
-            $http.delete('http://193.5.58.95/api/v1/cars/' + post).success(function (response) {
+            $http.delete('http://localhost:8000/api/v1/cars/' + post).success(function (response) {
                 $scope.loadPosts($scope.selectedUser);
             });
         });
@@ -69656,8 +69654,8 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function () {
             $scope.status = 'It is deleted.';
-            $http.delete('http://193.5.58.95/api/v1/admin/deleteuser/' + user.id).success(function (response) {
-                $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+            $http.delete('http://localhost:8000/api/v1/admin/deleteuser/' + user.id).success(function (response) {
+                $http.get('http://localhost:8000/api/v1/admin/users').success(function (response) {
                     $scope.users = response.data;
                     $scope.selectedUser = undefined;
                 });
@@ -69711,7 +69709,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
     $scope.loadPosts = function (user) {
         $scope.noneSelected = false;
         $scope.selectedUser = user;
-        $http.get('http://193.5.58.95/api/v1/admin/userposts/' + user.id).success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/userposts/' + user.id).success(function (response) {
             $scope.selectedPosts = response.data;
         });
     };
@@ -69721,13 +69719,13 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
      */
     $scope.startHomeInterval = function () {
         $rootScope.HomePromise = $interval(function () {
-            $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+            $http.get('http://localhost:8000/api/v1/admin/users').success(function (response) {
                 //var parsed = JSON.parse(response);
                 $scope.users = response.data;
             });
 
             if ($scope.selectedUser != undefined)
-                $http.get('http://193.5.58.95/api/v1/admin/userposts/' + $scope.selectedUser.id).success(function (response) {
+                $http.get('http://localhost:8000/api/v1/admin/userposts/' + $scope.selectedUser.id).success(function (response) {
                     $scope.selectedPosts = response.data;
                 });
         }, 5000);
@@ -69779,7 +69777,7 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
             $scope.loading = true;
             $rootScope.beingEdited = true;
 
-            var url = 'http://193.5.58.95/api/v1/admin/updateuser/' + user.id;
+            var url = 'http://localhost:8000/api/v1/admin/updateuser/' + user.id;
             var headers = {headers: {'Content-Type': 'application/json'}};
             var data = {
                 username: user.username,
@@ -69799,7 +69797,6 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
  * Created by rijad on 01.06.16.
  */
 angular.module('app.controllers').controller('LoginCtrl', function ($rootScope, $scope, $http, $state, $auth, $mdToast) {
-//    var loginUrl = 'http://193.5.58.95/api/v1/authenticate';
     $scope.pictureUrl = "img/icon_without_radius.jpg";
 
     $scope.logIn = function () {
@@ -69811,10 +69808,10 @@ angular.module('app.controllers').controller('LoginCtrl', function ($rootScope, 
         };
 
         /**
-         * Login process with an error message if user is not admin
+         * Login process with an error message if user is not admin 
          */
         $auth.login(credentials).then(function (resp) {
-            $http.get('http://193.5.58.95/api/v1/authenticate/user').success(function (response) {
+            $http.get('http://localhost:8000/api/v1/authenticate/user').success(function (response) {
                 var user = JSON.stringify(response.user);
                 var userObject = response.user;
                 localStorage.setItem('user', user);
@@ -69882,7 +69879,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
      * Get all user data for line graph
      */
     function lineGraphInit() {
-        $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/users').success(function (response) {
             $scope.users = response.data;
             $scope.map = null;
 
@@ -70021,7 +70018,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
      * Initialise the Pie Chart with the Brand and Model data
      */
     $scope.initPie = function () {
-        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
             lineGraphInit();
 
@@ -70168,7 +70165,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
      * The markers represents all the Cars that have been posted by all users.
      */
     $scope.setMarkers = function () {
-        $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
 
             // set multiple marker
@@ -70189,7 +70186,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
                     var contentString = '<md-card class="post-card">' +
                         '<div class="cell">' +
-                        '<img src="http://193.5.58.95/img/cars_tmbn/' + $scope.allPosts[i].img_path + '">' +
+                        '<img src="http://localhost:8000/img/cars_tmbn/' + $scope.allPosts[i].img_path + '">' +
                         '</div>' +
                         '<md-content layout="row">' +
                         '<md-content layout="column" layout-align="center center" flex>' +
@@ -70250,7 +70247,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
                 var contentString = '<md-card class="post-card">' +
                     '<div class="cell">' +
-                    '<img src="http://193.5.58.95/img/cars_tmbn/' + $scope.modelsMap[i].img_path + '">' +
+                    '<img src="http://localhost:8000/img/cars_tmbn/' + $scope.modelsMap[i].img_path + '">' +
                     '</div>' +
                     '<md-content layout="row">' +
                     '<md-content layout="column" layout-align="center center" flex>' +
@@ -70289,7 +70286,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
      */
     $scope.loadDetails = function (post) {
         $scope.detailsLoaded = true;
-        $http.get('http://193.5.58.95/api/v1/admin/postbelongs/' + post.id).success(function (response) {
+        $http.get('http://localhost:8000/api/v1/admin/postbelongs/' + post.id).success(function (response) {
 
             var theUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
                 '' + post.geoX + ',' + post.geoY + '&key=AIzaSyC7iEtfjUuGybd2KYJC7ml80UmpbKpZwK0';
