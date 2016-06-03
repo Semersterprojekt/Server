@@ -48,8 +48,8 @@ class CarsController extends Controller
         $car = Car::create($request->except('base64'));
         if ($request->base64 != null) {
             $image = Image::make($request->base64);
-            $image->resize(1200, 800)->save('img/car/' . $car->id . '.jpg');
-            $image->resize(300, 300)->save('img/test_tmbn/' . $car->id . '.jpg');
+            $image->resize(1200, 800)->save('img/cars/' . $car->id . '.jpg');
+            $image->resize(300, 300)->save('img/cars_tmbn/' . $car->id . '.jpg');
             $car->img_path = $car->id . '.jpg';
         }
         $car->save();
