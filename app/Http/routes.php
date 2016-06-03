@@ -39,8 +39,6 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
     Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
 
     Route::resource('cars', 'CarsController');
-    Route::resource('tests', 'TestsController');
-
 
     Route::post('authenticate/admin', 'AuthenticateController@authenticateAdmin');
 

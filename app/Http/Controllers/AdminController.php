@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use app\Car;
 use App\Http\Requests;
-use App\Test;
 use App\User;
 use Auth;
 
@@ -18,7 +18,7 @@ class AdminController extends Controller
     public function adminPosts()
     {
         return response()->json([
-            'data' => Test::orderBy('created_at', 'desc')->get()
+            'data' => Car::orderBy('created_at', 'desc')->get()
         ], 200);
     }
 
@@ -40,7 +40,7 @@ class AdminController extends Controller
     public function adminPostBelongs($id)
     {
         return response()->json([
-            'user' => Test::find($id)->user()->get()
+            'user' => Car::find($id)->user()->get()
         ], 200);
     }
 
