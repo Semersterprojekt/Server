@@ -79,13 +79,6 @@ class AuthenticateController extends Controller
 
         $user->username = $request->username;
         $user->email = $request->email;
-        $user->name = $request->name;
-        $user->surname = $request->surname;
-        $user->gender = $request->gender;
-        $user->birthdate = $request->birthdate;
-        $user->geoX = $request->geoX;
-        $user->geoY = $request->geoY;
-        $user->password = bcrypt($request->password);
         $user->save();
 
         return response()->json([

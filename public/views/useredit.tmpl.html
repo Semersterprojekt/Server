@@ -1,0 +1,55 @@
+<md-dialog aria-label="User Edit" ng-cloak ng-controller="HomeCtrl">
+
+    <!-- Spinner until data is loaded -->
+    <div ng-show="loading" class="container content-holder" ng-show="!dataLoaded" layout="column"
+         layout-align="center center">
+        <md-progress-circular class="md-accent"
+                              md-diameter="100" md-mode='indeterminate'>
+        </md-progress-circular>
+    </div>
+
+    <form ng-show="!loading">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit user: {{items.username}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon style="color: white;" src="img/icons/delete_cross.svg" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <img ng-show="items.img_path.length < 1" class="md-avatar"
+                     ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/krystynheide/128.jpg">
+
+                <img ng-show="items.img_path.length > 2" class="md-avatar"
+                     ng-src="http://193.5.58.95/img/user/{{items.img_path}}">
+            </div>
+
+            <div layout="column" class="md-dialog-content">
+                <md-input-container>
+                    <label>Username</label>
+                    <input ng-model="items.username">
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Email</label>
+                    <input ng-model="items.email" type="email">
+                </md-input-container>
+            </div>
+
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="answer('cancel')">
+                Cancel
+            </md-button>
+            <md-button ng-click="updateUser(items)" style="margin-right:20px;">
+                Update
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

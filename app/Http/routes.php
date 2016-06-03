@@ -45,10 +45,11 @@ Route::group(['middleware' => 'cors', 'prefix' => 'api/v1'], function () {
     Route::post('authenticate/admin', 'AuthenticateController@authenticateAdmin');
 
     Route::group(['middleware' => ['jwt.auth', 'admin', 'cors']], function () {
-        Route::get('admin/posts', 'TestsController@adminPosts');
-        Route::get('admin/users', 'TestsController@adminUsers');
-        Route::get('admin/userposts/{id}', 'TestsController@adminUserPosts');
-        Route::get('admin/postbelongs/{id}', 'TestsController@adminPostBelongs');   
+        Route::get('admin/posts', 'AdminController@adminPosts');
+        Route::get('admin/users', 'AdminController@adminUsers');
+        Route::get('admin/userposts/{id}', 'AdminController@adminUserPosts');
+        Route::get('admin/postbelongs/{id}', 'AdminController@adminPostBelongs');
+        Route::put('admin/updateuser/{id}', 'AuthenticateController@updateUser');
         Route::delete('admin/deleteuser/{id}', 'AuthenticateController@destroy');
     });
 });

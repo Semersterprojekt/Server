@@ -64,8 +64,13 @@
                                     </md-button>
                                     <md-menu-content width="2">
                                         <md-menu-item>
+                                            <md-button ng-click="redialEditUser($event, oneuser)">
+                                                Edit User
+                                            </md-button>
+                                        </md-menu-item>
+                                        <md-menu-item>
                                             <md-button ng-click="redialUser($event, oneuser)">
-                                                Delete this User?
+                                                Delete
                                             </md-button>
                                         </md-menu-item>
                                     </md-menu-content>
@@ -99,7 +104,7 @@
                             <md-menu-content width="2">
                                 <md-menu-item>
                                     <md-button ng-click="redial($event, post.id)">
-                                        Delete this Post?
+                                        Delete
                                     </md-button>
                                 </md-menu-item>
                             </md-menu-content>
@@ -157,7 +162,7 @@
                         <md-list>
                             <md-divider></md-divider>
                             <md-subheader>Auswahl</md-subheader>
-                            <md-list-item ui-sref="home" class="md-2-line" md-ink-ripple>
+                            <md-list-item ui-sref="home" ng-click="close();" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>User und Posts</h3>
                                 </div>
@@ -171,11 +176,10 @@
                             <md-divider></md-divider>
                             <md-subheader>Profil</md-subheader>
 
-                            <md-list-item ng-click="" class="md-2-line" md-ink-ripple>
+                            <md-list-item ng-click="close();" class="md-2-line" md-ink-ripple>
                                 <div class="md-list-item-text">
                                     <h3>Bearbeiten</h3></div>
                             </md-list-item>
-
                         </md-list>
                     </section>
                 </md-content>

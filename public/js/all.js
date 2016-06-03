@@ -69576,8 +69576,9 @@ angular.module('app.controllers', ['ngMaterial', 'ui.router']);
 /**
  * Created by rijad on 01.06.16.
  */
-angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $scope, $http, $timeout, $mdSidenav, $state, $mdDialog, $interval) {
-
+angular.module('app.controllers').controller('HomeCtrl', function ($rootScope,
+                                                                   $scope, $http, $timeout, $mdSidenav,
+                                                                   $state, $mdDialog, $mdMedia, $interval) {
     $scope.$on('$viewContentLoaded', function () {
         $mdSidenav('left').toggle();
         $scope.noneSelected = true;
@@ -69598,6 +69599,11 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         $mdOpenMenu(ev);
     };
 
+    /**
+     * Menu Click Event on Post Delete
+     * @param event
+     * @param post
+     */
     $scope.redial = function (event, post) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
@@ -69620,6 +69626,11 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         originatorEv = null;
     };
 
+    /**
+     * Menu Click Event on User Delete
+     * @param event
+     * @param user
+     */
     $scope.redialUser = function (event, user) {
         // Appending dialog to document.body to cover sidenav in docs app
         var confirm = $mdDialog.confirm()
@@ -69631,7 +69642,6 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
             .cancel('Cancel');
         $mdDialog.show(confirm).then(function () {
             $scope.status = 'It is deleted.';
-
 
             $http.delete('http://193.5.58.95/api/v1/admin/deleteuser/' + user.id).success(function (response) {
                 $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
@@ -69645,6 +69655,36 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
         originatorEv = null;
     };
 
+    /**
+     * Menu Click Event on User Edit
+     * @param event
+     * @param user
+     */
+    $scope.redialEditUser = function (event, user) {
+        $scope.editedUser = user;
+        var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'views/useredit.tmpl.html',
+            parent: angular.element(document.body),
+            targetEvent: event,
+            clickOutsideToClose: true,
+            fullscreen: useFullScreen,
+            locals: {
+                items: $scope.editedUser
+            }
+        })
+            .then(function () {
+                $scope.status = 'You said the information was.';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+        $scope.$watch(function () {
+            return $mdMedia('xs') || $mdMedia('sm');
+        }, function (wantsFullScreen) {
+            $scope.customFullscreen = (wantsFullScreen === true);
+        });
+    };
 
     $scope.close = function () {
         $mdSidenav('left').toggle();
@@ -69683,6 +69723,45 @@ angular.module('app.controllers').controller('HomeCtrl', function ($rootScope, $
                 $scope.selectedPosts = response.data;
             });
     }, 5000);
+
+    function DialogController($scope, $mdDialog, items) {
+        $scope.loading = false;
+
+        $scope.items = items;
+
+        $scope.hide = function () {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+        $scope.answer = function (answer) {
+            $mdDialog.hide(answer);
+        };
+
+        $scope.updateUser = function (user) {
+            $scope.loading = true;
+
+            var url = 'http://193.5.58.95/api/v1/admin/updateuser/' + user.id;
+            var headers = {headers: {'Content-Type': 'application/json'}};
+            var data = {
+                username: user.username,
+                email: user.email,
+                base64: user.img_path
+            };
+
+            console.log(user);
+
+
+            $http.put(url, data, headers).success(function (response) {
+                $scope.loading = false;
+                console.log(resonse);
+                $mdDialog.hide();
+            });
+
+
+        }
+    }
 
 });
 
@@ -69750,6 +69829,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $scope.username = localStorage.getItem('adminUsername');
         $scope.markers = [];
 
+        //Stop the HomeCtrl interval
         $interval.cancel($rootScope.HomePromise);
         $scope.startToolsInterval();
     });
@@ -69758,9 +69838,11 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $rootScope.ToolsPromise = $interval(function () {
             $scope.setMarkers();
         }, 4000);
-    }
+    };
 
-
+    /**
+     * Get all user data for line graph
+     */
     $http.get('http://193.5.58.95/api/v1/admin/users').success(function (response) {
         $scope.users = response.data;
         $scope.map = null;
@@ -69768,13 +69850,6 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         /**
          * Google Maps function
          */
-        google.maps.Map.prototype.clearMarkers = function () {
-            for (var i = 0; i < this.markers.length; i++) {
-                this.markers[i].setMap(null);
-            }
-            this.markers = new Array();
-        };
-
         $scope.initMap = function () {
             var mapDiv = document.getElementById('map');
             $scope.map = new google.maps.Map(mapDiv, {
@@ -69788,6 +69863,10 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
         $scope.initMap();
 
+
+        /**
+         * Take the user data, group it by creation date and form it for the line graph
+         */
         $scope.groupedUsersDate = _.groupBy($scope.users, function (item) {
             return item.created_at;
         });
@@ -69848,6 +69927,9 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         $scope.initPie();
     });
 
+    /**
+     * Initialise the Pie Chart with the Brand and Model data
+     */
     $scope.initPie = function () {
         $http.get('http://193.5.58.95/api/v1/admin/posts').success(function (response) {
             $scope.allPosts = response.data;
@@ -69898,6 +69980,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                             style: {
                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                             }
+                            //$scope.map.panTo(marker.getPosition());
                         }
                     }
                 },
@@ -69998,15 +70081,16 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                 var marker = new google.maps.Marker({
                     position: new google.maps.LatLng($scope.allPosts[i].geoX, $scope.allPosts[i].geoY),
                     map: $scope.map,
-                    title: 'Post' + i,
+                    title: $scope.allPosts[i].brand + " : " + $scope.allPosts[i].model,
                     icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
                 });
 
+                // Marker array for later removal from map
                 $scope.markers.push(marker);
 
                 // process multiple info windows
                 (function (marker, i) {
-                    // add click event
+
                     var contentString = '<md-card class="post-card">' +
                         '<div class="cell">' +
                         '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.allPosts[i].img_path + '">' +
@@ -70022,10 +70106,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                         if ($scope.infowindow) {
                             $scope.infowindow.close();
                         }
-
                         $scope.loadDetails($scope.allPosts[i]);
-
-                        //$scope.map.panTo(marker.getPosition());
                         $scope.infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
@@ -70036,10 +70117,17 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         });
     };
 
+    /**
+     * Close Sidenav on click
+     */
     $scope.close = function () {
         $mdSidenav('left').toggle();
     };
 
+    /**
+     * Load Markers to the google map depending on the set Brand
+     * @param brand
+     */
     $scope.setBrand = function (brand) {
         $interval.cancel($rootScope.ToolsPromise);
 
@@ -70063,7 +70151,7 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
 
             // process multiple info windows
             (function (marker, i) {
-                // add click event
+
                 var contentString = '<md-card class="post-card">' +
                     '<div class="cell">' +
                     '<img src="http://193.5.58.95/img/test_tmbn/' + $scope.modelsMap[i].img_path + '">' +
@@ -70075,11 +70163,20 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
                     '</md-content>' +
                     '</md-card>';
 
+                /**
+                 * Click event listener for every marker
+                 */
                 google.maps.event.addListener(marker, 'click', function () {
+                    if ($scope.lastMarker != undefined) {
+                        $scope.lastMarker.setIcon("http://maps.google.com/mapfiles/ms/icons/blue-dot.png");
+                    }
+
                     if ($scope.infowindow) {
                         $scope.infowindow.close();
                     }
                     $scope.loadDetails($scope.modelsMap[i]);
+                    marker.setIcon("http://maps.google.com/mapfiles/ms/icons/green-dot.png");
+                    $scope.lastMarker = marker;
 
                     $scope.infowindow = new google.maps.InfoWindow({
                         content: contentString
@@ -70090,6 +70187,10 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
         }
     };
 
+    /**
+     * Load details of a Car stored under the selected marker
+     * @param post
+     */
     $scope.loadDetails = function (post) {
         $scope.detailsLoaded = true;
         $http.get('http://193.5.58.95/api/v1/admin/postbelongs/' + post.id).success(function (response) {
@@ -70106,12 +70207,14 @@ angular.module('app.controllers').controller('ToolsCtrl', function ($rootScope, 
             xmlHttp.open("GET", theUrl, true); // true for asynchronous
             xmlHttp.send(null);
 
-
             $scope.postDetailed = post;
             $scope.postUser = response.user[0];
         });
     };
 
+    /**
+     * Reset the map and the markers
+     */
     $scope.resetMap = function () {
         $scope.selector = undefined;
 
