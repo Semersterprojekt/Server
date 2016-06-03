@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use app\Car;
+use App\Car;
 use App\Http\Requests;
 use App\User;
 use Auth;
