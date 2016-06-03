@@ -54,7 +54,7 @@ class AdminController extends Controller
     public function adminUserPosts($id)
     {
         $user = User::find($id);
-        $posts = $user->tests()->orderBy('created_at', 'desc')->get();
+        $posts = $user->cars()->orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'data' => $posts
