@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Cars;
+use App\Car;
 use App\Http\Requests;
 use App\User;
 use Auth;
@@ -45,7 +45,7 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
-        $car = Cars::create($request->except('base64'));
+        $car = Car::create($request->except('base64'));
         if ($request->base64 != null) {
             $image = Image::make($request->base64);
             $image->resize(1200, 800)->save('img/car/' . $car->id . '.jpg');
@@ -79,6 +79,6 @@ class CarsController extends Controller
      */
     public function destroy($id)
     {
-        Cars::destroy($id);
+        Car::destroy($id);
     }
 }
