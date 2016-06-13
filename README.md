@@ -48,6 +48,13 @@ php artisan migrate --seed
 ```
 Der Befehl `--seed` füllt die Datenbank mit vordefinierten Daten die sich unter **database/seeds/** befinden. In diesem Projekt sind dass die Admin User in der Datei AdminSeeder.php
 
+**Bei Fehler** -> Diese Zeile aus der Datei (im root Verzeichnis des Projektes) **composer.json** einkommentieren: 
+```shell
+47        "pre-update-cmd": [
+48            //"php artisan clear-compiled"   -> Auskommentierung entfernen!
+49        ],
+```
+
 ### 4. Server Starten
 Den Testserver starten wir mit dem Befehl:
 
@@ -55,9 +62,7 @@ Den Testserver starten wir mit dem Befehl:
 php artisan serve
 ```
 
-### 5. Routen ändern
-Da dieses Projekt auf einem Server gehostet ist, welcher auch auf dieses Repository zugreift (git pull), sind die Authentifizierungsrouten für das Frontend auch entsprechend definiert. Diese kann man unter public/js/all.js (nahe Ende der Datei) ändern.
-
+Dann im Browser die Adresse **http://localhost:8000/** öffnen. 
 
 
 ####ACHTUNG: User Registrierung wird zurzeit nur über Mobile App erledigt.
